@@ -1,0 +1,57 @@
+export const typography = {
+  fonts: {
+    display: 'var(--font-playfair)',
+    heading: 'var(--font-inter)',
+    body: 'var(--font-source-sans)',
+    mono: 'var(--font-mono)',
+  },
+  fontWeights: {
+    light: 300,
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+    extrabold: 800,
+    black: 900,
+  },
+  fontSizes: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
+    '4xl': '2.25rem',
+    '5xl': '3rem',
+    '6xl': '3.75rem',
+    '7xl': '4.5rem',
+    '8xl': '6rem',
+    '9xl': '8rem',
+  },
+  lineHeights: {
+    none: 1,
+    tight: 1.25,
+    snug: 1.375,
+    normal: 1.5,
+    relaxed: 1.625,
+    loose: 2,
+  },
+  letterSpacing: {
+    tighter: '-0.05em',
+    tight: '-0.025em',
+    normal: '0em',
+    wide: '0.025em',
+    wider: '0.05em',
+    widest: '0.1em',
+  },
+};
+
+export const premiumTextClasses = {
+  hero: 'font-display text-5xl md:text-7xl font-bold text-gradient',
+  sectionTitle: 'font-heading text-3xl md:text-5xl font-bold tracking-tight',
+  cardTitle: 'font-heading text-xl md:text-2xl font-semibold',
+  body: 'font-body text-base leading-relaxed',
+  caption: 'font-body text-sm text-gray-600',
+  mono: 'font-mono text-sm',
+};
