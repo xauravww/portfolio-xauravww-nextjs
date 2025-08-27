@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getProjectById, updateProject, deleteProject } from '@/models/Project';
+import { getProjectById, updateProject, deleteProject, ProjectInput } from '@/models/Project';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const project = await getProjectById(params.id);
+    const resolvedParams = await params;
+    const project = await getProjectById(resolvedParams.id);
     
     if (!project) {
       return NextResponse.json(
@@ -27,11 +28,12 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const projectData = await request.json();
-    const result = await updateProject(params.id, projectData);
+    const resolvedParams = await params;
+    const projectData: ProjectInput = await request.json(); // Ensure projectData is typed correctly
+    const result = await updateProject(resolvedParams.id, projectData);
     
     if (result.matchedCount === 0) {
       return NextResponse.json(
@@ -52,10 +54,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const result = await deleteProject(params.id);
+    const resolvedParams = await params;
+    const result = await deleteProject(resolvedParams.id);
     
     if (result.deletedCount === 0) {
       return NextResponse.json(

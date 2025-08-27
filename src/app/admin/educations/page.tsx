@@ -80,16 +80,13 @@ export default function EducationsPage() {
 
   if (loading) {
     return (
-      <ClientAdminLayout>
         <div className="flex items-center justify-center py-12">
           <div className="text-[#F0F0F0] text-xl">Loading educations...</div>
         </div>
-      </ClientAdminLayout>
     );
   }
 
   return (
-    <ClientAdminLayout>
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Header Section */}
@@ -273,6 +270,5 @@ export default function EducationsPage() {
           </div>
         </div>
       </div>
-    </ClientAdminLayout>
   );
 }

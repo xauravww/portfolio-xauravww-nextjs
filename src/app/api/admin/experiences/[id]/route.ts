@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getExperienceById, updateExperience, deleteExperience } from '@/models/Experience';
+import { getExperienceById, updateExperience, deleteExperience, ExperienceInput } from '@/models/Experience';
 
 export async function GET(
   request: NextRequest,
@@ -30,9 +30,9 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const experienceData = await request.json();
+    const experienceData: ExperienceInput = await request.json();
     
-    const updateData: unknown = { ...experienceData };
+    const updateData: Partial<ExperienceInput> = { ...experienceData };
     if (updateData.startDate) {
       updateData.startDate = new Date(updateData.startDate);
     }

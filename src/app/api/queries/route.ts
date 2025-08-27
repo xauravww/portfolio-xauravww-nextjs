@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 import nodemailer from 'nodemailer';
+import { getQueries, deleteQuery } from '@/models/Query';
 
 const notionAPIKey = process.env.NOTION_API_KEY;
 const notionDatabaseId = process.env.NOTION_DATABASE_ID;
@@ -14,7 +15,7 @@ const notion = axios.create({
   },
 });
 
-const sendEmail = async (options: any) => {
+const sendEmail = async (options: { to: string; subject: string; message: string }) => {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
@@ -34,6 +35,46 @@ const sendEmail = async (options: any) => {
 
   await transporter.sendMail(mailOptions);
 };
+
+export async function GET(request: Request) {
+  try {
+    // Fetch queries from the database (assuming a function getQueries exists)
+    const queries = await getQueries(); // Implement this function to fetch queries from your database
+    return NextResponse.json(queries, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching queries:", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to fetch queries" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { id } = await request.json();
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Query ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Implement the delete logic here (assuming a function deleteQuery exists)
+    await deleteQuery(id); // Implement this function to delete the query from your database
+
+    return NextResponse.json(
+      { success: true, message: "Query deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting query:", error);
+    return NextResponse.json(
+      { success: false, message: "Failed to delete query" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(request: Request) {
   try {
