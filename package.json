@@ -21,6 +21,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-headroom": "^3.2.1",
+    "react-scroll": "^1.9.3",
     "react-toastify": "^11.0.5",
     "typewriter-effect": "^2.22.0",
     "use-sound": "^5.0.0"

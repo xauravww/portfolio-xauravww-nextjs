@@ -69,7 +69,7 @@ const CursorGlow = () => {
     background: `radial-gradient(circle, rgba(74, 144, 226, 0.15) 0%, transparent 70%)`,
     borderRadius: '50%',
     pointerEvents: 'none',
-    zIndex: 9999,
+    zIndex: 1,
     opacity: isVisible ? 1 : 0,
     transition: 'opacity 0.3s ease-out, top 0.2s ease-out, left 0.2s ease-out',
     willChange: 'top, left',

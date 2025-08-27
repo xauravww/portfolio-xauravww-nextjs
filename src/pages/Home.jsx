@@ -5,11 +5,10 @@ import { ScrollTrigger } from "gsap/all";
 import PropTypes from 'prop-types';
 import { Link as ScrollLink } from "react-scroll";
 import Typewriter from "typewriter-effect";
-import InteractiveTerminal from "../components/InteractiveTerminal";
+
 
 const Home = ({ containerId }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -68,30 +67,7 @@ const Home = ({ containerId }) => {
     };
   }, []);
 
-  // Keyboard shortcuts and terminal events
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.ctrlKey && e.key === '`') {
-        e.preventDefault();
-        setIsTerminalOpen(true);
-      }
-      if (e.key === 'Escape' && isTerminalOpen) {
-        setIsTerminalOpen(false);
-      }
-    };
 
-    const handleCloseTerminal = () => {
-      setIsTerminalOpen(false);
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('closeTerminal', handleCloseTerminal);
-    
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('closeTerminal', handleCloseTerminal);
-    };
-  }, [isTerminalOpen]);
 
   return (
     <div
@@ -146,17 +122,13 @@ const Home = ({ containerId }) => {
             View My Work
           </ScrollLink>
           
-          <button
-            onClick={() => setIsTerminalOpen(true)}
-            className="terminal-button inline-flex items-center gap-2 bg-[#0d1117] border border-[#30363d] text-[#e6edf3] font-semibold py-3 px-8 rounded-md text-lg md:text-xl hover:bg-[#161b22] hover:border-[#58a6ff] hover:scale-105 transition-all duration-300 shadow-lg group cursor-pointer"
-            title="Open Terminal (Ctrl + `)"
-          >
+          <div className="inline-flex items-center gap-2 bg-[#0d1117] border border-[#30363d] text-[#e6edf3] font-semibold py-3 px-8 rounded-md text-lg md:text-xl shadow-lg">
             <span>💻</span>
-            Show Terminal
-            <span className="text-xs opacity-60 group-hover:opacity-100 transition-opacity">
-              Ctrl+`
+            Terminal Available
+            <span className="text-xs opacity-60">
+              (Right Side →)
             </span>
-          </button>
+          </div>
         </div>
         
         {/* Scroll indicator */}
@@ -168,41 +140,7 @@ const Home = ({ containerId }) => {
         </div>
       </div>
 
-      {/* Terminal Modal */}
-      {isTerminalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4">
-          <div className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between bg-[#161b22] px-4 py-3 border-b border-[#30363d] rounded-t-lg">
-              <div className="flex items-center gap-3">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 bg-[#ff5f56] rounded-full"></div>
-                  <div className="w-3 h-3 bg-[#ffbd2e] rounded-full"></div>
-                  <div className="w-3 h-3 bg-[#27ca3f] rounded-full"></div>
-                </div>
-                <span className="text-[#e6edf3] font-medium">
-                  💻 Interactive Terminal - Saurav's Portfolio
-                </span>
-              </div>
-              
-              <button
-                onClick={() => setIsTerminalOpen(false)}
-                className="text-[#8b949e] hover:text-[#e6edf3] transition-colors p-1"
-                aria-label="Close terminal"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Terminal Content */}
-            <div className="bg-[#0d1117] rounded-b-lg overflow-hidden">
-              <InteractiveTerminal />
-            </div>
-          </div>
-        </div>
-      )}
+    
     </div>
   );
 };

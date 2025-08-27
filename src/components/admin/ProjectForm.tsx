@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import TechStackSelector from './TechStackSelector';
 
 interface ProjectFormProps {
   project?: {
@@ -85,156 +86,160 @@ export default function ProjectForm({ project, isEdit = false }: ProjectFormProp
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-          Title
-        </label>
-        <input
-          type="text"
-          name="title"
-          id="title"
-          required
-          value={formData.title}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="sm:col-span-2">
+          <label htmlFor="title" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Title *
+          </label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            required
+            value={formData.title}
+            onChange={handleChange}
+            className="w-full bg-[#33373E]/60 border border-[#33373E] text-[#F0F0F0] px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#4A90E2]/50 focus:border-[#4A90E2] transition-all duration-200 placeholder-[#A0A0A0]"
+            placeholder="Enter project title"
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <label htmlFor="description" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Description *
+          </label>
+          <textarea
+            name="description"
+            id="description"
+            required
+            rows={4}
+            value={formData.description}
+            onChange={handleChange}
+            className="w-full bg-[#33373E]/60 border border-[#33373E] text-[#F0F0F0] px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#4A90E2]/50 focus:border-[#4A90E2] transition-all duration-200 placeholder-[#A0A0A0] resize-none"
+            placeholder="Describe your project in detail"
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <label className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Tech Stacks *
+          </label>
+          <div className="bg-[#33373E]/30 border border-[#33373E] rounded-xl p-4">
+            <TechStackSelector
+              selectedTechStacks={formData.techStacks.split(',').map(s => s.trim()).filter(s => s)}
+              onChange={(techStacks) => setFormData(prev => ({ ...prev, techStacks: techStacks.join(', ') }))}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="difficulty" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Difficulty *
+          </label>
+          <select
+            name="difficulty"
+            id="difficulty"
+            value={formData.difficulty}
+            onChange={handleChange}
+            className="w-full bg-[#33373E]/60 border border-[#33373E] text-[#F0F0F0] px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#4A90E2]/50 focus:border-[#4A90E2] transition-all duration-200"
+          >
+            <option value="Easy">Easy</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="status" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Status *
+          </label>
+          <select
+            name="status"
+            id="status"
+            value={formData.status}
+            onChange={handleChange}
+            className="w-full bg-[#33373E]/60 border border-[#33373E] text-[#F0F0F0] px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#4A90E2]/50 focus:border-[#4A90E2] transition-all duration-200"
+          >
+            <option value="draft">Draft</option>
+            <option value="live">Live</option>
+          </select>
+        </div>
+
+        <div className="sm:col-span-2">
+          <label htmlFor="img" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Image URL *
+          </label>
+          <input
+            type="url"
+            name="img"
+            id="img"
+            required
+            value={formData.img}
+            onChange={handleChange}
+            className="w-full bg-[#33373E]/60 border border-[#33373E] text-[#F0F0F0] px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#4A90E2]/50 focus:border-[#4A90E2] transition-all duration-200 placeholder-[#A0A0A0]"
+            placeholder="https://example.com/image.jpg"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="repo" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Repository URL (optional)
+          </label>
+          <input
+            type="url"
+            name="repo"
+            id="repo"
+            value={formData.repo}
+            onChange={handleChange}
+            className="w-full bg-[#33373E]/60 border border-[#33373E] text-[#F0F0F0] px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#4A90E2]/50 focus:border-[#4A90E2] transition-all duration-200 placeholder-[#A0A0A0]"
+            placeholder="https://github.com/username/project"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="live" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Live URL (optional)
+          </label>
+          <input
+            type="url"
+            name="live"
+            id="live"
+            value={formData.live}
+            onChange={handleChange}
+            className="w-full bg-[#33373E]/60 border border-[#33373E] text-[#F0F0F0] px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#4A90E2]/50 focus:border-[#4A90E2] transition-all duration-200 placeholder-[#A0A0A0]"
+            placeholder="https://your-project.vercel.app"
+          />
+        </div>
+
+        <div className="sm:col-span-2">
+          <label htmlFor="order" className="block text-sm font-medium text-[#F0F0F0] mb-2">
+            Display Order
+          </label>
+          <input
+            type="number"
+            name="order"
+            id="order"
+            required
+            min="0"
+            value={formData.order}
+            onChange={handleChange}
+            className="w-full bg-[#33373E]/60 border border-[#33373E] text-[#F0F0F0] px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#4A90E2]/50 focus:border-[#4A90E2] transition-all duration-200 placeholder-[#A0A0A0]"
+            placeholder="0"
+          />
+        </div>
       </div>
 
-      <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-          Description
-        </label>
-        <textarea
-          name="description"
-          id="description"
-          required
-          rows={3}
-          value={formData.description}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="techStacks" className="block text-sm font-medium text-gray-700">
-          Tech Stacks (comma separated)
-        </label>
-        <input
-          type="text"
-          name="techStacks"
-          id="techStacks"
-          required
-          value={formData.techStacks}
-          onChange={handleChange}
-          placeholder="ReactJS, Node.js, MongoDB"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="difficulty" className="block text-sm font-medium text-gray-700">
-          Difficulty
-        </label>
-        <select
-          name="difficulty"
-          id="difficulty"
-          value={formData.difficulty}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        >
-          <option value="Easy">Easy</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="img" className="block text-sm font-medium text-gray-700">
-          Image URL
-        </label>
-        <input
-          type="url"
-          name="img"
-          id="img"
-          required
-          value={formData.img}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="repo" className="block text-sm font-medium text-gray-700">
-          Repository URL (optional)
-        </label>
-        <input
-          type="url"
-          name="repo"
-          id="repo"
-          value={formData.repo}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="live" className="block text-sm font-medium text-gray-700">
-          Live URL (optional)
-        </label>
-        <input
-          type="url"
-          name="live"
-          id="live"
-          value={formData.live}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="status" className="block text-sm font-medium text-gray-700">
-          Status
-        </label>
-        <select
-          name="status"
-          id="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        >
-          <option value="draft">Draft</option>
-          <option value="live">Live</option>
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="order" className="block text-sm font-medium text-gray-700">
-          Order
-        </label>
-        <input
-          type="number"
-          name="order"
-          id="order"
-          required
-          min="0"
-          value={formData.order}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-        />
-      </div>
-
-      <div className="flex justify-end space-x-3">
+      <div className="flex justify-end space-x-4 pt-4">
         <button
           type="button"
           onClick={() => router.back()}
-          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+          className="bg-[#33373E]/60 backdrop-blur-xl border border-[#33373E] text-[#F0F0F0] px-6 py-3 rounded-xl font-medium hover:bg-[#33373E]/80 transition-all duration-200"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+          className="bg-gradient-to-r from-[#4A90E2] to-[#667eea] text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg hover:shadow-[#4A90E2]/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? 'Saving...' : isEdit ? 'Update Project' : 'Create Project'}
         </button>

@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
-import { PROJECT_DETAILS } from "../utils/data";
 import ProjectItem from "../components/ProjectItem";
 import Pagination from "../components/Pagination";
 import FilterModal from "../components/FilterModal";
@@ -10,11 +9,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const ProjectOverview = ({ containerId }) => {
   const [isActive, setIsActive] = useState(true);
-
-  const [isSearchActive, setisSearchActive] = useState(false);
-
-  const whiteColorFilter =
-    "invert(99%) sepia(1%) saturate(7473%) hue-rotate(186deg) brightness(116%) contrast(86%)";
+  const [projectData, setProjectData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [currentPage, setcurrentPage] = useState(1);
   const [postPerPage, setpostPerPage] = useState(3);
@@ -27,16 +23,16 @@ const ProjectOverview = ({ containerId }) => {
   });
 
   const availableTechStacks = useMemo(() => {
-    const allStacks = PROJECT_DETAILS.reduce((acc, project) => {
+    const allStacks = projectData.reduce((acc, project) => {
       project.techStacks.forEach(stack => acc.add(stack));
       return acc;
     }, new Set());
     return Array.from(allStacks);
-  }, []);
+  }, [projectData]);
 
   // Updated filtering logic to use techFilterMode
   const filteredProjects = useMemo(() => {
-    return PROJECT_DETAILS.filter(project => {
+    return projectData.filter(project => {
       // Tech Stack check (using AND or OR based on mode)
       if (activeFilters.techStacks.length > 0) {
         if (activeFilters.techFilterMode === 'AND') {
@@ -57,7 +53,7 @@ const ProjectOverview = ({ containerId }) => {
       }
       return true;
     });
-  }, [activeFilters]); // Re-filter when ANY active filter changes
+  }, [activeFilters, projectData]); // Re-filter when ANY active filter changes
 
   const lastPageIndex = currentPage * postPerPage;
   const firstPageIndex = lastPageIndex - postPerPage;
@@ -72,6 +68,23 @@ const ProjectOverview = ({ containerId }) => {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+
+    // Fetch projects data from database
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('/api/portfolio/projects');
+        if (response.ok) {
+          const data = await response.json();
+          setProjectData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
 
     gsap.fromTo(".projects-wrapper",
       { opacity: 0, y: 50 },
@@ -129,7 +142,7 @@ const ProjectOverview = ({ containerId }) => {
       <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-norepeat- bg-cover"></div>
       <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
 
-      <div className="flex items-center justify-center gap-4 mb-6 md:mb-10 z-[3]">
+      <div className="flex items-center justify-center gap-4 mb-6 md:mb-10 z-[10] relative">
         <header className="text-3xl md:text-5xl text-white font-bold relative text-center px-4">
           Projects
           <div className="underline-below-header absolute w-3/5 h-1 bg-[var(--accent-blue)] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
@@ -145,15 +158,16 @@ const ProjectOverview = ({ containerId }) => {
         </button>
       </div>
       <div
-        className="projects-wrapper z-[6] mt-6 overflow-y-auto h-[60vh] w-full max-w-6xl rounded-md p-4 m-6 opacity-0"
+        className="projects-wrapper z-[10] relative mt-6 overflow-y-auto h-[60vh] w-full max-w-6xl rounded-md p-4 m-6"
         style={{
           scrollbarColor: "var(--accent-blue) transparent",
           scrollbarWidth: "thin",
-          zIndex: 10,
         }}
       >
-        {isActive && (
-          <div className="grid-container rounded-md grid grid-cols-1 z-[5] md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 ">
+        {loading ? (
+          <div className="text-white text-xl text-center md:col-span-2 lg:col-span-3">Loading projects...</div>
+        ) : isActive && (
+          <div className="grid-container rounded-md grid grid-cols-1 z-[10] relative md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 ">
             {currentPosts.length > 0 ? (
               currentPosts.map((item) => (
                 <ProjectItem
@@ -166,12 +180,14 @@ const ProjectOverview = ({ containerId }) => {
                 />
               ))
             ) : (
-              <p className="text-[var(--text-medium)] text-center md:col-span-2 lg:col-span-3">No projects found matching your criteria.</p>
+              <p className="text-[var(--text-medium)] text-center md:col-span-2 lg:col-span-3">
+                {projectData.length === 0 ? 'No projects available.' : 'No projects found matching your criteria.'}
+              </p>
             )}
           </div>
         )}
       </div>
-      <div className="pagination-container z-[5] opacity-0 mt-4">
+      <div className="pagination-container z-[10] relative mt-4">
         {isActive && filteredProjects.length > postPerPage && (
           <Pagination
             totalPosts={filteredProjects.length}

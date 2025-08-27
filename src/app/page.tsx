@@ -1,4 +1,3 @@
-import Image from "next/image";
 import HomePage from '@/pages/Home';
 import TechStack from '@/pages/TechStack';
 import ProjectOverview from '@/pages/ProjectOverview';
@@ -8,12 +7,14 @@ import Education from '@/pages/Education';
 import ContactMe from '@/pages/ContactMe';
 import CursorGlow from '@/components/CursorGlow';
 import Navbar from '@/components/Navbar';
+import GlobalTerminal from '@/components/GlobalTerminal';
 import NavbarContextFunction from '@/context/navbarContext';
 
 export default function Home() {
   return (
     <div className="App relative min-h-screen">
       <CursorGlow />
+      <GlobalTerminal />
       <NavbarContextFunction>
         <Navbar />
         <main>

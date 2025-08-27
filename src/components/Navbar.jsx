@@ -57,12 +57,12 @@ const Navbar = () => {
 
   return (
     <div
-      className={`sticky nav-container bg-[#1A1D24] z-[50] relative transition-all duration-300 ${isNavbarVisible ? 'opacity-100' : 'opacity-0 -translate-y-full'}`}
+      className={`sticky nav-container bg-[#1A1D24] z-[30] relative transition-all duration-300 ${isNavbarVisible ? 'opacity-100' : 'opacity-0 -translate-y-full'}`}
     >
       {/* Mobile Overlay */}
       <div
         ref={navOverlayRef}
-        className={`fixed nav-overlay inset-0 bg-[#1A1D24]/90 backdrop-blur-lg z-50 flex flex-col items-center justify-center transition-all duration-300 md:hidden ${
+        className={`fixed nav-overlay inset-0 bg-[#1A1D24]/90 backdrop-blur-lg z-[40] flex flex-col items-center justify-center transition-all duration-300 md:hidden ${
           navbarToggleState ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         }`}
       >
@@ -106,7 +106,7 @@ const Navbar = () => {
       </div>
 
       {/* Desktop Navbar (Add blur and transparent background) */}
-      <div className="fixed top-5 rounded-full left-1/2 transform -translate-x-1/2 bg-[#1A1D24]/80 backdrop-blur-md border border-[#33373E] z-[12] navbar px-8 py-2 h-[4rem] max-w-fit flex justify-center items-center shadow-lg">
+      <div className="fixed top-5 rounded-full left-1/2 transform -translate-x-1/2 bg-[#1A1D24]/80 backdrop-blur-md border border-[#33373E] z-[30] navbar px-8 py-2 h-[4rem] max-w-fit flex justify-center items-center shadow-lg">
         <ul className="nav-items hidden md:flex gap-4 text-white px-4 py-2 cursor-pointer text-xl md:text-2xl">
           {[
             { name: "Home", section: "section1", offset: -100 },
@@ -143,7 +143,7 @@ const Navbar = () => {
         </button>
       </div>
       <button
-        className="h-10 w-10 fixed bottom-10 right-10 z-[15] border-4 border-[#4A90E2] rounded-full bg-[#1A1D24]/80 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 hover:bg-[#4A90E2]/20"
+        className="h-10 w-10 fixed bottom-10 right-10 z-[20] border-4 border-[#4A90E2] rounded-full bg-[#1A1D24]/80 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 hover:bg-[#4A90E2]/20"
         onClick={() => scroll.scrollToTop()}
         aria-label="Scroll to top"
       >

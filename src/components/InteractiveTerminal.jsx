@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import { PROJECT_DETAILS } from '../utils/data';
 
 const InteractiveTerminal = () => {
   const [input, setInput] = useState('');
@@ -9,201 +8,436 @@ const InteractiveTerminal = () => {
     { type: 'output', content: 'Type "help" to see available commands.' },
   ]);
   const [currentPath, setCurrentPath] = useState('~/portfolio');
+  const [apiData, setApiData] = useState({
+    projects: [],
+    experiences: [],
+    educations: [],
+    techstacks: [],
+    blogs: []
+  });
+  const [loading, setLoading] = useState(false);
+  const [showStatusBar, setShowStatusBar] = useState(true);
   const terminalRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Fetch real data from APIs
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [projectsRes, experiencesRes, educationsRes, techstacksRes, blogsRes] = await Promise.all([
+          fetch('/api/portfolio/projects').catch(() => ({ ok: false })),
+          fetch('/api/portfolio/experiences').catch(() => ({ ok: false })),
+          fetch('/api/portfolio/educations').catch(() => ({ ok: false })),
+          fetch('/api/portfolio/techstacks').catch(() => ({ ok: false })),
+          fetch('/api/portfolio/blogs').catch(() => ({ ok: false }))
+        ]);
+
+        const data = {
+          projects: projectsRes.ok ? await projectsRes.json() : [],
+          experiences: experiencesRes.ok ? await experiencesRes.json() : [],
+          educations: educationsRes.ok ? await educationsRes.json() : [],
+          techstacks: techstacksRes.ok ? await techstacksRes.json() : [],
+          blogs: blogsRes.ok ? await blogsRes.json() : []
+        };
+
+        setApiData(data);
+      } catch (error) {
+        console.error('Error fetching terminal data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Handle external events (like from terminal header buttons)
+  useEffect(() => {
+    const handleToggleStatusBar = () => {
+      setShowStatusBar(prev => !prev);
+    };
+
+    window.addEventListener('toggleStatusBar', handleToggleStatusBar);
+
+    return () => {
+      window.removeEventListener('toggleStatusBar', handleToggleStatusBar);
+    };
+  }, []);
 
   const commands = {
     help: () => [
       '╭─ Available Commands ─╮',
       '│                     │',
-      '│  about      - About me & background',
-      '│  skills     - Technical expertise',
-      '│  projects   - Featured work',
-      '│  contact    - Get in touch',
+      '│  about      - About me',
+      '│  projects   - My projects',
+      '│  blogs      - Blog posts',
       '│  experience - Work history',
-      '│  education  - Academic background',
-      '│  clear      - Clear terminal',
-      '│  whoami     - Current user',
-      '│  ls         - List files',
-      '│  cat <file> - Read file',
-      '│  project-details <name> - Project info',
-      '│  github     - GitHub profile',
-      '│  neofetch   - System info',
+      '│  education  - Education',
+      '│  techstack  - Tech stack',
+      '│  contact    - Contact info',
+      '│  status     - System status',
+      '│  refresh    - Refresh data',
+      '│  clear      - Clear screen',
       '│  exit       - Close terminal',
       '│                     │',
       '╰─────────────────────╯',
     ],
-    about: () => [
-      '╭─ About Saurav Maheshwari ─╮',
-      '│                           │',
-      '│  👨‍💻 Full Stack Developer    │',
-      '│  🤖 AI/Automation Expert   │',
-      '│  🎯 Telegram Bot Creator   │',
-      '│  🚀 Innovation enthusiast   │',
-      '│  💡 Problem solver          │',
-      '│                           │',
-      '╰───────────────────────────╯',
-      '',
-      'I specialize in creating AI-powered applications,',
-      'automation tools, and interactive web experiences.',
-      'From Telegram bots to full-stack web apps,',
-      'I love building solutions that make life easier!',
-      '',
-      '🎓 Currently exploring: AI/ML, Automation, Web3',
-    ],
-    skills: () => [
-      '╭─ Technical Skills ─╮',
-      '│                   │',
-      '├── 🎨 Frontend',
-      '│   ├── React & Next.js',
-      '│   ├── JavaScript/TypeScript',
-      '│   ├── HTML5 & CSS3',
-      '│   └── Tailwind CSS',
-      '│',
-      '├── ⚙️  Backend',
-      '│   ├── Node.js & Express',
-      '│   ├── Python',
-      '│   ├── REST APIs',
-      '│   └── Telegram Bot API',
-      '│',
-      '├── 🗄️  Database',
-      '│   ├── MongoDB',
-      '│   ├── Redis',
-      '│   ├── Notion DB',
-      '│   └── Sanity CMS',
-      '│',
-      '├── 🤖 AI/Automation',
-      '│   ├── N8N Workflows',
-      '│   ├── GramJS',
-      '│   ├── AI Integration',
-      '│   └── Bot Development',
-      '│',
-      '└── 🛠️  Tools & Others',
-      '    ├── Git & GitHub',
-      '    ├── Docker',
-      '    ├── Cloudinary',
-      '    └── Render/Netlify',
-      '',
-      '╰───────────────────╯',
-    ],
+    about: () => {
+      if (apiData.projects.length === 0 && apiData.experiences.length === 0) {
+        return [
+          'Loading profile data...',
+          'Use "refresh" to try again'
+        ];
+      }
+
+      const aboutLines = [
+        '╭─ About Saurav Maheshwari ─╮',
+        '│                           │',
+        '│  👨‍💻 Full Stack Developer    │',
+      ];
+
+      if (apiData.experiences.length > 0) {
+        const latestExp = apiData.experiences[0];
+        aboutLines.push(`│  💼 ${latestExp.position}`);
+        aboutLines.push(`│  🏢 ${latestExp.company}`);
+      }
+
+      if (apiData.projects.length > 0) {
+        aboutLines.push(`│  🚀 ${apiData.projects.length} Projects Built`);
+      }
+
+      if (apiData.blogs.length > 0) {
+        aboutLines.push(`│  📝 ${apiData.blogs.length} Blog Posts`);
+      }
+
+      aboutLines.push('│                           │');
+      aboutLines.push('╰───────────────────────────╯');
+
+      return aboutLines;
+    },
+    skills: () => {
+      const skillsLines = [
+        '╭─ Technical Skills ─╮',
+        '│                   │',
+        '├── 🎨 Frontend',
+        '│   ├── React & Next.js',
+        '│   ├── JavaScript/TypeScript',
+        '│   ├── HTML5 & CSS3',
+        '│   └── Tailwind CSS',
+        '│',
+        '├── ⚙️  Backend',
+        '│   ├── Node.js & Express',
+        '│   ├── Python',
+        '│   ├── REST APIs',
+        '│   └── Telegram Bot API',
+        '│',
+        '├── 🗄️  Database',
+        '│   ├── MongoDB',
+        '│   ├── Redis',
+        '│   ├── Notion DB',
+        '│   └── Sanity CMS',
+        '│',
+        '├── 🤖 AI/Automation',
+        '│   ├── N8N Workflows',
+        '│   ├── GramJS',
+        '│   ├── AI Integration',
+        '│   └── Bot Development',
+        '│',
+        '└── 🛠️  Tools & Others',
+        '    ├── Git & GitHub',
+        '    ├── Docker',
+        '    ├── Cloudinary',
+        '    └── Render/Netlify',
+        '',
+        '╰───────────────────╯',
+      ];
+
+      if (apiData.techstacks.length > 0) {
+        skillsLines.push('');
+        skillsLines.push('🔥 Current Tech Stack:');
+        apiData.techstacks.slice(0, 8).forEach(tech => {
+          skillsLines.push(`   • ${tech.name}`);
+        });
+      }
+
+      return skillsLines;
+    },
+
+    techstack: () => {
+      if (apiData.techstacks.length === 0) {
+        return [
+          '╭─ Tech Stack ─╮',
+          '│              │',
+          '│  Loading tech stack...',
+          '│  Use "refresh" to try again',
+          '│              │',
+          '╰──────────────╯'
+        ];
+      }
+
+      const techLines = [
+        '╭─ Technology Stack ─╮',
+        '│                   │',
+      ];
+
+      // Group by category if available
+      const categories = {};
+      apiData.techstacks.forEach(tech => {
+        const category = tech.category || 'Other';
+        if (!categories[category]) categories[category] = [];
+        categories[category].push(tech);
+      });
+
+      Object.entries(categories).forEach(([category, techs]) => {
+        const emoji = category === 'Frontend' ? '🎨' :
+          category === 'Backend' ? '⚙️' :
+            category === 'Database' ? '🗄️' :
+              category === 'DevOps' ? '🚀' : '🛠️';
+        techLines.push(`├── ${emoji} ${category}`);
+        techs.slice(0, 4).forEach(tech => {
+          techLines.push(`│   ├── ${tech.name}`);
+        });
+        techLines.push('│');
+      });
+
+      techLines.push('│                   │');
+      techLines.push('╰───────────────────╯');
+      techLines.push('');
+      techLines.push(`Total Technologies: ${apiData.techstacks.length}`);
+
+      return techLines;
+    },
+
+    blogs: () => {
+      if (apiData.blogs.length === 0) {
+        return [
+          '╭─ Blog Posts ─╮',
+          '│              │',
+          '│  Loading blog posts...',
+          '│  Use "refresh" to try again',
+          '│              │',
+          '╰──────────────╯'
+        ];
+      }
+
+      const blogLines = [
+        '╭─ Latest Blog Posts ─╮',
+        '│                    │',
+      ];
+
+      apiData.blogs.slice(0, 5).forEach((blog, index) => {
+        const emoji = ['📝', '💡', '🚀', '🔥', '⚡'][index] || '📄';
+        blogLines.push(`│  ${emoji} ${blog.title}`);
+        if (blog.brief) {
+          const brief = blog.brief.length > 40 ? blog.brief.substring(0, 40) + '...' : blog.brief;
+          blogLines.push(`│     ${brief}`);
+        }
+        if (blog.readTimeInMinutes) {
+          blogLines.push(`│     ⏱️  ${blog.readTimeInMinutes} min read`);
+        }
+        blogLines.push('│');
+      });
+
+      blogLines.push('│                    │');
+      blogLines.push('╰────────────────────╯');
+      blogLines.push('');
+      blogLines.push(`Total Posts: ${apiData.blogs.length}`);
+      blogLines.push('Visit: https://xauravww.hashnode.dev');
+
+      return blogLines;
+    },
+
+    refresh: async () => {
+      setLoading(true);
+      try {
+        const [projectsRes, experiencesRes, educationsRes, techstacksRes, blogsRes] = await Promise.all([
+          fetch('/api/portfolio/projects').catch(() => ({ ok: false })),
+          fetch('/api/portfolio/experiences').catch(() => ({ ok: false })),
+          fetch('/api/portfolio/educations').catch(() => ({ ok: false })),
+          fetch('/api/portfolio/techstacks').catch(() => ({ ok: false })),
+          fetch('/api/portfolio/blogs').catch(() => ({ ok: false }))
+        ]);
+
+        const data = {
+          projects: projectsRes.ok ? await projectsRes.json() : [],
+          experiences: experiencesRes.ok ? await experiencesRes.json() : [],
+          educations: educationsRes.ok ? await educationsRes.json() : [],
+          techstacks: techstacksRes.ok ? await techstacksRes.json() : [],
+          blogs: blogsRes.ok ? await blogsRes.json() : []
+        };
+
+        setApiData(data);
+        return [
+          '🔄 Refreshing data from APIs...',
+          '',
+          `✅ Projects: ${data.projects.length} loaded`,
+          `✅ Experiences: ${data.experiences.length} loaded`,
+          `✅ Education: ${data.educations.length} loaded`,
+          `✅ Tech Stack: ${data.techstacks.length} loaded`,
+          `✅ Blog Posts: ${data.blogs.length} loaded`,
+          '',
+          '🎉 All data refreshed successfully!'
+        ];
+      } catch (error) {
+        return [
+          '❌ Error refreshing data:',
+          error.message,
+          '',
+          'Please check your internet connection and try again.'
+        ];
+      } finally {
+        setLoading(false);
+      }
+    },
+
+    status: () => {
+      const statusLines = [
+        '╭─ API Status ─╮',
+        '│              │',
+        `│  📊 Projects: ${apiData.projects.length} items`,
+        `│  💼 Experience: ${apiData.experiences.length} items`,
+        `│  🎓 Education: ${apiData.educations.length} items`,
+        `│  🛠️  Tech Stack: ${apiData.techstacks.length} items`,
+        `│  📝 Blog Posts: ${apiData.blogs.length} items`,
+        '│              │',
+        '├─ System Info ─┤',
+        '│              │',
+        `│  🌐 API: ${loading ? 'Loading...' : 'Connected'}`,
+        `│  📡 Session: Active`,
+        `│  ⏰ Uptime: ${Math.floor((Date.now() - performance.now()) / 1000)}s`,
+        `│  💾 Cache: Live data`,
+        '│              │',
+        '╰──────────────╯'
+      ];
+
+      return statusLines;
+    },
     projects: () => {
-      const featuredProjects = PROJECT_DETAILS.slice(0, 6); // Show top 6 projects
+      if (apiData.projects.length === 0) {
+        return [
+          '╭─ Projects ─╮',
+          '│            │',
+          '│  Loading projects from API...',
+          '│  Use "refresh" to try again',
+          '│            │',
+          '╰────────────╯'
+        ];
+      }
+
+      const featuredProjects = apiData.projects.slice(0, 6);
       const projectLines = [
         '╭─ Featured Projects ─╮',
         '│                    │',
       ];
-      
+
       featuredProjects.forEach((project, index) => {
-        const emoji = index === 0 ? '🤖' : index === 1 ? '🤖' : index === 2 ? '💬' : index === 3 ? '📱' : index === 4 ? '📝' : '💼';
+        const emoji = ['🚀', '💻', '🤖', '📱', '🌐', '⚡'][index] || '💼';
         projectLines.push(`│  ${emoji} ${project.title}`);
-        projectLines.push(`│     ${project.techStacks.slice(0, 2).join(', ')}`);
-        projectLines.push(`│     Difficulty: ${project.difficulty}`);
-        if (project.url?.live) {
-          projectLines.push(`│     🌐 ${project.url.live.replace('https://', '')}`);
+        if (project.techStacks && project.techStacks.length > 0) {
+          projectLines.push(`│     ${project.techStacks.slice(0, 2).map(t => t.name || t).join(', ')}`);
+        }
+        if (project.liveUrl) {
+          projectLines.push(`│     🌐 ${project.liveUrl.replace('https://', '')}`);
         }
         projectLines.push('│');
       });
-      
+
       projectLines.push('│                    │');
       projectLines.push('╰────────────────────╯');
       projectLines.push('');
-      projectLines.push(`Total Projects: ${PROJECT_DETAILS.length}`);
+      projectLines.push(`Total Projects: ${apiData.projects.length}`);
       projectLines.push('Use "cat projects.json" for detailed list!');
-      
+
       return projectLines;
     },
     contact: () => [
       '╭─ Contact Information ─╮',
       '│                      │',
-      '│  📧 Email            │',
-      '│     saurav@example.com',
-      '│                      │',
-      '│  💼 LinkedIn         │',
-      '│     /in/sauravmaheshwari',
+      '│  🌐 Portfolio        │',
+      '│     You\'re here! 😊   │',
       '│                      │',
       '│  🐙 GitHub           │',
       '│     github.com/xauravww',
       '│                      │',
-      '│  🌐 Portfolio        │',
-      '│     You\'re here! 😊   │',
-      '│                      │',
-      '│  🤖 Telegram Bot     │',
-      '│     @funwalabot      │',
+      '│  📧 Get in touch via  │',
+      '│     Contact section   │',
       '│                      │',
       '╰──────────────────────╯',
       '',
-      'Always open for collaborations and opportunities!',
+      'Check the Contact section for more details!',
     ],
-    experience: () => [
-      '╭─ Work Experience ─╮',
-      '│                  │',
-      '│  🏢 Full Stack Developer',
-      '│     Company Name',
-      '│     📅 2022 - Present',
-      '│',
-      '│  🔧 Technologies:',
-      '│     • React & Node.js',
-      '│     • MongoDB & PostgreSQL',
-      '│     • AWS & Docker',
-      '│     • Agile Development',
-      '│                  │',
-      '╰──────────────────╯',
-      '',
-      'Check the Experience section for detailed timeline!',
-    ],
-    education: () => [
-      '╭─ Education ─╮',
-      '│             │',
-      '│  🎓 Computer Science',
-      '│     University Name',
-      '│     📅 2018 - 2022',
-      '│             │',
-      '│  📚 Relevant Coursework:',
-      '│     • Data Structures',
-      '│     • Web Development',
-      '│     • Database Systems',
-      '│     • Software Engineering',
-      '│             │',
-      '╰─────────────╯',
-    ],
-    neofetch: () => [
-      '                   -`                    saurav@portfolio',
-      '                  .o+`                   ─────────────────',
-      '                 `ooo/                   OS: Portfolio Linux',
-      '                `+oooo:                  Host: Interactive Terminal',
-      '               `+oooooo:                 Kernel: JavaScript v1.0',
-      '               -+oooooo+:                Uptime: Always online',
-      '             `/:-:++oooo+:               Shell: bash 5.0.17',
-      '            `/++++/+++++++:              Resolution: Responsive',
-      '           `/++++++++++++++:             Terminal: xterm-256color',
-      '          `/+++ooooooooo+++/             CPU: React (8) @ 60fps',
-      '         ./ooosssso++osssssso+`          Memory: Optimized',
-      '        .oossssso-````/ossssss+`         ',
-      '       -osssssso.      :ssssssso.        ████ ████ ████ ████',
-      '      :osssssss/        osssso+++.       ████ ████ ████ ████',
-      '     /ossssssss/        +ssssooo/-       ',
-      '   `/ossssso+/:-        -:/+osssso+-     ',
-      '  `+sso+:-`                 `.-/+oso:    ',
-      ' `++:.                           `-/+/   ',
-      ' .`                                 `/   ',
-    ],
-    whoami: () => ['saurav'],
-    pwd: () => ['/home/saurav/portfolio'],
-    ls: () => [
-      'total 8',
-      'drwxr-xr-x  2 saurav saurav 4096 Dec 15 10:30 .',
-      'drwxr-xr-x  3 saurav saurav 4096 Dec 15 10:29 ..',
-      '-rw-r--r--  1 saurav saurav  256 Dec 15 10:30 about.txt',
-      '-rw-r--r--  1 saurav saurav  512 Dec 15 10:30 skills.json',
-      '-rw-r--r--  1 saurav saurav 2048 Dec 15 10:30 projects.json',
-      'drwxr-xr-x  2 saurav saurav 4096 Dec 15 10:30 bots/',
-      '-rw-r--r--  1 saurav saurav  128 Dec 15 10:30 contact.md',
-      '-rw-r--r--  1 saurav saurav 1024 Dec 15 10:30 resume.pdf',
-    ],
+    experience: () => {
+      if (apiData.experiences.length === 0) {
+        return [
+          '╭─ Experience ─╮',
+          '│              │',
+          '│  Loading experience data...',
+          '│  Use "refresh" to try again',
+          '│              │',
+          '╰──────────────╯'
+        ];
+      }
+
+      const expLines = [
+        '╭─ Work Experience ─╮',
+        '│                  │',
+      ];
+
+      apiData.experiences.slice(0, 3).forEach((exp, index) => {
+        const emoji = ['🏢', '💼', '🚀'][index] || '💼';
+        expLines.push(`│  ${emoji} ${exp.position}`);
+        expLines.push(`│     ${exp.company}`);
+        expLines.push(`│     📅 ${exp.startDate} - ${exp.endDate || 'Present'}`);
+        if (exp.techStacks && exp.techStacks.length > 0) {
+          expLines.push(`│     🔧 ${exp.techStacks.slice(0, 3).map(t => t.name || t).join(', ')}`);
+        }
+        expLines.push('│');
+      });
+
+      expLines.push('│                  │');
+      expLines.push('╰──────────────────╯');
+      expLines.push('');
+      expLines.push(`Total Experience: ${apiData.experiences.length} positions`);
+
+      return expLines;
+    },
+    education: () => {
+      if (apiData.educations.length === 0) {
+        return [
+          '╭─ Education ─╮',
+          '│             │',
+          '│  Loading education data...',
+          '│  Use "refresh" to try again',
+          '│             │',
+          '╰─────────────╯'
+        ];
+      }
+
+      const eduLines = [
+        '╭─ Education ─╮',
+        '│             │',
+      ];
+
+      apiData.educations.forEach((edu, index) => {
+        const emoji = ['🎓', '📚', '🏫'][index] || '🎓';
+        eduLines.push(`│  ${emoji} ${edu.degree}`);
+        eduLines.push(`│     ${edu.institution}`);
+        eduLines.push(`│     📅 ${edu.startDate} - ${edu.endDate}`);
+        if (edu.grade) {
+          eduLines.push(`│     📊 Grade: ${edu.grade}`);
+        }
+        eduLines.push('│');
+      });
+
+      eduLines.push('│             │');
+      eduLines.push('╰─────────────╯');
+
+      return eduLines;
+    },
+
+
     cat: (args) => {
       const file = args[0];
       if (!file) return ['cat: missing file operand', 'Try "cat <filename>" or "ls" to see available files'];
-      
+
       const files = {
         'about.txt': [
           '╭─ about.txt ─╮',
@@ -241,35 +475,82 @@ const InteractiveTerminal = () => {
           '}',
         ],
         'projects.json': (() => {
+          if (apiData.projects.length === 0) {
+            return [
+              '{',
+              '  "error": "No projects loaded",',
+              '  "message": "Use \'refresh\' command to load data",',
+              '  "totalProjects": 0',
+              '}'
+            ];
+          }
+
           const projectsJson = [
             '{',
-            '  "totalProjects": ' + PROJECT_DETAILS.length + ',',
+            '  "totalProjects": ' + apiData.projects.length + ',',
             '  "featured": [',
           ];
-          
-          PROJECT_DETAILS.slice(0, 5).forEach((project, index) => {
+
+          apiData.projects.slice(0, 5).forEach((project, index) => {
             projectsJson.push('    {');
             projectsJson.push(`      "title": "${project.title}",`);
-            projectsJson.push(`      "tech": [${project.techStacks.map(tech => `"${tech}"`).join(', ')}],`);
-            projectsJson.push(`      "difficulty": "${project.difficulty}",`);
-            if (project.url?.live) {
-              projectsJson.push(`      "live": "${project.url.live}",`);
+            if (project.techStacks && project.techStacks.length > 0) {
+              const techNames = project.techStacks.map(tech => `"${tech.name || tech}"`).join(', ');
+              projectsJson.push(`      "tech": [${techNames}],`);
             }
-            if (project.url?.repo) {
-              projectsJson.push(`      "repo": "${project.url.repo}"`);
+            if (project.liveUrl) {
+              projectsJson.push(`      "live": "${project.liveUrl}",`);
+            }
+            if (project.githubUrl) {
+              projectsJson.push(`      "repo": "${project.githubUrl}"`);
             }
             projectsJson.push(index < 4 ? '    },' : '    }');
           });
-          
+
           projectsJson.push('  ],');
-          projectsJson.push('  "categories": {');
-          projectsJson.push('    "AI/Automation": 2,');
-          projectsJson.push('    "Web Apps": 6,');
-          projectsJson.push('    "Mini Projects": 5');
-          projectsJson.push('  }');
+          projectsJson.push('  "lastUpdated": "' + new Date().toISOString() + '"');
           projectsJson.push('}');
-          
+
           return projectsJson;
+        })(),
+
+        'blogs.json': (() => {
+          if (apiData.blogs.length === 0) {
+            return [
+              '{',
+              '  "error": "No blog posts loaded",',
+              '  "message": "Use \'refresh\' command to load data",',
+              '  "totalPosts": 0',
+              '}'
+            ];
+          }
+
+          const blogsJson = [
+            '{',
+            '  "totalPosts": ' + apiData.blogs.length + ',',
+            '  "recent": [',
+          ];
+
+          apiData.blogs.slice(0, 3).forEach((blog, index) => {
+            blogsJson.push('    {');
+            blogsJson.push(`      "title": "${blog.title}",`);
+            if (blog.brief) {
+              blogsJson.push(`      "brief": "${blog.brief.substring(0, 100)}...",`);
+            }
+            blogsJson.push(`      "url": "${blog.url}",`);
+            if (blog.readTimeInMinutes) {
+              blogsJson.push(`      "readTime": "${blog.readTimeInMinutes} min",`);
+            }
+            blogsJson.push(`      "publishedAt": "${blog.publishedAt}"`);
+            blogsJson.push(index < 2 ? '    },' : '    }');
+          });
+
+          blogsJson.push('  ],');
+          blogsJson.push('  "platform": "Hashnode",');
+          blogsJson.push('  "profile": "https://xauravww.hashnode.dev"');
+          blogsJson.push('}');
+
+          return blogsJson;
         })(),
         'contact.md': [
           '# 📞 Contact Information',
@@ -317,39 +598,54 @@ const InteractiveTerminal = () => {
       return files[file] || [`cat: ${file}: No such file or directory`];
     },
     'project-details': (args) => {
+      if (apiData.projects.length === 0) {
+        return [
+          'No projects loaded. Use "refresh" to load data.',
+          'Or try "projects" to see available projects.'
+        ];
+      }
+
       const projectName = args.join(' ').toLowerCase();
-      const project = PROJECT_DETAILS.find(p => 
+      const project = apiData.projects.find(p =>
         p.title.toLowerCase().includes(projectName) ||
         p.id === projectName
       );
-      
+
       if (!project) {
         return [
           'Project not found! Available projects:',
-          ...PROJECT_DETAILS.slice(0, 5).map(p => `  • ${p.title}`)
+          ...apiData.projects.slice(0, 5).map(p => `  • ${p.title}`)
         ];
       }
-      
+
       const details = [
         `╭─ ${project.title} ─╮`,
         '│',
-        `│  📝 ${project.description}`,
-        '│',
-        `│  🛠️  Tech Stack: ${project.techStacks.join(', ')}`,
-        `│  📊 Difficulty: ${project.difficulty}`,
+        `│  📝 ${project.description || 'No description available'}`,
         '│'
       ];
-      
-      if (project.url?.live) {
-        details.push(`│  🌐 Live: ${project.url.live}`);
+
+      if (project.techStacks && project.techStacks.length > 0) {
+        const techNames = project.techStacks.map(tech => tech.name || tech).join(', ');
+        details.push(`│  🛠️  Tech Stack: ${techNames}`);
       }
-      if (project.url?.repo) {
-        details.push(`│  📂 Repo: ${project.url.repo}`);
+
+      if (project.status) {
+        details.push(`│  📊 Status: ${project.status}`);
       }
-      
+
       details.push('│');
-      details.push('╰' + '─'.repeat(project.title.length + 4) + '╯');
-      
+
+      if (project.liveUrl) {
+        details.push(`│  🌐 Live: ${project.liveUrl}`);
+      }
+      if (project.githubUrl) {
+        details.push(`│  📂 Repo: ${project.githubUrl}`);
+      }
+
+      details.push('│');
+      details.push('╰' + '─'.repeat(Math.max(project.title.length + 4, 20)) + '╯');
+
       return details;
     },
     github: () => [
@@ -378,12 +674,16 @@ const InteractiveTerminal = () => {
     },
   };
 
-  const executeCommand = (cmd) => {
+  const executeCommand = async (cmd) => {
     const [command, ...args] = cmd.trim().toLowerCase().split(' ');
-    
+
     if (commands[command]) {
-      const output = commands[command](args);
-      return output;
+      try {
+        const output = await commands[command](args);
+        return output;
+      } catch (error) {
+        return [`Error executing ${command}: ${error.message}`];
+      }
     } else if (cmd.trim() === '') {
       return [];
     } else {
@@ -391,7 +691,7 @@ const InteractiveTerminal = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (input.trim()) {
       const command = input.trim().toLowerCase();
@@ -399,10 +699,10 @@ const InteractiveTerminal = () => {
         ...history,
         { type: 'input', content: `┌─[saurav@portfolio]─[${currentPath}]\n└─$ ${input}` },
       ];
-      
+
       if (command === 'exit') {
         // Close terminal - this will be handled by parent component
-        const output = executeCommand(input);
+        const output = await executeCommand(input);
         setHistory([
           ...newHistory,
           ...output.map(line => ({ type: 'output', content: line })),
@@ -414,13 +714,26 @@ const InteractiveTerminal = () => {
       } else if (command === 'clear') {
         setHistory([]);
       } else {
-        const output = executeCommand(input);
-        setHistory([
-          ...newHistory,
-          ...output.map(line => ({ type: 'output', content: line })),
-        ]);
+        // Show loading for async commands
+        if (['refresh', 'projects', 'blogs', 'experience', 'education', 'techstack'].includes(command)) {
+          setHistory([
+            ...newHistory,
+            { type: 'output', content: '⏳ Loading...' }
+          ]);
+        }
+
+        const output = await executeCommand(input);
+
+        // Remove loading message and add actual output
+        setHistory(prev => {
+          const withoutLoading = prev.filter(item => item.content !== '⏳ Loading...');
+          return [
+            ...withoutLoading,
+            ...output.map(line => ({ type: 'output', content: line })),
+          ];
+        });
       }
-      
+
       setInput('');
     }
   };
@@ -438,63 +751,78 @@ const InteractiveTerminal = () => {
   };
 
   return (
-    <div className="terminal-container bg-[#0c0c0c] p-6 font-mono text-sm w-full min-h-[500px] relative">
-      {/* Terminal content with hidden scrollbar */}
-      <div 
+    <div className="terminal-container bg-gradient-to-b from-[#0d1117] via-[#010409] to-[#0d1117] font-mono text-sm w-full h-full flex flex-col max-h-full overflow-hidden">
+      {/* Terminal content with custom scrollbar */}
+      <div
         ref={terminalRef}
-        className="terminal-content h-96 overflow-y-auto cursor-text pr-4"
+        className="terminal-content overflow-y-auto cursor-text px-6 pt-6 custom-scrollbar flex-1 min-h-0"
         onClick={focusInput}
-        style={{
-          scrollbarWidth: 'none', /* Firefox */
-          msOverflowStyle: 'none', /* IE and Edge */
-        }}
+        style={{ maxHeight: 'calc(100% - 120px)' }}
       >
         {/* Welcome message */}
-        <div className="mb-4">
-          <div className="text-[#00ff00] mb-1">
-            ╭─ Welcome to Saurav's Portfolio Terminal
+        <div className="mb-6 p-4 bg-gradient-to-r from-[#0d1117] to-[#161b22] rounded-lg border border-[#21262d] shadow-lg">
+          <div className="text-[#58a6ff] mb-2 font-semibold text-lg flex items-center gap-2">
+            <span className="text-2xl">🚀</span>
+            Welcome to Saurav's Interactive Terminal
           </div>
-          <div className="text-[#00ff00] mb-3">
-            ╰─ Type 'help' to see available commands
+          <div className="text-[#7c3aed] mb-2 flex items-center gap-2">
+            <span className="text-lg">💡</span>
+            Type <span className="bg-[#21262d] px-2 py-1 rounded text-[#58a6ff] font-semibold">'help'</span> to see available commands
+          </div>
+          <div className="text-[#8b949e] text-xs mt-3 space-y-1">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-[#27ca3f] rounded-full animate-pulse"></div>
+              System ready • Interactive mode enabled • Real API data
+            </div>
+            <div className="flex items-center gap-4 text-[#6b7280] flex-wrap">
+              <span>⬆️ Arrow up: Previous command</span>
+              <span>Tab: Autocomplete</span>
+              <span>Ctrl+C: Cancel</span>
+              <span>Ctrl+L: Clear</span>
+              <span>Ctrl+B: Toggle status bar</span>
+            </div>
           </div>
         </div>
 
         {history.map((line, index) => (
-          <div key={index} className={`mb-1 leading-relaxed ${
-            line.type === 'input' 
-              ? 'text-[#00ff00] font-medium' 
-              : line.content.startsWith('Command not found') 
-                ? 'text-[#ff6b6b] font-medium'
-                : line.content.startsWith('Available commands:') || 
-                  line.content.startsWith('Technical Skills:') ||
-                  line.content.startsWith('Featured Projects:') ||
-                  line.content.startsWith('Contact Information:') ||
-                  line.content.startsWith('Work Experience:')
-                  ? 'text-[#ffd93d] font-semibold'
+          <div key={index} className={`mb-2 leading-relaxed transition-all duration-200 ${line.type === 'input'
+            ? 'text-[#58a6ff] font-semibold bg-[#0d1117]/50 p-2 rounded border-l-4 border-[#58a6ff]'
+            : line.content.startsWith('Command not found')
+              ? 'text-[#ff6b6b] font-medium bg-[#ff6b6b]/10 p-2 rounded border-l-4 border-[#ff6b6b]'
+              : line.content.startsWith('╭─') || line.content.includes('─╮') || line.content.includes('─╯') || line.content.startsWith('╰─')
+                ? 'text-[#7c3aed] font-bold'
                 : line.content.startsWith('├──') || line.content.startsWith('└──') || line.content.startsWith('│')
-                  ? 'text-[#74c0fc]'
-                : line.content.includes('📧') || line.content.includes('💼') || line.content.includes('🐙') || line.content.includes('🌐')
-                  ? 'text-[#ff8cc8]'
-                : line.content.includes('🏢') || line.content.includes('📅') || line.content.includes('🔧')
-                  ? 'text-[#51cf66]'
-                : 'text-[#e9ecef]'
-          }`}>
-            {line.content}
+                  ? 'text-[#06d6a0] font-medium'
+                  : line.content.includes('📧') || line.content.includes('💼') || line.content.includes('🐙') || line.content.includes('🌐')
+                    ? 'text-[#ff8cc8] font-medium'
+                    : line.content.includes('🏢') || line.content.includes('📅') || line.content.includes('🔧')
+                      ? 'text-[#51cf66] font-medium'
+                      : line.content.includes('🚀') || line.content.includes('💡') || line.content.includes('🎯')
+                        ? 'text-[#ffd93d] font-medium'
+                        : 'text-[#e9ecef]'
+            }`}>
+            <span className="select-text">{line.content}</span>
           </div>
         ))}
-        
-        {/* Current input line */}
-        <div className="flex items-center mt-2">
-          <span className="text-[#00ff00] mr-2 font-medium select-none">
-            ┌─[saurav@portfolio]─[{currentPath}]
-          </span>
+
+      </div>
+
+      {/* Fixed input area at bottom */}
+      <div className="px-6 py-3 bg-gradient-to-b from-[#0d1117] via-[#010409] to-[#0d1117] border-t border-[#21262d]/30 flex-shrink-0">
+        <div className="p-3 bg-gradient-to-r from-[#161b22] to-[#0d1117] rounded-lg border border-[#21262d] shadow-inner">
+          <div className="flex items-center mb-1">
+            <span className="text-[#58a6ff] mr-2 font-bold select-none flex items-center gap-2">
+              <span className="w-2 h-2 bg-[#58a6ff] rounded-full animate-pulse"></span>
+              ┌─[<span className="text-[#7c3aed]">saurav</span>@<span className="text-[#06d6a0]">portfolio</span>]─[<span className="text-[#ffd93d]">{currentPath}</span>]
+            </span>
+          </div>
+          <div className="flex items-center">
+            <span className="text-[#58a6ff] mr-3 font-bold select-none">└─$</span>
+            <span className="text-[#e9ecef] font-medium">{input}</span>
+            <span className="animate-pulse text-[#58a6ff] ml-1 font-bold">▊</span>
+          </div>
         </div>
-        <div className="flex items-center">
-          <span className="text-[#00ff00] mr-2 font-medium select-none">└─$</span>
-          <span className="text-[#e9ecef]">{input}</span>
-          <span className="animate-pulse text-[#00ff00] ml-1">█</span>
-        </div>
-        
+
         {/* Hidden input for capturing keystrokes */}
         <input
           ref={inputRef}
@@ -504,6 +832,45 @@ const InteractiveTerminal = () => {
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               handleSubmit(e);
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              // Get last command from history
+              const lastCommand = history.filter(h => h.type === 'input').pop();
+              if (lastCommand) {
+                const cmd = lastCommand.content.split('└─$ ')[1];
+                if (cmd) setInput(cmd);
+              }
+            } else if (e.key === 'Tab') {
+              e.preventDefault();
+              // Simple autocomplete
+              const availableCommands = Object.keys(commands);
+              const matches = availableCommands.filter(cmd => cmd.startsWith(input.toLowerCase()));
+              if (matches.length === 1) {
+                setInput(matches[0]);
+              } else if (matches.length > 1) {
+                setHistory(prev => [
+                  ...prev,
+                  { type: 'output', content: `Available: ${matches.join(', ')}` }
+                ]);
+              }
+            } else if (e.ctrlKey && e.key === 'c') {
+              e.preventDefault();
+              setInput('');
+              setHistory(prev => [
+                ...prev,
+                { type: 'input', content: `┌─[saurav@portfolio]─[${currentPath}]\n└─$ ${input}^C` },
+                { type: 'output', content: '' }
+              ]);
+            } else if (e.ctrlKey && e.key === 'l') {
+              e.preventDefault();
+              setHistory([]);
+            } else if (e.ctrlKey && e.key === 'b') {
+              e.preventDefault();
+              setShowStatusBar(prev => !prev);
+              setHistory(prev => [
+                ...prev,
+                { type: 'output', content: `Status bar ${showStatusBar ? 'hidden' : 'shown'}` }
+              ]);
             }
           }}
           className="absolute opacity-0 pointer-events-none"
@@ -511,27 +878,112 @@ const InteractiveTerminal = () => {
           spellCheck={false}
         />
       </div>
-      
-      {/* Terminal status bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-[#1a1a1a] px-6 py-2 text-xs text-[#6c757d] border-t border-[#2d2d2d] flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-[#00ff00] rounded-full animate-pulse"></div>
-            Online
-          </span>
-          <span>Lines: {history.length + 2}</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <span>UTF-8</span>
-          <span>Bash</span>
-          <span className="text-[#00ff00]">Ready</span>
-        </div>
-      </div>
 
-      {/* Custom scrollbar styles */}
+      {/* Terminal status bar */}
+      {showStatusBar && (
+        <div className="bg-gradient-to-r from-[#161b22] to-[#21262d] px-6 py-2 text-xs text-[#8b949e] border-t border-[#30363d] flex justify-between items-center backdrop-blur-sm relative flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-2 text-[#27ca3f] font-medium">
+              <div className={`w-2 h-2 rounded-full shadow-sm ${loading ? 'bg-[#ffd93d] animate-spin' : 'bg-[#27ca3f] animate-pulse'}`}></div>
+              {loading ? 'Loading...' : 'Connected'}
+            </span>
+            <span className="flex items-center gap-2 text-xs">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+              </svg>
+              {history.length} lines
+            </span>
+            <span className="flex items-center gap-2 text-xs">
+              📊 {apiData.projects.length}P {apiData.blogs.length}B {apiData.experiences.length}E
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-[#58a6ff] font-medium text-xs">API Live</span>
+            <span className="text-[#7c3aed] font-medium text-xs">Interactive</span>
+            <span className="text-[#27ca3f] font-semibold flex items-center gap-1 text-xs">
+              <div className="w-2 h-2 bg-[#27ca3f] rounded-full"></div>
+              Ready
+            </span>
+
+            {/* Status bar toggle button */}
+            <button
+              onClick={() => setShowStatusBar(false)}
+              className="absolute -top-1 right-2 text-[#8b949e] hover:text-[#ff5f56] transition-colors p-1 rounded hover:bg-[#30363d]/50 group"
+              title="Hide status bar"
+            >
+              <svg className="w-3 h-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Show status bar button when hidden */}
+      {!showStatusBar && (
+        <div className="bg-gradient-to-r from-[#161b22] to-[#21262d] px-6 py-1 border-t border-[#30363d] flex justify-center items-center backdrop-blur-sm flex-shrink-0">
+          <button
+            onClick={() => setShowStatusBar(true)}
+            className="text-[#8b949e] hover:text-[#58a6ff] transition-colors p-1 rounded hover:bg-[#30363d]/50 group flex items-center gap-2 text-xs"
+            title="Show status bar"
+          >
+            <svg className="w-3 h-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+            <span>Show Status</span>
+          </button>
+        </div>
+      )}
+
+      {/* Custom scrollbar and animation styles */}
       <style jsx>{`
-        .terminal-content::-webkit-scrollbar {
-          display: none;
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: #58a6ff #161b22;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 12px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #161b22;
+          border-radius: 6px;
+          margin: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, #58a6ff, #1f6feb);
+          border-radius: 6px;
+          border: 2px solid #161b22;
+          min-height: 20px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(to bottom, #79c0ff, #58a6ff);
+        }
+        .custom-scrollbar::-webkit-scrollbar-corner {
+          background: #161b22;
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+          from { 
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+        
+        .animate-slideUp {
+          animation: slideUp 0.4s ease-out;
         }
       `}</style>
     </div>

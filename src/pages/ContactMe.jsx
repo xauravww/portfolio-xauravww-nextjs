@@ -9,7 +9,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const ContactMe = ({ containerId }) => {
-    const sidebarImgCSS = "sidebar-img w-16 hover:scale-125 transition-transform duration-300";
+    const sidebarImgCSS = "sidebar-img w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 xl:w-18 xl:h-18 hover:scale-110 transition-all duration-300 rounded-lg object-cover shadow-lg hover:shadow-xl";
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -88,7 +88,7 @@ const ContactMe = ({ containerId }) => {
         
         setLoader(true);
         try {
-            const response = await axios.post(`${process.env.VITE_BACKEND_URL}/api/queries`, formData);
+            const response = await axios.post('/api/contact', formData);
             toast.success('Your message has been sent successfully! I\'ll get back to you soon.');
             setFormData({
                 name: '',
@@ -232,30 +232,30 @@ const ContactMe = ({ containerId }) => {
             </div>
 
             {/* Mobile social links */}
-            <div className="contact-sidebar sidebar-wrapper z-50 lg:hidden mt-8 opacity-0">
-                <div className="sidebar flex justify-center items-center gap-4 border-2 border-[var(--border-color)] p-3 bg-[#33373E]/50 backdrop-blur-sm rounded-md">
-                    <a href={process.env.NEXT_PUBLIC_X_URL} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+            <div className="contact-sidebar sidebar-wrapper z-50 xl:hidden mt-8 opacity-0">
+                <div className="sidebar flex justify-center items-center gap-4 md:gap-6 lg:gap-8 border-2 border-[var(--border-color)] p-4 md:p-6 bg-[#33373E]/80 backdrop-blur-sm rounded-xl shadow-lg">
+                    <a href={process.env.NEXT_PUBLIC_X_URL} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20">
                         <img className={sidebarImgCSS} src="/assets/X.jpeg" alt="X" />
                     </a>
-                    <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
                         <img className={sidebarImgCSS} src="/assets/linkedin.png" alt="LinkedIn" />
                     </a>
-                    <a href={process.env.NEXT_PUBLIC_SHOWWCASE_URL} target="_blank" rel="noopener noreferrer" aria-label="Showwcase">
+                    <a href={process.env.NEXT_PUBLIC_SHOWWCASE_URL} target="_blank" rel="noopener noreferrer" aria-label="Showwcase" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
                         <img className={sidebarImgCSS} src="/assets/showwcase.png" alt="Showwcase" />
                     </a>
                 </div>
             </div>
 
             {/* Desktop social links */}
-            <div className="contact-sidebar hidden sidebar-wrapper fixed top-[40vh] left-8 z-50 flex-col justify-center items-center lg:flex lg:w-[4vw] opacity-0">
-                <div className="sidebar flex flex-col justify-center items-center gap-4 border-2 border-[var(--border-color)] p-3 bg-[#33373E]/50 backdrop-blur-sm rounded-md shadow-lg">
-                    <a href={process.env.NEXT_PUBLIC_X_URL} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="hover:scale-110 transition-transform duration-300">
+            <div className="contact-sidebar hidden sidebar-wrapper fixed top-1/2 left-2 md:left-4 lg:left-6 xl:left-8 z-40 flex-col justify-center items-center xl:flex opacity-0 transform -translate-y-1/2">
+                <div className="sidebar flex flex-col justify-center items-center gap-3 lg:gap-4 border-2 border-[var(--border-color)] p-3 lg:p-4 bg-[#33373E]/80 backdrop-blur-sm rounded-xl shadow-lg">
+                    <a href={process.env.NEXT_PUBLIC_X_URL} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20">
                         <img className={sidebarImgCSS} src="/assets/X.jpeg" alt="X" />
                     </a>
-                    <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:scale-110 transition-transform duration-300">
+                    <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
                         <img className={sidebarImgCSS} src="/assets/linkedin.png" alt="LinkedIn" />
                     </a>
-                    <a href={process.env.NEXT_PUBLIC_SHOWWCASE_URL} target="_blank" rel="noopener noreferrer" aria-label="Showwcase" className="hover:scale-110 transition-transform duration-300">
+                    <a href={process.env.NEXT_PUBLIC_SHOWWCASE_URL} target="_blank" rel="noopener noreferrer" aria-label="Showwcase" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
                         <img className={sidebarImgCSS} src="/assets/showwcase.png" alt="Showwcase" />
                     </a>
                 </div>
