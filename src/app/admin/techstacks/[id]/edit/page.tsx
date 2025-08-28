@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import { TechStack } from '@/models/TechStack';
+import ClientAdminLayout from '@/components/ClientAdminLayout';
 
-export default function NewTechStackPage() {
+export default function EditTechStackPage() {
   const router = useRouter();
+  const params = useParams();
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     category: 'frontend' as 'frontend' | 'backend' | 'database' | 'devops' | 'mobile' | 'other',
@@ -17,13 +21,39 @@ export default function NewTechStackPage() {
     order: 0,
   });
 
+  const fetchTechStack = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/admin/techstacks/${params?.id}`);
+      if (response.ok) {
+        const techStack: TechStack = await response.json();
+        setFormData({
+          name: techStack.name,
+          category: techStack.category,
+          icon: techStack.icon,
+          color: techStack.color || '',
+          description: techStack.description || '',
+          status: techStack.status,
+          order: techStack.order,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching tech stack:', error);
+    } finally {
+      setInitialLoading(false);
+    }
+  }, [params?.id]);
+
+  useEffect(() => {
+    fetchTechStack();
+  }, [fetchTechStack]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await fetch('/api/admin/techstacks', {
-        method: 'POST',
+      const response = await fetch(`/api/admin/techstacks/${params?.id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
@@ -39,20 +69,28 @@ export default function NewTechStackPage() {
         alert(`Error: ${error.error}`);
       }
     } catch (error) {
-      console.error('Error creating tech stack:', error);
-      alert('Failed to create tech stack');
+      console.error('Error updating tech stack:', error);
+      alert('Failed to update tech stack');
     } finally {
       setLoading(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
     }));
   };
+
+  if (initialLoading) {
+    return (
+        <div className="flex items-center justify-center py-12">
+          <div className="text-lg">Loading...</div>
+        </div>
+    );
+  }
 
   return (
       <div className="py-8 px-4 sm:px-6 lg:px-8">
@@ -60,9 +98,9 @@ export default function NewTechStackPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 bg-clip-text text-transparent mb-2">
-              Add New Tech Stack
+              Edit Tech Stack
             </h1>
-            <p className="text-[#A0A0A0] text-lg">Add a new technology to your stack</p>
+            <p className="text-[#A0A0A0] text-lg">Update your technology stack</p>
           </div>
 
           {/* Back Button */}
@@ -207,7 +245,7 @@ export default function NewTechStackPage() {
                   disabled={loading}
                   className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Creating...' : 'Create Tech Stack'}
+                  {loading ? 'Updating...' : 'Update Tech Stack'}
                 </button>
               </div>
             </form>
