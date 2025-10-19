@@ -7,14 +7,14 @@ import Education from '@/pages/Education';
 import ContactMe from '@/pages/ContactMe';
 import CursorGlow from '@/components/CursorGlow';
 import Navbar from '@/components/Navbar';
-import GlobalTerminal from '@/components/GlobalTerminal';
+// import GlobalTerminal from '@/components/GlobalTerminal';
 import NavbarContextFunction from '@/context/navbarContext';
 
 export default function Home() {
   return (
     <div className="App relative min-h-screen">
       <CursorGlow />
-      <GlobalTerminal />
+      {/* <GlobalTerminal /> */}
       <NavbarContextFunction>
         <Navbar />
         <main>

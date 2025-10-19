@@ -13,47 +13,47 @@ const Home = ({ containerId }) => {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     
-    // Initial animation sequence
+    // Initial animation sequence - optimized for faster loading
     const tl = gsap.timeline({ 
       onComplete: () => setIsLoaded(true) 
     });
     
     tl.fromTo(".home-intro-overlay", 
       { opacity: 1 },
-      { opacity: 0, duration: 1, delay: 0.5 }
+      { opacity: 0, duration: 0.4, delay: 0.1 }
     );
     
     tl.fromTo(".home-name",
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }
     );
     
     tl.fromTo(".home-title",
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
-      "-=0.4"
-    );
-    
-    tl.fromTo(".home-description",
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
       "-=0.3"
     );
     
-    tl.fromTo(".cta-button",
-      { opacity: 0, y: 20, scale: 0.9 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.7)" },
+    tl.fromTo(".home-description",
+      { opacity: 0, y: 15 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
       "-=0.2"
     );
     
-    // Scroll-based animations
+    tl.fromTo(".cta-button",
+      { opacity: 0, y: 15, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(1.2)" },
+      "-=0.1"
+    );
+    
+    // Scroll-based animations - faster appearance
     gsap.fromTo(".scroll-indicator",
       { opacity: 0, y: -10 },
       { 
         opacity: 1, 
         y: 0, 
-        duration: 1,
-        delay: 2,
+        duration: 0.6,
+        delay: 1.2,
         ease: "power2.inOut",
         yoyo: true,
         repeat: -1
@@ -89,7 +89,7 @@ const Home = ({ containerId }) => {
         <h1 className="home-name font-['Cyborg'] text-6xl md:text-8xl lg:text-9xl font-bold text-[var(--text-light)] mb-4 md:mb-6 tracking-tight">
           Saurav Maheshwari
         </h1>
-        <p className="home-description text-lg md:text-xl lg:text-2xl text-[var(--text-medium)] max-w-xl md:max-w-2xl mb-8 md:mb-10">
+        <div className="home-description text-lg md:text-xl lg:text-2xl text-[var(--text-medium)] max-w-xl md:max-w-2xl mb-8 md:mb-10">
           Turning ideas into interactive experiences where{" "}
           <span className="text-[#f3d800] font-semibold">
             <Typewriter
@@ -108,7 +108,7 @@ const Home = ({ containerId }) => {
               }}
             />
           </span>
-        </p>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <ScrollLink
@@ -121,14 +121,6 @@ const Home = ({ containerId }) => {
           >
             View My Work
           </ScrollLink>
-          
-          <div className="inline-flex items-center gap-2 bg-[#0d1117] border border-[#30363d] text-[#e6edf3] font-semibold py-3 px-8 rounded-md text-lg md:text-xl shadow-lg">
-            <span>💻</span>
-            Terminal Available
-            <span className="text-xs opacity-60">
-              (Right Side →)
-            </span>
-          </div>
         </div>
         
         {/* Scroll indicator */}

@@ -165,9 +165,14 @@ const ProjectOverview = ({ containerId }) => {
         }}
       >
         {loading ? (
-          <div className="text-white text-xl text-center md:col-span-2 lg:col-span-3">Loading projects...</div>
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center space-y-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+              <div className="text-white text-xl">Loading projects...</div>
+            </div>
+          </div>
         ) : isActive && (
-          <div className="grid-container rounded-md grid grid-cols-1 z-[10] relative md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 ">
+          <div className="grid-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 auto-rows-fr">
             {currentPosts.length > 0 ? (
               currentPosts.map((item) => (
                 <ProjectItem
@@ -180,9 +185,23 @@ const ProjectOverview = ({ containerId }) => {
                 />
               ))
             ) : (
-              <p className="text-[var(--text-medium)] text-center md:col-span-2 lg:col-span-3">
-                {projectData.length === 0 ? 'No projects available.' : 'No projects found matching your criteria.'}
-              </p>
+              <div className="col-span-full flex flex-col items-center justify-center min-h-[300px] text-center space-y-4">
+                <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-white text-lg font-semibold">
+                    {projectData.length === 0 ? 'No projects available' : 'No matching projects'}
+                  </h3>
+                  <p className="text-slate-400 text-sm max-w-md">
+                    {projectData.length === 0 
+                      ? 'Projects are being loaded or none are currently available.' 
+                      : 'Try adjusting your filters to see more projects.'}
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         )}
