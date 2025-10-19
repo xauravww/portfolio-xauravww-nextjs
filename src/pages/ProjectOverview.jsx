@@ -172,7 +172,8 @@ const ProjectOverview = ({ containerId }) => {
             </div>
           </div>
         ) : isActive && (
-          <div className="grid-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 auto-rows-fr">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {currentPosts.length > 0 ? (
               currentPosts.map((item) => (
                 <ProjectItem
@@ -186,16 +187,16 @@ const ProjectOverview = ({ containerId }) => {
               ))
             ) : (
               <div className="col-span-full flex flex-col items-center justify-center min-h-[300px] text-center space-y-4">
-                <div className="w-16 h-16 bg-slate-700/50 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 bg-[var(--border-color)]/50 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-[var(--text-medium)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-white text-lg font-semibold">
+                  <h3 className="text-[var(--text-light)] text-lg font-semibold">
                     {projectData.length === 0 ? 'No projects available' : 'No matching projects'}
                   </h3>
-                  <p className="text-slate-400 text-sm max-w-md">
+                  <p className="text-[var(--text-medium)] text-sm max-w-md">
                     {projectData.length === 0 
                       ? 'Projects are being loaded or none are currently available.' 
                       : 'Try adjusting your filters to see more projects.'}
@@ -203,6 +204,7 @@ const ProjectOverview = ({ containerId }) => {
                 </div>
               </div>
             )}
+            </div>
           </div>
         )}
       </div>

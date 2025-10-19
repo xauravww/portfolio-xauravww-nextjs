@@ -46,7 +46,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
 
   return (
     <article
-      className="group relative w-full rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-[var(--accent-blue)]/25 transition-all duration-500 bg-[#1A1D24]/70 backdrop-blur-sm border border-[var(--border-color)] hover:border-[var(--accent-blue)]/50"
+      className="group relative w-full h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-[var(--accent-blue)]/25 transition-all duration-500 bg-[#1A1D24]/70 backdrop-blur-sm border border-[var(--border-color)] hover:border-[var(--accent-blue)]/50 flex flex-col"
       onMouseEnter={() => setHoverItem(true)}
       onMouseLeave={() => setHoverItem(false)}
     >
@@ -74,20 +74,21 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
       </div>
 
       {/* Content Section - Always visible with better hierarchy */}
-      <div className="p-6 space-y-4">
-        {/* Project Title - Always visible */}
-        <div className="space-y-2">
-          <h3 className="text-xl font-bold text-[var(--text-light)] group-hover:text-[var(--accent-blue)] transition-colors duration-300 line-clamp-1">
-            {projectTitle}
-          </h3>
-          
-          {/* Description - Always visible with better contrast */}
-          <p className="text-[var(--text-medium)] text-sm leading-relaxed line-clamp-2 group-hover:text-[var(--text-light)] transition-colors duration-300">
-            {description}
-          </p>
-        </div>
+      <div className="flex-1 p-4 sm:p-6 space-y-4 flex flex-col">
+        {/* Project Title and Description - Top section */}
+        <div className="flex-1 space-y-4">
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-[var(--text-light)] group-hover:text-[var(--accent-blue)] transition-colors duration-300 line-clamp-1">
+              {projectTitle}
+            </h3>
+            
+            {/* Description - Always visible with better contrast */}
+            <p className="text-[var(--text-medium)] text-sm leading-relaxed line-clamp-2 group-hover:text-[var(--text-light)] transition-colors duration-300">
+              {description}
+            </p>
+          </div>
 
-        {/* Tech Stack Icons - Always visible */}
+          {/* Tech Stack Icons - Always visible */}
         <div className="flex flex-wrap gap-2">
           {techStacksLoading ? (
             // Loading skeleton for tech stacks
@@ -130,8 +131,10 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
           )}
         </div>
 
-        {/* Action Buttons - Enhanced visibility */}
-        <div className="flex gap-3 pt-2">
+        </div>
+
+        {/* Action Buttons - Enhanced visibility - Bottom section */}
+        <div className="flex gap-3 pt-4 mt-auto">
           {repo && (
             <button
               onClick={(e) => {

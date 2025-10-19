@@ -78,24 +78,25 @@ function Experience({ containerId }) {
           No experience data available.
         </div>
       ) : (
-        <div className="experience-content-box border border-[var(--border-color)] max-w-[75vw] mx-6 md:mx-8 p-4 text-[var(--text-light)] grid grid-cols-1 md:grid-cols-3 gap-4 z-[10] relative bg-[#1A1D24]/70 backdrop-blur-sm rounded-xl">
-          <div className="md:col-span-1 m-2 md:m-4 border-r border-[var(--border-color)] pr-4">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-[10] relative">
+          <div className="experience-content-box border border-[var(--border-color)] p-4 sm:p-6 lg:p-8 text-[var(--text-light)] grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 bg-[#1A1D24]/70 backdrop-blur-sm rounded-xl">
+            <div className="lg:col-span-1 border-b lg:border-b-0 lg:border-r border-[var(--border-color)] pb-4 lg:pb-0 lg:pr-6">
             {experienceData.map((data) => (
               <div
                 key={data.id}
-                className={`py-2 md:py-3 px-2 md:px-4 mt-2 md:mt-3 cursor-pointer rounded transition-colors duration-150 ${
+                className={`py-3 px-4 mt-3 cursor-pointer rounded transition-colors duration-150 ${
                   showExperience === data.position
                     ? "border-l-4 border-[var(--accent-blue)] bg-[var(--border-color)] text-[var(--text-light)]"
                     : "text-[var(--text-medium)] hover:text-[var(--text-light)] hover:bg-[#33373E]/50"
                 }`}
                 onClick={() => handleClick(data.position)}
               >
-                <div className="text-lg md:text-xl font-medium">{data.position}</div>
-                <div className="text-sm md:text-base text-[var(--text-medium)]">{data.company}</div>
+                <div className="text-lg font-medium">{data.position}</div>
+                <div className="text-sm text-[var(--text-medium)]">{data.company}</div>
               </div>
             ))}
           </div>
-          <div className="md:col-span-2 flex flex-col justify-start mt-2 md:mt-4 pl-4">
+            <div className="lg:col-span-2 flex flex-col justify-start mt-4 lg:mt-0 lg:pl-6">
             {showExperience &&
               experienceData.filter((data) => data.position === showExperience).map((data) => (
                 <ExperienceItem
@@ -110,6 +111,7 @@ function Experience({ containerId }) {
                   location={data.location}
                 />
               ))}
+            </div>
           </div>
         </div>
       )}

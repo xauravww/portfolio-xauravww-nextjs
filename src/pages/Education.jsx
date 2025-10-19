@@ -77,12 +77,13 @@ function Education({ containerId }) {
           No education data available.
         </div>
       ) : (
-        <div className="education-content-box border border-[var(--border-color)] mt-8 max-w-[75vw] md:mt-16 mx-6 md:mx-8 p-4 text-[var(--text-light)] grid grid-cols-1 md:grid-cols-3 gap-4 z-[10] relative bg-[#1A1D24]/70 backdrop-blur-sm rounded-xl">
-          <div className="md:col-span-1 m-2 md:m-4 border-r border-[var(--border-color)] pr-4">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-[10] relative">
+          <div className="education-content-box border border-[var(--border-color)] p-4 sm:p-6 lg:p-8 text-[var(--text-light)] grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 bg-[#1A1D24]/70 backdrop-blur-sm rounded-xl">
+            <div className="lg:col-span-1 border-b lg:border-b-0 lg:border-r border-[var(--border-color)] pb-4 lg:pb-0 lg:pr-6">
             {educationData.map((item) => (
               <div
                 key={item.id}
-                className={`py-2 md:py-3 px-2 md:px-4 text-lg md:text-xl font-medium mt-2 md:mt-3 cursor-pointer rounded transition-colors duration-150 ${
+                className={`py-3 px-4 text-lg font-medium mt-3 cursor-pointer rounded transition-colors duration-150 ${
                   showItem === item.degree
                     ? "border-l-4 border-[var(--accent-blue)] bg-[var(--border-color)] text-[var(--text-light)]"
                     : "text-[var(--text-medium)] hover:text-[var(--text-light)] hover:bg-[#33373E]/50"
@@ -94,7 +95,7 @@ function Education({ containerId }) {
               </div>
             ))}
           </div>
-          <div className="md:col-span-2 flex flex-col justify-start mt-2 md:mt-4 pl-4">
+            <div className="lg:col-span-2 flex flex-col justify-start mt-4 lg:mt-0 lg:pl-6">
             {showItem &&
               educationData.filter((data) => data.degree === showItem).map((data) => (
                 <AboutItem
@@ -111,6 +112,7 @@ function Education({ containerId }) {
                   description={data.description}
                 />
               ))}
+            </div>
           </div>
         </div>
       )}
