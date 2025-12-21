@@ -11,6 +11,8 @@ const ProjectOverview = ({ containerId }) => {
   const [isActive, setIsActive] = useState(true);
   const [projectData, setProjectData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [techStackData, setTechStackData] = useState({});
+  const [techStacksLoading, setTechStacksLoading] = useState(true);
 
   const [currentPage, setcurrentPage] = useState(1);
   const [postPerPage, setpostPerPage] = useState(3);
@@ -84,54 +86,30 @@ const ProjectOverview = ({ containerId }) => {
       }
     };
 
+    // Fetch tech stack data once for all projects
+    const fetchTechStacks = async () => {
+      try {
+        const response = await fetch('/api/portfolio/techstacks');
+
+        if (response.ok) {
+          const data = await response.json();
+
+          // Create a mapping of tech stack names to their data
+          const techStackMap = {};
+          data.forEach(stack => {
+            techStackMap[stack.name] = stack;
+          });
+          setTechStackData(techStackMap);
+        }
+      } catch (error) {
+        console.error('Error fetching tech stacks:', error);
+      } finally {
+        setTechStacksLoading(false);
+      }
+    };
+
     fetchProjects();
-
-    gsap.fromTo(".projects-wrapper",
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".ProjectOverview",
-          start: "top 70%",
-        }
-      }
-    );
-
-    gsap.fromTo(".pagination-container",
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 0.5,
-        delay: 0.4,
-        scrollTrigger: {
-          trigger: ".ProjectOverview",
-          start: "top 70%",
-        }
-      }
-    );
-
-    const handleResize = () => {
-      const width = window.innerWidth;
-
-      if (width < 768) {
-        setpostPerPage(1);
-      } else if (width >= 768 && width < 1024) {
-        setpostPerPage(2);
-      } else if (width >= 1024) {
-        setpostPerPage(3);
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    fetchTechStacks();
   }, []);
 
   return (
@@ -183,6 +161,8 @@ const ProjectOverview = ({ containerId }) => {
                   techStacks={item.techStacks}
                   url={item.url}
                   projectTitle={item.title}
+                  techStackData={techStackData}
+                  techStacksLoading={techStacksLoading}
                 />
               ))
             ) : (

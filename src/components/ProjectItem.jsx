@@ -3,56 +3,26 @@ import PropTypes from "prop-types";
 import React, { useState, useEffect } from "react";
 import OptimizedImage from "./OptimizedImage";
 
-const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) => {
+const ProjectItem = ({ img, description, techStacks = [], url, projectTitle, techStackData, techStacksLoading }) => {
   const [hoverItem, setHoverItem] = useState(false);
-  const [techStackData, setTechStackData] = useState({});
-  const [techStacksLoading, setTechStacksLoading] = useState(true);
   const repo = url.repo;
   const live = url.live;
 
-  // Fetch tech stack data on component mount
-  useEffect(() => {
-    const fetchTechStacks = async () => {
-      console.log('🔄 ProjectItem: Starting to fetch tech stacks...');
-      try {
-        const response = await fetch('/api/portfolio/techstacks');
-        console.log('📡 ProjectItem: Tech stacks API response:', response.status, response.ok);
 
-        if (response.ok) {
-          const data = await response.json();
-          console.log('✅ ProjectItem: Tech stacks data received:', data.length, 'items');
-
-          // Create a mapping of tech stack names to their data
-          const techStackMap = {};
-          data.forEach(stack => {
-            techStackMap[stack.name] = stack;
-            console.log(`🔗 ProjectItem: Mapped "${stack.name}" -> ${stack.icon}`);
-          });
-          setTechStackData(techStackMap);
-          console.log('🎯 ProjectItem: Tech stack mapping complete:', Object.keys(techStackMap));
-        } else {
-          console.error('❌ ProjectItem: Failed to fetch tech stacks, status:', response.status);
-        }
-      } catch (error) {
-        console.error('💥 ProjectItem: Error fetching tech stacks:', error);
-      } finally {
-        setTechStacksLoading(false);
-        console.log('🏁 ProjectItem: Tech stacks loading complete');
-      }
-    };
-
-    fetchTechStacks();
-  }, []);
 
   // Function to get tech stack icon
   const getTechStackIcon = (techName) => {
     const techData = techStackData[techName];
+
     if (techData && techData.icon) {
       return techData.icon;
     }
+
     // Fallback to a generic tech icon
     return "/assets/image-not-found.png";
   };
+
+
 
   return (
     <article
@@ -117,7 +87,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
                 className="group/tech relative"
                 title={tech}
               >
-                 <div className="w-8 h-8 rounded-lg bg-[#1A1D24]/80 p-1.5 hover:bg-[var(--border-color)]/80 transition-all duration-200 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-[#1A1D24]/80 p-1.5 hover:bg-[var(--border-color)]/80 transition-all duration-200 flex items-center justify-center">
                   <OptimizedImage
                     className="w-full h-full object-contain"
                     src={getTechStackIcon(tech)}

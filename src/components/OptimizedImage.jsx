@@ -42,33 +42,6 @@ const OptimizedImage = ({
     );
   }
 
-  // For external URLs, use regular img tag to avoid Next.js Image optimization issues
-  const isExternalUrl = src && (src.startsWith('http://') || src.startsWith('https://'));
-
-  if (isExternalUrl) {
-    return (
-      <div className={`relative ${fill ? 'w-full h-full' : ''} ${className}`}>
-        {isLoading && (
-          <div className="absolute inset-0 bg-slate-800/50 animate-pulse flex items-center justify-center z-10">
-            <div className="w-8 h-8 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-          </div>
-        )}
-
-        <img
-          src={src}
-          alt={alt}
-          width={!fill ? width : undefined}
-          height={!fill ? height : undefined}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} ${fill ? 'object-cover w-full h-full' : ''}`}
-          style={fill ? { width: '100%', height: '100%' } : undefined}
-          {...props}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className={`relative ${fill ? 'w-full h-full' : ''} ${className}`}>
       {isLoading && (
@@ -85,6 +58,8 @@ const OptimizedImage = ({
         height={!fill ? height : undefined}
         priority={priority}
         sizes={sizes}
+        placeholder={placeholder}
+        blurDataURL={blurDataURL}
         onLoad={handleLoad}
         onError={handleError}
         className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} ${fill ? 'object-cover' : ''}`}
