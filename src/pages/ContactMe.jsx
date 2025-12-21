@@ -110,34 +110,44 @@ const ContactMe = ({ containerId }) => {
     useEffect(() => {
       gsap.registerPlugin(ScrollTrigger);
 
-      gsap.fromTo(".contact-form-container",
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".ContactMe",
-            start: "top 70%",
-          }
+      // Delay animation to ensure elements exist
+      setTimeout(() => {
+        if (document.querySelector('.contact-form-container')) {
+          gsap.fromTo(".contact-form-container",
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: ".ContactMe",
+                start: "top 70%",
+              }
+            }
+          );
         }
-      );
+      }, 100);
       
-      gsap.fromTo(".contact-sidebar",
-        { opacity: 0, x: -30 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.6,
-          delay: 0.3,
-          stagger: 0.2,
-          scrollTrigger: {
-            trigger: ".ContactMe",
-            start: "top 70%",
-          }
+      // Delay sidebar animation
+      setTimeout(() => {
+        if (document.querySelector('.contact-sidebar')) {
+          gsap.fromTo(".contact-sidebar",
+            { opacity: 0, x: -30 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              delay: 0.3,
+              stagger: 0.2,
+              scrollTrigger: {
+                trigger: ".ContactMe",
+                start: "top 70%",
+              }
+            }
+          );
         }
-      );
+      }, 150);
     }, []);
 
     return (
@@ -145,12 +155,12 @@ const ContactMe = ({ containerId }) => {
             className="ContactMe min-h-screen relative flex flex-col justify-evenly items-center overflow-hidden py-16 md:py-24"
             id={containerId}
         >
-            <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-norepeat- bg-cover"></div>
+            <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
             <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
 
             <header className="text-3xl md:text-5xl text-white font-bold relative z-[3] text-center px-4 mb-8">
                 Contact Me
-                <div className="underline-below-header absolute w-3/5 h-1 bg-[#4A90E2] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
+                <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
             </header>
 
             <div className="contact-form-container main-content border border-[#33373E] bg-[#1A1D24]/70 backdrop-blur-sm p-6 flex flex-col items-center justify-center w-full max-w-[90vw] md:max-w-[70vw] lg:max-w-[800px] xl:max-w-[900px] text-[#F0F0F0] text-center z-[3] rounded-xl shadow-lg opacity-0">
@@ -216,7 +226,7 @@ const ContactMe = ({ containerId }) => {
                     <button
                         type="submit"
                         disabled={loader}
-                        className={`w-full bg-[var(--accent-blue)] text-white py-3 px-6 rounded-lg shadow-md hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--accent-blue)] transition duration-300 ease-in-out ${loader ? 'opacity-70 cursor-not-allowed' : ''}`}
+                        className={`w-full bg-[#f3d800] text-[#1A1D24] py-3 px-6 rounded-lg shadow-md hover:bg-[#f3d800]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f3d800] transition duration-300 ease-in-out ${loader ? 'opacity-70 cursor-not-allowed' : ''}`}
                     >
                         {loader ? (
                             <span className="flex items-center justify-center">

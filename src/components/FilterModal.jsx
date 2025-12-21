@@ -107,13 +107,13 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, availableTechStacks, act
               <div className="flex border border-[var(--border-color)] rounded-md text-xs">
                 <button
                   onClick={() => setTechFilterMode('AND')}
-                  className={`px-2 py-1 rounded-l-md ${techFilterMode === 'AND' ? 'bg-[var(--accent-blue)] text-[#1A1D24]' : 'bg-transparent text-[var(--text-medium)] hover:bg-[var(--border-color)]'}`}
+                  className={`px-2 py-1 rounded-l-md ${techFilterMode === 'AND' ? 'bg-[#f3d800] text-[#1A1D24]' : 'bg-transparent text-[var(--text-medium)] hover:bg-[var(--border-color)]'}`}
                 >
                   AND
                 </button>
                 <button
                   onClick={() => setTechFilterMode('OR')}
-                  className={`px-2 py-1 rounded-r-md ${techFilterMode === 'OR' ? 'bg-[var(--accent-blue)] text-[#1A1D24]' : 'bg-transparent text-[var(--text-medium)] hover:bg-[var(--border-color)]'}`}
+                  className={`px-2 py-1 rounded-r-md ${techFilterMode === 'OR' ? 'bg-[#f3d800] text-[#1A1D24]' : 'bg-transparent text-[var(--text-medium)] hover:bg-[var(--border-color)]'}`}
                 >
                   OR
                 </button>
@@ -145,7 +145,7 @@ const FilterModal = ({ isOpen, onClose, onApplyFilters, availableTechStacks, act
           </button>
           <button
             onClick={handleApply}
-            className="px-4 py-2 bg-[var(--accent-blue)] text-[#1A1D24] font-semibold rounded-md hover:opacity-90 transition-opacity"
+            className="px-4 py-2 bg-[#f3d800] text-[#1A1D24] font-semibold rounded-md hover:opacity-90 transition-opacity"
           >
             Apply Filters
           </button>

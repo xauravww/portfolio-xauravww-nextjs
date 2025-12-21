@@ -17,7 +17,7 @@
       "repo": "https://github.com/xauravww/project-planner-next",
       "live": "https://nebulaplan.vercel.app"
     },
-    "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d/assets/projects/nebulaplan.png",
+    "img": "/assets/random.png",
     "status": "live",
     "order": 0,
     "id": "nebulaplan_2025",
@@ -49,9 +49,9 @@
     "title": "Rupay Savvy",
     "description": "This project is a user-friendly affiliate blogging website built with ReactJS, utilizing Notion as a...",
     "techStacks": [
-      "React.js",
+      "React",
       "Notion",
-      "Express.js",
+      "Express",
       "Node.js"
     ],
     "difficulty": "Intermediate",
@@ -72,7 +72,7 @@
     "description": "Insta DM automation, yt downloader, GIFs generator,text and images Gen AI , inline queries and many m...",
     "techStacks": [
       "Gram.js",
-      "Express.js",
+      "Express",
       "Redis",
       "Node.js"
     ],
@@ -114,7 +114,7 @@
     "title": "Grocery Bud - TODO List",
     "description": "This miniproject is a simple todo list that was made to showcase my understanding of React and Redux Toolkit.",
     "techStacks": [
-      "React.js",
+      "React",
       "Redux Toolkit"
     ],
     "difficulty": "Easy",
@@ -134,7 +134,7 @@
     "title": "Color Shade Generator",
     "description": "This mini-project lets you can Generate color shades from any type of color format",
     "techStacks": [
-      "React.js"
+      "React"
     ],
     "difficulty": "Easy",
     "url": {
@@ -154,7 +154,7 @@
     "description": "A simple Piano that can be played using keyboard keys. (works on ONLY PC)",
     "techStacks": [
       "HTML & CSS",
-      "Javascript"
+      "JavaScript"
     ],
     "difficulty": "Easy",
     "url": {
@@ -174,7 +174,7 @@
     "description": "This mini-project is designed to validate user input in real-time and display error messages if any of the validation criteria are not met.",
     "techStacks": [
       "HTML & CSS",
-      "Javascript"
+      "JavaScript"
     ],
     "difficulty": "Easy",
     "url": {
@@ -193,7 +193,7 @@
     "description": "A platform to share images , pinterest-like images and a search functionality.",
     "techStacks": [
       "Sanity",
-      "React.js"
+      "React"
     ],
     "difficulty": "Intermediate",
     "url": {
@@ -212,7 +212,7 @@
     "title": "Analog Clock",
     "description": "This is a simple and elegant project showcases a basic analog clock.",
     "techStacks": [
-      "Javascript",
+      "JavaScript",
       "HTML & CSS"
     ],
     "difficulty": "Easy",
@@ -232,8 +232,8 @@
     "title": "Detoxy Fusion",
     "description": "Experience lightning-fast, secure chatting with our sleek app. Enjoy real-time messaging, AI-based t...",
     "techStacks": [
-      "React.js",
-      "Express.js",
+      "React",
+      "Express",
       "MongoDB",
       "Tailwind CSS"
     ],
@@ -255,9 +255,9 @@
     "description": "Ai Based Resume Analyzer...",
     "techStacks": [
       "N8N",
-      "React.js",
+      "React",
       "Node.js",
-      "Express.js"
+      "Express"
     ],
     "difficulty": "Easy",
     "url": {
@@ -277,7 +277,7 @@
     "description": "A college management Android App with features like managing students, attendance, and etc.",
     "techStacks": [
       "React Native",
-      "Express.js",
+      "Express",
       "MongoDB",
       "Tailwind CSS"
     ],

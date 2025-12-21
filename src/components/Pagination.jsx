@@ -52,7 +52,7 @@ const Pagination = ({ totalPosts, postPerPage, setcurrentPage, currentPage }) =>
                     key={page}
                     className={`text-lg md:text-xl lg:text-2xl font-bold rounded px-3 py-1 transition-colors duration-200 ${
                       page === currentPage
-                        ? 'bg-[var(--accent-blue)] text-[#1A1D24] border border-[var(--accent-blue)]'
+                        ? 'bg-[#f3d800] text-[#1A1D24] border border-[#f3d800]'
                         : 'bg-transparent text-[var(--text-medium)] border border-[var(--border-color)] hover:bg-[var(--border-color)] hover:text-[var(--text-light)]'
                     }`}
                     onClick={() => setcurrentPage(page)}

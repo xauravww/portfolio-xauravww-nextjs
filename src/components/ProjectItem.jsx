@@ -13,21 +13,31 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
   // Fetch tech stack data on component mount
   useEffect(() => {
     const fetchTechStacks = async () => {
+      console.log('🔄 ProjectItem: Starting to fetch tech stacks...');
       try {
         const response = await fetch('/api/portfolio/techstacks');
+        console.log('📡 ProjectItem: Tech stacks API response:', response.status, response.ok);
+
         if (response.ok) {
           const data = await response.json();
+          console.log('✅ ProjectItem: Tech stacks data received:', data.length, 'items');
+
           // Create a mapping of tech stack names to their data
           const techStackMap = {};
           data.forEach(stack => {
             techStackMap[stack.name] = stack;
+            console.log(`🔗 ProjectItem: Mapped "${stack.name}" -> ${stack.icon}`);
           });
           setTechStackData(techStackMap);
+          console.log('🎯 ProjectItem: Tech stack mapping complete:', Object.keys(techStackMap));
+        } else {
+          console.error('❌ ProjectItem: Failed to fetch tech stacks, status:', response.status);
         }
       } catch (error) {
-        console.error('Error fetching tech stacks:', error);
+        console.error('💥 ProjectItem: Error fetching tech stacks:', error);
       } finally {
         setTechStacksLoading(false);
+        console.log('🏁 ProjectItem: Tech stacks loading complete');
       }
     };
 
@@ -46,7 +56,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
 
   return (
     <article
-      className="group relative w-full h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-[var(--accent-blue)]/25 transition-all duration-500 bg-[#1A1D24]/70 backdrop-blur-sm border border-[var(--border-color)] hover:border-[var(--accent-blue)]/50 flex flex-col"
+      className="group relative w-full h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-[var(--accent-blue)]/25 transition-all duration-500 bg-[#1A1D24]/70 backdrop-blur-sm flex flex-col"
       onMouseEnter={() => setHoverItem(true)}
       onMouseLeave={() => setHoverItem(false)}
     >
@@ -66,8 +76,8 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
         
         {/* Status Badge */}
         <div className="absolute top-4 right-4 z-10">
-          <div className="flex items-center gap-2 bg-[#1A1D24]/80 backdrop-blur-sm px-3 py-1 rounded-full border border-[var(--border-color)]">
-            <div className="w-2 h-2 bg-[var(--accent-blue)] rounded-full animate-pulse"></div>
+          <div className="flex items-center gap-2 bg-[#1A1D24]/80 backdrop-blur-sm px-3 py-1 rounded-full">
+            <div className="w-2 h-2 bg-[#f3d800] rounded-full animate-pulse"></div>
             <span className="text-[var(--text-light)] text-xs font-medium">Active</span>
           </div>
         </div>
@@ -78,7 +88,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
         {/* Project Title and Description - Top section */}
         <div className="flex-1 space-y-4">
           <div className="space-y-2">
-            <h3 className="text-xl font-bold text-[var(--text-light)] group-hover:text-[var(--accent-blue)] transition-colors duration-300 line-clamp-1">
+            <h3 className="text-xl font-bold text-[var(--text-light)] group-hover:text-[#f3d800] transition-colors duration-300 line-clamp-1">
               {projectTitle}
             </h3>
             
@@ -107,7 +117,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
                 className="group/tech relative"
                 title={tech}
               >
-                <div className="w-8 h-8 rounded-lg bg-[#1A1D24]/80 border border-[var(--border-color)] p-1.5 hover:border-[var(--accent-blue)]/60 hover:bg-[var(--border-color)]/80 transition-all duration-200 flex items-center justify-center">
+                 <div className="w-8 h-8 rounded-lg bg-[#1A1D24]/80 p-1.5 hover:bg-[var(--border-color)]/80 transition-all duration-200 flex items-center justify-center">
                   <OptimizedImage
                     className="w-full h-full object-contain"
                     src={getTechStackIcon(tech)}
@@ -117,7 +127,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
                   />
                 </div>
                 {/* Enhanced Tooltip */}
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-[#1A1D24]/95 backdrop-blur-sm text-[var(--text-light)] text-xs rounded-md opacity-0 group-hover/tech:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-20 border border-[var(--border-color)]">
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-[#1A1D24]/95 backdrop-blur-sm text-[var(--text-light)] text-xs rounded-md opacity-0 group-hover/tech:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-20">
                   {tech}
                   <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-[#1A1D24]/95"></div>
                 </div>
@@ -125,7 +135,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
             ))
           )}
           {techStacks.length > 5 && (
-            <div className="w-8 h-8 rounded-lg bg-[#1A1D24]/80 border border-[var(--border-color)] flex items-center justify-center text-xs font-medium text-[var(--accent-blue)] hover:bg-[var(--border-color)]/80 transition-colors duration-200">
+            <div className="w-8 h-8 rounded-lg bg-[#1A1D24]/80 flex items-center justify-center text-xs font-medium text-[#f3d800] hover:bg-[var(--border-color)]/80 transition-colors duration-200">
               +{techStacks.length - 5}
             </div>
           )}
@@ -141,7 +151,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
                 e.stopPropagation();
                 window.open(repo, "_blank");
               }}
-              className="flex items-center gap-2 bg-[#1A1D24]/80 hover:bg-[var(--border-color)]/80 text-[var(--text-light)] px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 border border-[var(--border-color)] hover:border-[var(--accent-blue)]/50 flex-1 justify-center"
+              className="flex items-center gap-2 bg-[#1A1D24]/80 hover:bg-[var(--border-color)]/80 text-[var(--text-light)] px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 flex-1 justify-center"
               title="View Source Code"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -156,7 +166,7 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle }) =
                 e.stopPropagation();
                 window.open(live, "_blank");
               }}
-              className="flex items-center gap-2 bg-[var(--accent-blue)]/90 hover:bg-[var(--accent-blue)] text-[#1A1D24] px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 border border-[var(--accent-blue)] hover:border-[var(--accent-blue)] flex-1 justify-center"
+              className="flex items-center gap-2 bg-[#f3d800] hover:bg-[#f3d800]/90 text-[#1A1D24] px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 flex-1 justify-center"
               title="View Live Demo"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

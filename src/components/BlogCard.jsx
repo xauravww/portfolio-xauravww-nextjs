@@ -16,8 +16,8 @@ const BlogCard = ({ post }) => {
   };
 
   return (
-    <div 
-      className="group bg-[#1A1D24]/80 backdrop-blur-sm border border-[var(--border-color)] rounded-xl p-4 md:p-6 cursor-pointer hover:bg-[#1A1D24]/90 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/10"
+    <div
+      className="group bg-[#1A1D24]/80 backdrop-blur-sm rounded-xl p-4 md:p-6 cursor-pointer hover:bg-[#1A1D24]/90 transition-all duration-300 hover:scale-105"
       onClick={handleCardClick}
     >
       {/* Cover Image */}
@@ -35,7 +35,7 @@ const BlogCard = ({ post }) => {
       )}
 
       {/* Title */}
-      <h3 className="text-lg md:text-xl font-bold text-white mb-3 line-clamp-2 group-hover:text-cyan-400 transition-colors">
+      <h3 className="text-lg md:text-xl font-bold text-[var(--text-light)] mb-3 line-clamp-2 group-hover:text-[#f3d800] transition-colors">
         {post.title}
       </h3>
 
@@ -50,13 +50,13 @@ const BlogCard = ({ post }) => {
           {post.tags.slice(0, 3).map((tag) => (
             <span
               key={tag.slug}
-              className="px-2 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors"
+              className="px-2 py-1 bg-cyan-500/15 text-cyan-400 text-xs rounded-full hover:bg-cyan-500/25 hover:scale-105 transition-all duration-200"
             >
               {tag.name}
             </span>
           ))}
           {post.tags.length > 3 && (
-            <span className="px-2 py-1 bg-gray-500/20 text-gray-400 text-xs rounded-full border border-gray-500/30">
+            <span className="px-2 py-1 bg-gray-500/15 text-gray-400 text-xs rounded-full">
               +{post.tags.length - 3}
             </span>
           )}
@@ -70,7 +70,7 @@ const BlogCard = ({ post }) => {
       </div>
 
       {/* Read More Indicator */}
-      <div className="flex items-center text-cyan-400 text-sm font-medium">
+      <div className="flex items-center text-[#f3d800] text-sm font-medium">
         Read More
         <svg className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

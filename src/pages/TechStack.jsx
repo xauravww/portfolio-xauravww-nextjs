@@ -39,7 +39,7 @@ const TechStack = ({ containerId }) => {
 
       <header className="text-3xl md:text-5xl text-white font-bold relative z-[3] text-center px-4 mb-12 md:mb-16">
         Tech Stack
-        <div className="underline-below-header absolute w-3/5 h-1 bg-[var(--accent-blue)] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
+        <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
       </header>
 
       <div className="tech-stack-container relative z-[3] w-full max-w-4xl lg:max-w-5xl flex flex-wrap justify-center items-center gap-6 md:gap-8 lg:gap-10 px-4">

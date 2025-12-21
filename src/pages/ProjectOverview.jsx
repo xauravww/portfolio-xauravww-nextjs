@@ -145,7 +145,7 @@ const ProjectOverview = ({ containerId }) => {
       <div className="flex items-center justify-center gap-4 mb-6 md:mb-10 z-[10] relative">
         <header className="text-3xl md:text-5xl text-white font-bold relative text-center px-4">
           Projects
-          <div className="underline-below-header absolute w-3/5 h-1 bg-[var(--accent-blue)] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
+          <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
         </header>
         <button
           onClick={() => setIsModalOpen(true)}

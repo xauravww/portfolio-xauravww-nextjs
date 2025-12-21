@@ -18,41 +18,29 @@ const Home = ({ containerId }) => {
       onComplete: () => setIsLoaded(true) 
     });
     
-    tl.fromTo(".home-intro-overlay", 
+    tl.fromTo(".home-intro-overlay",
       { opacity: 1 },
       { opacity: 0, duration: 0.4, delay: 0.1 }
     );
-    
+
     tl.fromTo(".home-name",
       { opacity: 0, y: 20 },
       { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }
     );
-    
-    tl.fromTo(".home-title",
+
+    tl.fromTo(".home-description",
       { opacity: 0, y: 15 },
       { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
       "-=0.3"
     );
     
-    tl.fromTo(".home-description",
-      { opacity: 0, y: 15 },
-      { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
-      "-=0.2"
-    );
-    
-    tl.fromTo(".cta-button",
-      { opacity: 0, y: 15, scale: 0.95 },
-      { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(1.2)" },
-      "-=0.1"
-    );
-    
-    // Scroll-based animations - faster appearance
+    // Scroll-based animations - smoother appearance
     gsap.fromTo(".scroll-indicator",
       { opacity: 0, y: -10 },
-      { 
-        opacity: 1, 
-        y: 0, 
-        duration: 0.6,
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
         delay: 1.2,
         ease: "power2.inOut",
         yoyo: true,
@@ -76,29 +64,26 @@ const Home = ({ containerId }) => {
     >
       {/* Initial loading overlay */}
       <div className="home-intro-overlay absolute top-0 left-0 h-full w-full bg-[var(--bg-dark)] z-[10] flex items-center justify-center">
-        <div className="text-[var(--accent-blue)] text-4xl">SM</div>
+        <div className="text-[#f3d800] text-4xl">SM</div>
       </div>
       
       <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
-      <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-norepeat- bg-cover"></div>
+      <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
 
       <div className="home-content-block flex flex-col items-center justify-center text-center z-[3] px-4">
-        <p className="home-title text-xl md:text-2xl lg:text-3xl font-medium text-[var(--text-medium)] mb-2">
-          Hey, I&apos;m
-        </p>
         <h1 className="home-name font-['Cyborg'] text-6xl md:text-8xl lg:text-9xl font-bold text-[var(--text-light)] mb-4 md:mb-6 tracking-tight">
-          Saurav Maheshwari
+          Hello, I&apos;m Saurav Maheshwari
         </h1>
         <div className="home-description text-lg md:text-xl lg:text-2xl text-[var(--text-medium)] max-w-xl md:max-w-2xl mb-8 md:mb-10">
-          Turning ideas into interactive experiences where{" "}
+          Full-Stack Developer crafting AI-powered solutions where{" "}
           <span className="text-[#f3d800] font-semibold">
             <Typewriter
               options={{
                 strings: [
-                  'innovation meets interaction',
-                  'creativity comes alive',
-                  'design meets functionality',
-                  'user experience is key'
+                  'code meets creativity',
+                  'React builds experiences',
+                  'Node powers innovation',
+                  'design drives functionality'
                 ],
                 autoStart: true,
                 loop: true,

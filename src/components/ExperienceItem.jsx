@@ -21,26 +21,26 @@ const ExperienceItem = ({ title, company, time, description, skills, location })
           </div>
         )}
         
-        <div className="text-md lg:text-lg text-[var(--text-light)] mb-4 leading-relaxed">
+        <div className="text-md lg:text-lg text-[var(--text-light)] mb-6 leading-relaxed">
           {descriptionArray.length > 1 ? (
-            <ul className="list-disc pl-5 space-y-1">
+            <ul className="list-disc pl-5 space-y-2 text-[var(--text-light)]/90">
               {descriptionArray.map((point, index) => (
                 <li key={index}>{point}</li>
               ))}
             </ul>
           ) : (
-            <p>{description}</p>
+            <p className="text-[var(--text-light)]/90">{description}</p>
           )}
         </div>
 
         {skills && skills.length > 0 && (
-          <div className="mt-4">
-            <h4 className="text-sm font-medium text-[var(--text-medium)] mb-2">Technologies & Skills:</h4>
+          <div className="mt-6">
+            <h4 className="text-sm font-semibold text-[var(--text-light)] mb-3 uppercase tracking-wide">Technologies & Skills</h4>
             <div className="flex flex-wrap gap-2">
               {skills.map((skill, index) => (
                 <span
                   key={index}
-                  className="px-3 py-1 bg-[var(--accent-blue)]/20 text-[var(--accent-blue)] text-sm rounded-full border border-[var(--accent-blue)]/30"
+                  className="px-3 py-1.5 bg-[#f3d800]/15 text-[#f3d800] text-sm rounded-full font-medium hover:bg-[#f3d800]/25 hover:scale-105 transition-all duration-200 border border-[#f3d800]/20"
                 >
                   {skill}
                 </span>
