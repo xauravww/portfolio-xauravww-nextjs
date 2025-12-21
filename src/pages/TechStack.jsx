@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const TechStack = ({ containerId }) => {
   const [techStackData, setTechStackData] = useState([]);
@@ -106,9 +107,7 @@ const TechStack = ({ containerId }) => {
           <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
         </header>
 
-        <div className="flex items-center justify-center py-20">
-          <div className="text-white text-xl">Loading tech stacks...</div>
-        </div>
+        <LoadingSpinner text="Loading tech stacks..." />
       </div>
     );
   }

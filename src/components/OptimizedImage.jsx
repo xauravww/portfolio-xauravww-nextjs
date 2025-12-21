@@ -42,6 +42,9 @@ const OptimizedImage = ({
     );
   }
 
+  // Handle SVG files differently - use regular img tag for SVGs
+  const isSvg = src && src.toLowerCase().endsWith('.svg');
+
   return (
     <div className={`relative ${fill ? 'w-full h-full' : ''} ${className}`}>
       {isLoading && (
@@ -50,21 +53,33 @@ const OptimizedImage = ({
         </div>
       )}
 
-      <Image
-        src={src}
-        alt={alt}
-        fill={fill}
-        width={!fill ? width : undefined}
-        height={!fill ? height : undefined}
-        priority={priority}
-        sizes={sizes}
-        placeholder={placeholder}
-        blurDataURL={blurDataURL}
-        onLoad={handleLoad}
-        onError={handleError}
-        className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} ${fill ? 'object-cover' : ''}`}
-        {...props}
-      />
+      {isSvg ? (
+        <img
+          src={src}
+          alt={alt}
+          width={!fill ? width : undefined}
+          height={!fill ? height : undefined}
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} ${fill ? 'w-full h-full object-contain' : ''}`}
+          style={fill ? { width: '100%', height: '100%' } : undefined}
+          {...props}
+        />
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          fill={fill}
+          width={!fill ? width : undefined}
+          height={!fill ? height : undefined}
+          priority={priority}
+          sizes={sizes}
+          onLoad={handleLoad}
+          onError={handleError}
+          className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'} ${fill ? 'object-cover' : ''}`}
+          {...props}
+        />
+      )}
     </div>
   );
 };

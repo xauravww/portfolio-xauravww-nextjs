@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import ProjectItem from "../components/ProjectItem";
 import Pagination from "../components/Pagination";
 import FilterModal from "../components/FilterModal";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -13,6 +14,37 @@ const ProjectOverview = ({ containerId }) => {
   const [loading, setLoading] = useState(true);
   const [techStackData, setTechStackData] = useState({});
   const [techStacksLoading, setTechStacksLoading] = useState(true);
+
+  // Simple hardcoded tech stack data for reliability
+  const simpleTechStacks = {
+    'React': { name: 'React', icon: '/assets/techstack/react.png' },
+    'Next.js': { name: 'Next.js', icon: '/assets/techstack/next-js.svg' },
+    'TypeScript': { name: 'TypeScript', icon: '/assets/techstack/typescript.svg' },
+    'JavaScript': { name: 'JavaScript', icon: '/assets/techstack/javascript.png' },
+    'Node.js': { name: 'Node.js', icon: '/assets/techstack/nodejs-official.png' },
+    'Express': { name: 'Express', icon: '/assets/techstack/express.webp' },
+    'MongoDB': { name: 'MongoDB', icon: '/assets/techstack/mongodb.png' },
+    'PostgreSQL': { name: 'PostgreSQL', icon: '/assets/techstack/postgresql.svg' },
+    'Prisma': { name: 'Prisma', icon: '/assets/techstack/prisma.svg' },
+    'Tailwind CSS': { name: 'Tailwind CSS', icon: '/assets/techstack/tailwind-css.svg' },
+    'Redux Toolkit': { name: 'Redux Toolkit', icon: '/assets/techstack/redux-toolkit.png' },
+    'React Native': { name: 'React Native', icon: '/assets/techstack/react-native.png' },
+    'Git': { name: 'Git', icon: '/assets/techstack/git-square.png' },
+    'GitHub': { name: 'GitHub', icon: '/assets/techstack/github-square.png' },
+    'Docker': { name: 'Docker', icon: '/assets/techstack/docker-square.png' },
+    'GraphQL': { name: 'GraphQL', icon: '/assets/techstack/graphql-square.svg' },
+    'JWT': { name: 'JWT', icon: '/assets/techstack/jwt-colorful.svg' },
+    'Figma': { name: 'Figma', icon: '/assets/techstack/figma-square.png' },
+    'Postman': { name: 'Postman', icon: '/assets/techstack/postman-square.svg' },
+    'LangChain': { name: 'LangChain', icon: '/assets/techstack/langchain-square.png' },
+    'OpenAI API': { name: 'OpenAI API', icon: '/assets/techstack/openai-square.png' },
+    'HTML & CSS': { name: 'HTML & CSS', icon: '/assets/techstack/html---css.png' },
+    'Gram.js': { name: 'Gram.js', icon: '/assets/techstack/gram-js.png' },
+    'N8N': { name: 'N8N', icon: '/assets/techstack/n8n.jpg' },
+    'Notion': { name: 'Notion', icon: '/assets/techstack/notion.png' },
+    'Redis': { name: 'Redis', icon: '/assets/techstack/redis.png' },
+    'Sanity': { name: 'Sanity', icon: '/assets/techstack/sanity.png' }
+  };
 
   const [currentPage, setcurrentPage] = useState(1);
   const [postPerPage, setpostPerPage] = useState(3);
@@ -86,70 +118,39 @@ const ProjectOverview = ({ containerId }) => {
       }
     };
 
-    // Fetch tech stack data once for all projects
-    const fetchTechStacks = async () => {
-      try {
-        const response = await fetch('/api/portfolio/techstacks');
-
-        if (response.ok) {
-          const data = await response.json();
-
-          // Create a mapping of tech stack names to their data
-          const techStackMap = {};
-          data.forEach(stack => {
-            techStackMap[stack.name] = stack;
-          });
-          setTechStackData(techStackMap);
-        }
-      } catch (error) {
-        console.error('Error fetching tech stacks:', error);
-      } finally {
-        setTechStacksLoading(false);
-      }
-    };
-
     fetchProjects();
-    fetchTechStacks();
+    // Use simple hardcoded data instead of API
+    setTechStackData(simpleTechStacks);
+    setTechStacksLoading(false);
   }, []);
+
+
 
   return (
     <div
-      className="ProjectOverview min-h-screen relative flex flex-col items-center py-16 md:py-24"
+      className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a2e] to-[#0a0a0a] relative overflow-hidden"
       id={containerId}
     >
-      <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-norepeat- bg-cover"></div>
-      <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
+      <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
+      <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.7)] z-[2] "></div>
 
-      <div className="flex items-center justify-center gap-4 mb-6 md:mb-10 z-[10] relative">
-        <header className="text-3xl md:text-5xl text-white font-bold relative text-center px-4">
-          Projects
+      <div className="relative z-10 container mx-auto px-4 py-16 md:py-24">
+        <header className="text-center mb-12 md:mb-16">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+            My Projects
+          </h1>
           <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
         </header>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="filter-button p-2 border border-[var(--border-color)] bg-[#1A1D24]/60 backdrop-blur-sm rounded-md hover:bg-[var(--border-color)] transition-colors"
-          title="Filter Projects"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[var(--text-light)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-          </svg>
-        </button>
-      </div>
-      <div
-        className="projects-wrapper z-[10] relative mt-6 overflow-y-auto h-[60vh] w-full max-w-6xl rounded-md p-4 m-6"
-        style={{
-          scrollbarColor: "var(--accent-blue) transparent",
-          scrollbarWidth: "thin",
-        }}
-      >
-        {loading ? (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-              <div className="text-white text-xl">Loading projects...</div>
-            </div>
-          </div>
-        ) : isActive && (
+
+        {/* Loading State */}
+        {(loading || techStacksLoading) && (
+          <LoadingSpinner
+            text={loading ? 'Loading projects...' : techStacksLoading ? 'Loading tech stacks...' : 'Loading...'}
+          />
+        )}
+
+        {/* Projects Grid */}
+        {!loading && !techStacksLoading && (
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {currentPosts.length > 0 ? (

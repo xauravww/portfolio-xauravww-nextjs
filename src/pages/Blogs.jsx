@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BlogCard from "../components/BlogCard";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Blogs = ({ containerId }) => {
   const [posts, setPosts] = useState([]);
@@ -88,10 +89,8 @@ const Blogs = ({ containerId }) => {
       {/* Content */}
       <div className="blog-content z-[3] relative w-full max-w-7xl px-4 opacity-0">
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-white text-xl">Loading blog posts...</div>
-          </div>
-         ) : error ? (
+          <LoadingSpinner text="Loading blog posts..." />
+        ) : error ? (
            <div className="bg-[#1A1D24]/80 backdrop-blur-sm rounded-xl p-8 text-center shadow-xl">
              <div className="text-red-400 text-lg mb-4">Failed to load blog posts</div>
              <p className="text-[var(--text-medium)] mb-6">

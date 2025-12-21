@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import AboutItem from "../components/AboutItem";
+import LoadingSpinner from "../components/LoadingSpinner";
 import PropTypes from 'prop-types';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -64,7 +65,7 @@ function Education({ containerId }) {
       <div className="education-container flex flex-col items-center justify-center min-h-screen relative py-16 md:py-24" id={containerId}>
         <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
         <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
-        <div className="text-white text-xl z-[10] relative">Loading education...</div>
+        <LoadingSpinner text="Loading education..." />
       </div>
     );
   }
