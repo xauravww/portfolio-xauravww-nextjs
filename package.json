@@ -7,7 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "keep-mongo-alive": "node scripts/keep-mongo-alive.js"
+    "keep-mongo-alive": "node scripts/keep-mongo-alive.js",
+    "update-mongodb": "node scripts/update-mongodb.js"
   },
   "dependencies": {
     "@types/nodemailer": "^7.0.1",
