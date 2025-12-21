@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 
@@ -15,7 +15,7 @@ export async function GET() {
     try {
       jwt.verify(token.value, process.env.JWT_SECRET || 'fallback-secret');
       return NextResponse.json({ authenticated: true });
-    } catch (error) {
+    } catch {
       return NextResponse.json({ authenticated: false }, { status: 401 });
     }
   } catch (error) {

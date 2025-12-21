@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getExperiences } from '@/models/Experience';
+import { getExperiences, Experience } from '@/models/Experience';
 
 export async function GET() {
   try {
-    const experiences = await getExperiences();
+    const experiences: Experience[] = await getExperiences();
     // Only return active experiences for the public portfolio
-    const activeExperiences = experiences.filter(experience => experience.status === 'active');
+    const activeExperiences = experiences.filter((experience: Experience) => experience.status === 'active');
     return NextResponse.json(activeExperiences);
   } catch (error) {
     console.error('Error fetching portfolio experiences:', error);

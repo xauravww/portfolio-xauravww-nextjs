@@ -1,0 +1,52 @@
+[
+  {
+    "_id": "68b0969b8a3ecbf38f4cb1c9",
+    "company": "Digitech Services Private Limited",
+    "position": "Full Stack Developer",
+    "description": "Developed and maintained a SaaS platform (confidential) for a subsidiary company using MERN stack.\nBuilt browser automation scripts with Playwright/Patchright to handle workflows.\nManaged full-stack architecture: Next.js frontend, Node.js/Express microservices, BullMQ with Redis.\nIntegrated AI features into workflows and designed automation pipelines.\nLed feature research and planning from scratch: identified requirements, prioritized scripts/features.\nConfigured and managed secure email service using Mailcow on VPS for internal operations.",
+    "startDate": "2025-06-05T00:00:00.000Z",
+    "endDate": null,
+    "isCurrentJob": true,
+    "location": "Remote",
+    "skills": [
+      "React.js",
+      "Node.js",
+      "Express.js",
+      "Next.js",
+      "Redis",
+      "BullMQ",
+      "MailCow",
+      "Playwright/Patchright"
+    ],
+    "order": "1",
+    "status": "active",
+    "id": "1756403355389",
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b08a6d483ba85feb5d6136",
+    "company": "Prodoc AI",
+    "position": "Full Stack Developer Intern",
+    "description": "    Worked on feature upgrades, bug fixes, and enhancements for the Hospital/Clinic Management Tool using React.js, Node.js, and Express.js.\n    Integrated WhatsApp webflows for messaging and forms; fixed token-based appointment system bugs.\n    Developed MongoDB backup scripts and integrated Haptik Meta API wrapper.\n    Contributed to AI Agentic Workflow research for architecture planning using N8N and Dify.\n    Enhanced Excel export analysis reports using the XLSX library.\n    Made content updates and form submission logic improvements on the main Next.js website.",
+    "startDate": "2025-01-07T00:00:00.000Z",
+    "endDate": "2025-04-07T00:00:00.000Z",
+    "isCurrentJob": false,
+    "location": "Bangalore , India",
+    "skills": [
+      "React.js",
+      "Node.js",
+      "Express.js",
+      "Next.js",
+      "MongoDB",
+      "N8N",
+      "Dify",
+      "Excel"
+    ],
+    "order": "2",
+    "status": "active",
+    "id": "1756400237585",
+    "createdAt": "2025-08-28T16:57:17.585Z",
+    "updatedAt": "2025-08-28T17:49:45.237Z"
+  }
+]

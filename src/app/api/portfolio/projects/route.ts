@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import { getProjects } from '@/models/Project';
+import { getProjects, Project } from '@/models/Project';
 
 export async function GET() {
   try {
-    const projects = await getProjects();
+    const projects: Project[] = await getProjects();
     // Only return live projects for the public portfolio
-    const liveProjects = projects.filter(project => project.status === 'live');
+    const liveProjects = projects.filter((project: Project) => project.status === 'live');
     return NextResponse.json(liveProjects);
   } catch (error) {
     console.error('Error fetching portfolio projects:', error);

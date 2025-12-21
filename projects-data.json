@@ -1,0 +1,270 @@
+[
+  {
+    "_id": "68c59f20b5b28fe698243f16",
+    "title": "JobQuest AI",
+    "description": "Jobquest AI is your career co-pilot. We use intelligent automation to find your perfect job, optimize your resume, and manage your applications so you can focus on acing the interview.",
+    "techStacks": [
+      "Next.js",
+      "MongoDB"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/jobquest-ai",
+      "live": "https://jobquest-ai.vercel.app"
+    },
+    "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d/assets/projects/jobquestai.png",
+    "status": "live",
+    "order": 0,
+    "id": "1757781792113",
+    "createdAt": "2025-09-13T16:43:12.113Z",
+    "updatedAt": "2025-09-13T16:49:44.587Z"
+  },
+  {
+    "_id": "68b09092157c11be3ab35029",
+    "title": "Rupay Savvy",
+    "description": "This project is a user-friendly affiliate blogging website built with ReactJS, utilizing Notion as a...",
+    "techStacks": [
+      "React.js",
+      "Notion",
+      "Express.js",
+      "Node.js"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/affiliate-blogging",
+      "live": "https://affiliate-blogging-website.onrender.com"
+    },
+    "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d/assets/projects/rupaysavvy.png",
+    "status": "live",
+    "order": 1,
+    "id": "1756401810030",
+    "createdAt": "2025-08-28T17:23:30.030Z",
+    "updatedAt": "2025-09-13T16:53:07.493Z"
+  },
+  {
+    "_id": "68b08d9e157c11be3ab35024",
+    "title": "FunWala Telegram Bot",
+    "description": "Insta DM automation, yt downloader, GIFs generator,text and images Gen AI , inline queries and many m...",
+    "techStacks": [
+      "Gram.js",
+      "Express.js",
+      "Redis",
+      "Node.js"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/xauravww-tg-userbot",
+      "live": "https://telegram.dog/funwalabot"
+    },
+    "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d@main/assets/test/gen.webp",
+    "status": "live",
+    "order": 2,
+    "id": "1756401054698",
+    "createdAt": "2025-08-28T17:10:54.698Z",
+    "updatedAt": "2025-10-19T10:34:27.024Z"
+  },
+  {
+    "_id": "68b0918a157c11be3ab3502b",
+    "title": "Portfolio Website",
+    "description": "This is my personal portfolio website that is responsive, containing all my projects, blogs, my tech...",
+    "techStacks": [
+      "Next.js",
+      "Tailwind CSS",
+      "MongoDB"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/portfolio-xauravww-nextjs",
+      "live": "https://xauravww.vercel.app"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1704802069/assets/projects/portfolio_bg_uoxyxc.png",
+    "status": "live",
+    "order": 3,
+    "id": "1756402058947",
+    "createdAt": "2025-08-28T17:27:38.947Z",
+    "updatedAt": "2025-08-28T17:52:32.803Z"
+  },
+  {
+    "_id": "68b0949f08a5dfe744a80a91",
+    "title": "Grocery Bud - TODO List",
+    "description": "This miniproject is a simple todo list that was made to showcase my understanding of React and Redux Toolkit.",
+    "techStacks": [
+      "React.js",
+      "Redux Toolkit"
+    ],
+    "difficulty": "Easy",
+    "url": {
+      "repo": "https://github.com/xauravww/practiceWEB/tree/react-projects/09-grocery-bud",
+      "live": "https://grocery-bud-xauravww.onrender.com/"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1711396632/grocery-bud_mlfowb.webp",
+    "status": "live",
+    "order": 4,
+    "id": "1756402847576",
+    "createdAt": "2025-08-28T17:40:47.576Z",
+    "updatedAt": "2025-08-28T17:53:10.315Z"
+  },
+  {
+    "_id": "68b0945908a5dfe744a80a90",
+    "title": "Color Shade Generator",
+    "description": "This mini-project lets you can Generate color shades from any type of color format",
+    "techStacks": [
+      "React.js"
+    ],
+    "difficulty": "Easy",
+    "url": {
+      "repo": "https://github.com/xauravww/practiceWEB/tree/react-projects/04-color-shades-generator",
+      "live": "https://color-shader-xauravww.onrender.com"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1724990853/color-shader_qmdnjt.png",
+    "status": "live",
+    "order": 5,
+    "id": "1756402777771",
+    "createdAt": "2025-08-28T17:39:37.771Z",
+    "updatedAt": "2025-08-28T17:53:22.477Z"
+  },
+  {
+    "_id": "68b092e9b3bd70dc16a6a7ad",
+    "title": "Midi Piano",
+    "description": "A simple Piano that can be played using keyboard keys. (works on ONLY PC)",
+    "techStacks": [
+      "HTML & CSS",
+      "Javascript"
+    ],
+    "difficulty": "Easy",
+    "url": {
+      "repo": "https://github.com/xauravww/practiceWEB/tree/learn-js/mini-projects/adv-midi-piano-miniproject",
+      "live": "https://adv-midi-piano-miniproject.onrender.com"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1704802058/assets/projects/piano_bg_cbvm09.png",
+    "status": "live",
+    "order": 6,
+    "id": "1756402409616",
+    "createdAt": "2025-08-28T17:33:29.616Z",
+    "updatedAt": "2025-08-28T17:53:30.462Z"
+  },
+  {
+    "_id": "68b09395b3bd70dc16a6a7ae",
+    "title": "Form Validation MiniProject",
+    "description": "This mini-project is designed to validate user input in real-time and display error messages if any of the validation criteria are not met.",
+    "techStacks": [
+      "HTML & CSS",
+      "Javascript"
+    ],
+    "difficulty": "Easy",
+    "url": {
+      "live": "https://xauravww-form-validation.netlify.app"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1723032640/form_s39len.webp",
+    "status": "live",
+    "order": 7,
+    "id": "1756402581666",
+    "createdAt": "2025-08-28T17:36:21.666Z",
+    "updatedAt": "2025-08-28T17:53:44.620Z"
+  },
+  {
+    "_id": "68b094f608a5dfe744a80a92",
+    "title": "Pixtract",
+    "description": "A platform to share images , pinterest-like images and a search functionality.",
+    "techStacks": [
+      "Sanity",
+      "React.js"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/pixtract",
+      "live": "https://pixtract.netlify.app"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1704802065/assets/projects/pixtract_bg_xrwjvk.png",
+    "status": "draft",
+    "order": 8,
+    "id": "1756402934578",
+    "createdAt": "2025-08-28T17:42:14.578Z",
+    "updatedAt": "2025-08-28T17:53:56.947Z"
+  },
+  {
+    "_id": "68b0955808a5dfe744a80a93",
+    "title": "Analog Clock",
+    "description": "This is a simple and elegant project showcases a basic analog clock.",
+    "techStacks": [
+      "Javascript",
+      "HTML & CSS"
+    ],
+    "difficulty": "Easy",
+    "url": {
+      "repo": "https://github.com/xauravww/practiceWEB/tree/learn-js/mini-projects/analog-clock-mini-project",
+      "live": "https://analog-clock-xauravww.onrender.com"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1704802062/assets/projects/clock_bg_l9alsk.png",
+    "status": "live",
+    "order": 9,
+    "id": "1756403032577",
+    "createdAt": "2025-08-28T17:43:52.577Z",
+    "updatedAt": "2025-08-28T17:54:13.657Z"
+  },
+  {
+    "_id": "68b08e97157c11be3ab35026",
+    "title": "Detoxy Fusion",
+    "description": "Experience lightning-fast, secure chatting with our sleek app. Enjoy real-time messaging, AI-based t...",
+    "techStacks": [
+      "React.js",
+      "Express.js",
+      "MongoDB",
+      "Tailwind CSS"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/detoxy-fusion",
+      "live": "https://detoxy-fusion-1.onrender.com/login"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1724586718/2_jwyuaj.jpg",
+    "status": "draft",
+    "order": 10,
+    "id": "1756401303235",
+    "createdAt": "2025-08-28T17:15:03.235Z",
+    "updatedAt": "2025-08-28T17:54:22.581Z"
+  },
+  {
+    "_id": "68b08e06157c11be3ab35025",
+    "title": "AI Resume Analyzer",
+    "description": "Ai Based Resume Analyzer...",
+    "techStacks": [
+      "N8N",
+      "React.js",
+      "Node.js",
+      "Express.js"
+    ],
+    "difficulty": "Easy",
+    "url": {
+      "repo": "https://github.com/xauravww/ai-analyzer",
+      "live": "https://ai-analyzer-3jok.onrender.com/"
+    },
+    "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d/assets/projects/ai-analyzer.webp",
+    "status": "draft",
+    "order": 999,
+    "id": "1756401158172",
+    "createdAt": "2025-08-28T17:12:38.172Z",
+    "updatedAt": "2025-08-28T17:51:39.428Z"
+  },
+  {
+    "_id": "68b09005157c11be3ab35028",
+    "title": "BRCM Educon",
+    "description": "A college management Android App with features like managing students, attendance, and etc.",
+    "techStacks": [
+      "React Native",
+      "Express.js",
+      "MongoDB",
+      "Tailwind CSS"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/brcmeducon-cross-platform"
+    },
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1722943455/brcmeduconmerge_oeppji.png",
+    "status": "draft",
+    "order": 999,
+    "id": "1756401669185",
+    "createdAt": "2025-08-28T17:21:09.185Z",
+    "updatedAt": "2025-08-28T17:51:48.280Z"
+  }
+]

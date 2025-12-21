@@ -1,13 +1,12 @@
-import { getProjects } from '@/models/Project';
-import { getExperiences } from '@/models/Experience';
-import { getEducations } from '@/models/Education';
-import { getAllTechStacks } from '@/models/TechStack';
-import { getQueries, getQueryCount, getNewQueryCount } from '@/models/Query';
-import AdminProtectedLayout from '@/app/admin/layout';
+import { getExperiences, Experience } from '@/models/Experience';
+import { getEducations, Education } from '@/models/Education';
+import { getProjects, Project } from '@/models/Project';
+import { getAllTechStacks, TechStack } from '@/models/TechStack';
+import { getQueries, getQueryCount, getNewQueryCount, Query } from '@/models/Query';
 import Link from 'next/link';
 
 export default async function AdminDashboardPage() {
-  const [projects, experiences, educations, techStacks, queries, totalQueries, newQueries] = await Promise.all([
+  const [projects, experiences, educations, techStacks, queries, totalQueries, newQueries]: [Project[], Experience[], Education[], TechStack[], Query[], number, number] = await Promise.all([
     getProjects(),
     getExperiences(),
     getEducations(),
