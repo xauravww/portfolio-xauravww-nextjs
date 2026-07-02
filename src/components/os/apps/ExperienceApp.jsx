@@ -1,7 +1,25 @@
 'use client';
 import { useState, useEffect } from 'react';
-import ExperienceItem from '../../ExperienceItem';
+import { Page, Card, SectionLabel, Tag, SidebarItem, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
+
+const MapPinIcon = (
+  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+const CalendarIcon = (
+  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+    <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
+function formatDate(d) {
+  return new Date(d).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
 
 const ExperienceApp = () => {
   const [data, setData] = useState([]);
@@ -22,29 +40,66 @@ const ExperienceApp = () => {
     })();
   }, []);
 
-  if (loading) return <div className="flex items-center justify-center h-60"><LoadingSpinner text="Loading experience..." /></div>;
-  if (data.length === 0) return <div className="p-6 text-center text-white/30 text-sm">No experience data available.</div>;
+  if (loading) return <Centered><LoadingSpinner text="Loading experience..." /></Centered>;
+  if (data.length === 0) return <Centered>No experience data available.</Centered>;
+
+  const exp = data.find(d => d.position === selected);
+  const descriptionArray = exp
+    ? Array.isArray(exp.description) ? exp.description : exp.description.split('\n').filter(l => l.trim())
+    : [];
+  const timeStr = exp
+    ? `${formatDate(exp.startDate)} - ${exp.isCurrentJob || !exp.endDate ? 'Present' : formatDate(exp.endDate)}`
+    : '';
 
   return (
     <div className="flex flex-col lg:flex-row h-full">
-      <div className="lg:w-56 shrink-0 border-b lg:border-b-0 lg:border-r border-white/[0.06] p-3 overflow-y-auto">
+      <div className="lg:w-56 shrink-0 border-b lg:border-b-0 lg:border-r border-white/[0.06] p-2 overflow-y-auto">
         {data.map(d => (
-          <button key={d.id} onClick={() => setSelected(d.position)}
-            className={`w-full text-left px-3 py-2.5 rounded-lg text-[12px] mb-1 transition-colors ${
-              selected === d.position ? 'bg-gold/10 text-gold' : 'text-white/40 hover:text-white/60 hover:bg-white/[0.04]'}`}>
-            <div className="font-medium">{d.position}</div>
-            <div className="text-[10px] text-white/25 mt-0.5">{d.company}</div>
-          </button>
+          <SidebarItem
+            key={d.id}
+            active={selected === d.position}
+            title={d.position}
+            subtitle={d.company}
+            onClick={() => setSelected(d.position)}
+          />
         ))}
       </div>
-      <div className="flex-1 p-5 overflow-y-auto">
-        {selected && data.filter(d => d.position === selected).map(d => (
-          <ExperienceItem key={d.id} title={d.position} company={d.company}
-            time={`${new Date(d.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - ${
-              d.isCurrentJob ? 'Present' : d.endDate ? new Date(d.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Present'
-            }`}
-            description={d.description} skills={d.skills} location={d.location} />
-        ))}
+
+      <div className="flex-1 overflow-y-auto">
+        {exp && (
+          <Page>
+            <h2 className="text-[16px] font-bold text-white leading-tight">{exp.position}</h2>
+            <p className="text-[12.5px] text-[#0A84FF] font-medium mt-0.5">{exp.company}</p>
+
+            <div className="flex flex-wrap items-center gap-3 mt-2.5 text-[11.5px] text-white/45">
+              <span className="flex items-center gap-1">{CalendarIcon}{timeStr}</span>
+              {exp.location && <span className="flex items-center gap-1">{MapPinIcon}{exp.location}</span>}
+            </div>
+
+            <Card className="mt-4 mb-4">
+              <div className="p-3.5">
+                {descriptionArray.length > 1 ? (
+                  <ul className="space-y-2 text-[13px] text-white/75 leading-relaxed list-disc pl-4">
+                    {descriptionArray.map((point, i) => <li key={i}>{point}</li>)}
+                  </ul>
+                ) : (
+                  <p className="text-[13px] text-white/75 leading-relaxed">{exp.description}</p>
+                )}
+              </div>
+            </Card>
+
+            {exp.skills?.length > 0 && (
+              <>
+                <SectionLabel>Technologies & Skills</SectionLabel>
+                <Card>
+                  <div className="p-3 flex flex-wrap gap-1.5">
+                    {exp.skills.map(s => <Tag key={s}>{s}</Tag>)}
+                  </div>
+                </Card>
+              </>
+            )}
+          </Page>
+        )}
       </div>
     </div>
   );

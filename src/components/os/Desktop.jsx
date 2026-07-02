@@ -27,13 +27,13 @@ const DESKTOP_ICONS = [
 ];
 
 const WINDOW_SIZES = {
-  about: { w: 620, h: 440 },
-  techstack: { w: 780, h: 520 },
-  projects: { w: 920, h: 580 },
-  experience: { w: 820, h: 520 },
-  blogs: { w: 860, h: 540 },
-  education: { w: 820, h: 520 },
-  contact: { w: 480, h: 560 },
+  about: { w: 500, h: 420 },
+  techstack: { w: 720, h: 520 },
+  projects: { w: 900, h: 580 },
+  experience: { w: 780, h: 500 },
+  blogs: { w: 840, h: 540 },
+  education: { w: 780, h: 500 },
+  contact: { w: 460, h: 560 },
 };
 
 const SVG = {
@@ -50,6 +50,7 @@ const SVG = {
 function DesktopSurface() {
   const { openWindow, windows, closeWindow, getOpenWindows } = useWindows();
   const [menu, setMenu] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   const openApp = useCallback((id) => openWindow(id, { size: WINDOW_SIZES[id] }), [openWindow]);
 
@@ -85,27 +86,30 @@ function DesktopSurface() {
   };
 
   return (
-    <>
+    <div className="os-ui">
       <Wallpaper />
       <MenuBar />
 
       {/* Desktop surface */}
       <div
-        className="fixed inset-0 pt-7 pb-[68px]"
+        className="fixed inset-0 pt-7 pb-[64px]"
         onContextMenu={desktopMenu}
+        onMouseDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}
       >
-        {/* Desktop icons — desktop only */}
-        <div className="hidden md:flex flex-wrap gap-5 p-6 pt-8 max-w-4xl">
+        {/* Desktop icons — right-aligned grid, desktop only (macOS convention) */}
+        <div className="hidden md:grid grid-flow-col grid-rows-6 gap-x-2 gap-y-1 absolute top-10 right-3 justify-items-center">
           {DESKTOP_ICONS.map((item) => (
             <button
               key={item.id}
-              onClick={() => openApp(item.id)}
+              onClick={(e) => { e.stopPropagation(); setSelected(item.id); }}
               onDoubleClick={() => openApp(item.id)}
-              onContextMenu={(e) => iconMenu(e, item)}
-              className="group flex flex-col items-center gap-1 w-[72px] cursor-default rounded-lg p-1.5 hover:bg-white/[0.06] transition-colors"
+              onContextMenu={(e) => { setSelected(item.id); iconMenu(e, item); }}
+              className="group flex flex-col items-center gap-0.5 w-[76px] cursor-default rounded-md p-1.5 transition-colors"
             >
-              <AppIcon appId={item.id} className="w-[52px] h-[52px]" />
-              <span className="text-[10px] text-white/70 font-medium text-center leading-tight line-clamp-2">
+              <AppIcon appId={item.id} className="w-[48px] h-[48px]" />
+              <span className={`desktop-label text-[11px] font-medium text-center leading-tight px-1 rounded ${
+                selected === item.id ? 'bg-[#0A84FF] text-white' : 'text-white'
+              }`}>
                 {item.name}
               </span>
             </button>
@@ -149,7 +153,7 @@ function DesktopSurface() {
       <Dock defaultSizes={WINDOW_SIZES} onItemContextMenu={iconMenu} />
 
       {menu && <ContextMenu menu={menu} onClose={() => setMenu(null)} />}
-    </>
+    </div>
   );
 }
 

@@ -1,11 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { Page, Card, SectionLabel, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
 
 const CAT_LABELS = {
   frontend: 'Frontend', backend: 'Backend', database: 'Database',
   devops: 'DevOps & Tools', design: 'Design', other: 'Other',
 };
+const CAT_ORDER = ['frontend', 'backend', 'database', 'devops', 'design', 'other'];
 
 const TechStackApp = () => {
   const [grouped, setGrouped] = useState({});
@@ -25,30 +27,32 @@ const TechStackApp = () => {
     })();
   }, []);
 
-  if (loading) return <div className="flex items-center justify-center h-60"><LoadingSpinner text="Loading skills..." /></div>;
+  if (loading) return <Centered><LoadingSpinner text="Loading skills..." /></Centered>;
+
+  const cats = CAT_ORDER.filter(c => grouped[c]).concat(Object.keys(grouped).filter(c => !CAT_ORDER.includes(c)));
 
   return (
-    <div className="p-5 space-y-6">
-      {Object.entries(grouped).map(([cat, techs]) => (
+    <Page className="space-y-4">
+      {cats.map(cat => (
         <div key={cat}>
-          <h3 className="text-[11px] font-semibold text-gold/80 uppercase tracking-widest mb-3">{CAT_LABELS[cat] || cat}</h3>
-          <div className="flex flex-wrap gap-2.5">
-            {techs.map(t => (
-              <div key={t.id} className="flex flex-col items-center group w-16">
-                <div className="bg-white/[0.04] rounded-lg p-2 hover:bg-white/[0.08] transition-colors w-full flex items-center justify-center">
-                  <img src={t.icon} className="w-8 h-8 md:w-10 md:h-10 object-contain" alt={t.name}
-                    onError={(e) => { e.target.style.display='none'; if(e.target.nextSibling) e.target.nextSibling.style.display='flex'; }} />
-                  <div className="hidden w-8 h-8 md:w-10 md:h-10 bg-gold/10 rounded items-center justify-center text-gold text-[9px] font-medium">
-                    {t.name.split(' ')[0]}
+          <SectionLabel>{CAT_LABELS[cat] || cat}</SectionLabel>
+          <Card>
+            <div className="p-3 grid grid-cols-4 sm:grid-cols-6 gap-x-2 gap-y-3">
+              {grouped[cat].map(t => (
+                <div key={t.id} className="flex flex-col items-center gap-1.5 group">
+                  <div className="w-11 h-11 rounded-[10px] bg-white/[0.05] flex items-center justify-center group-hover:bg-white/[0.09] transition-colors">
+                    <img src={t.icon} alt={t.name} className="w-7 h-7 object-contain"
+                      onError={(e) => { e.target.style.display='none'; if(e.target.nextSibling) e.target.nextSibling.style.display='flex'; }} />
+                    <div className="hidden w-7 h-7 rounded bg-white/10 items-center justify-center text-white/60 text-[8px] font-semibold">{t.name.slice(0,2)}</div>
                   </div>
+                  <span className="text-[10px] text-white/45 text-center leading-tight truncate w-full group-hover:text-white/70 transition-colors">{t.name}</span>
                 </div>
-                <span className="text-[9px] text-white/40 mt-1 text-center leading-tight group-hover:text-white/60 transition-colors truncate w-full">{t.name}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </Card>
         </div>
       ))}
-    </div>
+    </Page>
   );
 };
 
