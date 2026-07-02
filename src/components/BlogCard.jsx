@@ -17,8 +17,11 @@ const BlogCard = ({ post }) => {
 
   return (
     <div
-      className="group bg-[#1A1D24]/80 backdrop-blur-sm rounded-xl p-4 md:p-6 cursor-pointer hover:bg-[#1A1D24]/90 transition-all duration-300 hover:scale-105"
+      className="group bg-surface/80 backdrop-blur-sm rounded-xl p-4 md:p-6 cursor-pointer hover:bg-surface/90 transition-all duration-300 hover:scale-105"
       onClick={handleCardClick}
+      tabIndex={0}
+      role="link"
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(); } }}
     >
       {/* Cover Image */}
       {post.coverImage?.url && (
@@ -35,12 +38,12 @@ const BlogCard = ({ post }) => {
       )}
 
       {/* Title */}
-      <h3 className="text-lg md:text-xl font-bold text-[var(--text-light)] mb-3 line-clamp-2 group-hover:text-[#f3d800] transition-colors">
+      <h3 className="text-lg md:text-xl font-bold text-heading mb-3 line-clamp-2 group-hover:text-gold transition-colors">
         {post.title}
       </h3>
 
       {/* Brief */}
-      <p className="text-[var(--text-medium)] text-sm mb-4 line-clamp-3">
+      <p className="text-body text-sm mb-4 line-clamp-3">
         {post.brief}
       </p>
 
@@ -50,13 +53,13 @@ const BlogCard = ({ post }) => {
           {post.tags.slice(0, 3).map((tag) => (
             <span
               key={tag.slug}
-              className="px-2 py-1 bg-cyan-500/15 text-cyan-400 text-xs rounded-full hover:bg-cyan-500/25 hover:scale-105 transition-all duration-200"
+              className="px-2 py-1 bg-gold/15 text-gold text-xs rounded-full hover:bg-gold/25 hover:scale-105 transition-all duration-200"
             >
               {tag.name}
             </span>
           ))}
           {post.tags.length > 3 && (
-            <span className="px-2 py-1 bg-gray-500/15 text-gray-400 text-xs rounded-full">
+            <span className="px-2 py-1 bg-border/50 text-body text-xs rounded-full">
               +{post.tags.length - 3}
             </span>
           )}
@@ -64,13 +67,13 @@ const BlogCard = ({ post }) => {
       )}
 
       {/* Meta Info */}
-      <div className="flex items-center justify-between text-xs md:text-sm text-[var(--text-light)] mb-3">
+      <div className="flex items-center justify-between text-xs md:text-sm text-heading mb-3">
         <span>{formatDate(post.publishedAt)}</span>
         <span>{post.readTimeInMinutes} min read</span>
       </div>
 
       {/* Read More Indicator */}
-      <div className="flex items-center text-[#f3d800] text-sm font-medium">
+      <div className="flex items-center text-gold text-sm font-medium">
         Read More
         <svg className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

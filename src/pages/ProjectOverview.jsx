@@ -128,19 +128,31 @@ const ProjectOverview = ({ containerId }) => {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#1a1a2e] to-[#0a0a0a] relative overflow-hidden"
+      className="min-h-screen bg-background relative overflow-hidden"
       id={containerId}
     >
-      <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
-      <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.7)] z-[2] "></div>
+      <div className="section-overlay" />
 
-      <div className="relative z-10 container mx-auto px-4 py-16 md:py-24">
-        <header className="text-center mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-            My Projects
-          </h1>
-          <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
+      <div className="section-content container mx-auto px-4 py-16 md:py-24">
+        <header className="section-content text-center mb-12 md:mb-16">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-heading tracking-tight">My Projects</h2>
+          <div className="mt-3 mx-auto w-16 h-1 bg-gold rounded-full" />
         </header>
+
+        <div className="section-content flex justify-center mb-8">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2 bg-surface border border-border px-4 py-2 rounded-lg text-sm font-medium text-heading hover:bg-border/50 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filter
+            {(activeFilters.techStacks.length > 0 || activeFilters.difficulty) && (
+              <span className="w-2 h-2 bg-gold rounded-full" />
+            )}
+          </button>
+        </div>
 
         {/* Loading State */}
         {(loading || techStacksLoading) && (
@@ -168,18 +180,18 @@ const ProjectOverview = ({ containerId }) => {
               ))
             ) : (
               <div className="col-span-full flex flex-col items-center justify-center min-h-[300px] text-center space-y-4">
-                <div className="w-16 h-16 bg-[var(--border-color)]/50 rounded-full flex items-center justify-center">
-                  <svg className="w-8 h-8 text-[var(--text-medium)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-16 h-16 bg-border/50 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-body" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-[var(--text-light)] text-lg font-semibold">
+                  <h3 className="text-heading text-lg font-semibold">
                     {projectData.length === 0 ? 'No projects available' : 'No matching projects'}
                   </h3>
-                  <p className="text-[var(--text-medium)] text-sm max-w-md">
-                    {projectData.length === 0 
-                      ? 'Projects are being loaded or none are currently available.' 
+                  <p className="text-body text-sm max-w-md">
+                    {projectData.length === 0
+                      ? 'Projects are being loaded or none are currently available.'
                       : 'Try adjusting your filters to see more projects.'}
                   </p>
                 </div>
@@ -189,7 +201,7 @@ const ProjectOverview = ({ containerId }) => {
           </div>
         )}
       </div>
-      <div className="pagination-container z-[10] relative mt-4">
+      <div className="pagination-container section-content mt-4">
         {isActive && filteredProjects.length > postPerPage && (
           <Pagination
             totalPosts={filteredProjects.length}

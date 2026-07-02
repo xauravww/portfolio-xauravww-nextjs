@@ -123,26 +123,27 @@ const ContactMe = ({ containerId }) => {
               scrollTrigger: {
                 trigger: ".ContactMe",
                 start: "top 70%",
+                once: true,
               }
             }
           );
         }
       }, 100);
-      
+
       // Delay sidebar animation
       setTimeout(() => {
         if (document.querySelector('.contact-sidebar')) {
           gsap.fromTo(".contact-sidebar",
-            { opacity: 0, x: -30 },
+            { opacity: 0, y: 20 },
             {
               opacity: 1,
-              x: 0,
+              y: 0,
               duration: 0.6,
               delay: 0.3,
-              stagger: 0.2,
               scrollTrigger: {
                 trigger: ".ContactMe",
                 start: "top 70%",
+                once: true,
               }
             }
           );
@@ -155,18 +156,17 @@ const ContactMe = ({ containerId }) => {
             className="ContactMe min-h-screen relative flex flex-col justify-evenly items-center overflow-hidden py-16 md:py-24"
             id={containerId}
         >
-            <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
-            <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
+            <div className="section-overlay" />
 
-            <header className="text-3xl md:text-5xl text-white font-bold relative z-[3] text-center px-4 mb-8">
-                Contact Me
-                <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
+            <header className="section-content text-center mb-12 md:mb-16">
+                <h2 className="font-display text-3xl md:text-4xl font-bold text-heading tracking-tight">Contact Me</h2>
+                <div className="mt-3 mx-auto w-16 h-1 bg-gold rounded-full" />
             </header>
 
-            <div className="contact-form-container main-content border border-[#33373E] bg-[#1A1D24]/70 backdrop-blur-sm p-6 flex flex-col items-center justify-center w-full max-w-[90vw] md:max-w-[70vw] lg:max-w-[800px] xl:max-w-[900px] text-[#F0F0F0] text-center z-[3] rounded-xl shadow-lg opacity-0">
+            <div className="contact-form-container main-content border border-border bg-surface/70 backdrop-blur-sm p-6 flex flex-col items-center justify-center w-full max-w-[90vw] md:max-w-[70vw] lg:max-w-[800px] xl:max-w-[900px] text-heading text-center section-content rounded-xl shadow-lg opacity-0">
                 <form onSubmit={handleSubmit} className="space-y-6 w-full">
                     <div className="flex flex-col">
-                        <label htmlFor="name" className="text-xl lg:text-2xl font-medium mb-2 text-[#F0F0F0] text-left">Name</label>
+                        <label htmlFor="name" className="text-sm font-medium mb-2 text-heading text-left">Name</label>
                         <input
                             type="text"
                             id="name"
@@ -176,16 +176,16 @@ const ContactMe = ({ containerId }) => {
                             required
                             maxLength="30"
                             placeholder="Your Name"
-                            className={`bg-[#33373E] border-2 ${formErrors.name ? 'border-red-500' : 'border-[#33373E]'} text-[#F0F0F0] placeholder:text-[#A0A0A0] p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A90E2] transition-all duration-200`}
+                            className={`bg-input border-2 ${formErrors.name ? 'border-error' : 'border-input'} text-heading placeholder:text-body p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200`}
                             aria-describedby="nameError"
                         />
                         {formErrors.name && (
-                            <p id="nameError" className="text-red-500 text-sm mt-1 text-left">{formErrors.name}</p>
+                            <p id="nameError" className="text-error text-sm mt-1 text-left">{formErrors.name}</p>
                         )}
                     </div>
 
                     <div className="flex flex-col">
-                        <label htmlFor="email" className="text-xl lg:text-2xl font-medium mb-2 text-[#F0F0F0] text-left">Email</label>
+                        <label htmlFor="email" className="text-sm font-medium mb-2 text-heading text-left">Email</label>
                         <input
                             type="email"
                             id="email"
@@ -194,17 +194,17 @@ const ContactMe = ({ containerId }) => {
                             onChange={handleChange}
                             required
                             placeholder="your.email@example.com"
-                            className={`bg-[#33373E] border-2 ${formErrors.email ? 'border-red-500' : 'border-[#33373E]'} text-[#F0F0F0] placeholder:text-[#A0A0A0] p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A90E2] transition-all duration-200`}
+                            className={`bg-input border-2 ${formErrors.email ? 'border-error' : 'border-input'} text-heading placeholder:text-body p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200`}
                             maxLength="50"
                             aria-describedby="emailError"
                         />
                         {formErrors.email && (
-                            <p id="emailError" className="text-red-500 text-sm mt-1 text-left">{formErrors.email}</p>
+                            <p id="emailError" className="text-error text-sm mt-1 text-left">{formErrors.email}</p>
                         )}
                     </div>
 
                     <div className="flex flex-col">
-                        <label htmlFor="query" className="text-xl lg:text-2xl font-medium mb-2 text-[#F0F0F0] text-left">Message</label>
+                        <label htmlFor="query" className="text-sm font-medium mb-2 text-heading text-left">Message</label>
                         <textarea
                             id="query"
                             name="query"
@@ -214,23 +214,23 @@ const ContactMe = ({ containerId }) => {
                             rows="4"
                             maxLength="500"
                             placeholder="Your message here..."
-                            className={`bg-[#33373E] border-2 ${formErrors.query ? 'border-red-500' : 'border-[#33373E]'} text-[#F0F0F0] placeholder:text-[#A0A0A0] resize-none p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4A90E2] transition-all duration-200`}
+                            className={`bg-input border-2 ${formErrors.query ? 'border-error' : 'border-input'} text-heading placeholder:text-body resize-none p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200`}
                             aria-describedby="queryError"
                         />
                         {formErrors.query && (
-                            <p id="queryError" className="text-red-500 text-sm mt-1 text-left">{formErrors.query}</p>
+                            <p id="queryError" className="text-error text-sm mt-1 text-left">{formErrors.query}</p>
                         )}
-                        <p className="text-right text-sm text-[var(--text-medium)] mt-1">{formData.query.length}/500</p>
+                        <p className="text-right text-sm text-body mt-1">{formData.query.length}/500</p>
                     </div>
 
                     <button
                         type="submit"
                         disabled={loader}
-                        className={`w-full bg-[#f3d800] text-[#1A1D24] py-3 px-6 rounded-lg shadow-md hover:bg-[#f3d800]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f3d800] transition duration-300 ease-in-out ${loader ? 'opacity-70 cursor-not-allowed' : ''}`}
+                        className={`w-full bg-gold text-inverse py-3 px-6 rounded-lg shadow-md hover:bg-gold/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gold transition duration-300 ease-in-out ${loader ? 'opacity-70 cursor-not-allowed' : ''}`}
                     >
                         {loader ? (
                             <span className="flex items-center justify-center">
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-heading" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -242,34 +242,20 @@ const ContactMe = ({ containerId }) => {
             </div>
 
             {/* Mobile social links */}
-            <div className="contact-sidebar sidebar-wrapper z-50 xl:hidden mt-8 opacity-0">
-                <div className="sidebar flex justify-center items-center gap-4 md:gap-6 lg:gap-8 border-2 border-[var(--border-color)] p-4 md:p-6 bg-[#33373E]/80 backdrop-blur-sm rounded-xl shadow-lg">
-                    <a href={process.env.NEXT_PUBLIC_X_URL} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20">
+            <div className="contact-sidebar sidebar-wrapper section-content mt-8">
+                <div className="sidebar flex justify-center items-center gap-4 md:gap-6 lg:gap-8 border-2 border-border p-4 md:p-6 bg-border/80 backdrop-blur-sm rounded-xl shadow-lg">
+                    <a href={process.env.NEXT_PUBLIC_X_URL} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
                         <img className={sidebarImgCSS} src="/assets/X.jpeg" alt="X" />
                     </a>
-                    <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
+                    <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
                         <img className={sidebarImgCSS} src="/assets/linkedin.png" alt="LinkedIn" />
                     </a>
-                    <a href={process.env.NEXT_PUBLIC_SHOWWCASE_URL} target="_blank" rel="noopener noreferrer" aria-label="Showwcase" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
+                    <a href={process.env.NEXT_PUBLIC_SHOWWCASE_URL} target="_blank" rel="noopener noreferrer" aria-label="Showwcase" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
                         <img className={sidebarImgCSS} src="/assets/showwcase.png" alt="Showwcase" />
                     </a>
                 </div>
             </div>
 
-            {/* Desktop social links */}
-            <div className="contact-sidebar hidden sidebar-wrapper fixed top-1/2 left-2 md:left-4 lg:left-6 xl:left-8 z-40 flex-col justify-center items-center xl:flex opacity-0 transform -translate-y-1/2">
-                <div className="sidebar flex flex-col justify-center items-center gap-3 lg:gap-4 border-2 border-[var(--border-color)] p-3 lg:p-4 bg-[#33373E]/80 backdrop-blur-sm rounded-xl shadow-lg">
-                    <a href={process.env.NEXT_PUBLIC_X_URL} target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20">
-                        <img className={sidebarImgCSS} src="/assets/X.jpeg" alt="X" />
-                    </a>
-                    <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
-                        <img className={sidebarImgCSS} src="/assets/linkedin.png" alt="LinkedIn" />
-                    </a>
-                    <a href={process.env.NEXT_PUBLIC_SHOWWCASE_URL} target="_blank" rel="noopener noreferrer" aria-label="Showwcase" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-                        <img className={sidebarImgCSS} src="/assets/showwcase.png" alt="Showwcase" />
-                    </a>
-                </div>
-            </div>
 
             <ToastContainer position="bottom-center" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="dark" />
         </div>

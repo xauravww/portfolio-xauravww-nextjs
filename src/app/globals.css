@@ -1,45 +1,38 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  
-  /* Custom color variables for consistent theming */
-  --accent-blue: #4A90E2;
-  --border-color: #33373E;
-  --bg-dark: #1A1D24;
-  --bg-darker: #0a0a0a;
-  --text-light: #F0F0F0;
-  --text-medium: #A0A0A0;
-  --text-dark: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Brand */
+  --color-gold: #D4A017;
+  --color-accent: #4A90E2;
+
+  /* Surfaces */
+  --color-background: #0a0a0a;
+  --color-foreground: #F0F0F0;
+  --color-surface: #1A1D24;
+  --color-border: #33373E;
+  --color-input: #33373E;
+
+  /* Text */
+  --color-heading: #F0F0F0;
+  --color-body: #B8B8B8;
+  --color-caption: #808080;
+  --color-inverse: #1A1D24;
+
+  /* State */
+  --color-error: #EF4444;
+  --color-success: #22C55E;
+  --color-ring: #4A90E2;
+
+  /* Fonts */
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
   --font-body: var(--font-source-sans);
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --accent-blue: #4A90E2;
-    --border-color: #33373E;
-    --bg-dark: #1A1D24;
-    --bg-darker: #0a0a0a;
-    --text-light: #F0F0F0;
-    --text-medium: #A0A0A0;
-    --text-dark: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-body), system-ui, -apple-system, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   font-variation-settings: normal;
@@ -48,7 +41,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Premium typography utilities */
 .font-display {
   font-family: var(--font-serif), serif;
   font-weight: 600;
@@ -61,17 +53,25 @@ body {
   letter-spacing: -0.02em;
 }
 
-.font-body {
-  font-family: var(--font-body), sans-serif;
-  font-weight: 400;
-  line-height: 1.6;
+.section-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: url('/assets/pattern2.png') center/cover no-repeat fixed;
 }
 
-.font-mono {
-  font-family: var(--font-mono), monospace;
+.section-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
 }
 
-/* Premium text styling */
+.section-content {
+  position: relative;
+  z-index: 2;
+}
+
 .text-gradient {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
@@ -79,76 +79,10 @@ body {
   background-clip: text;
 }
 
-.text-shadow {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+.line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
-.text-shadow-lg {
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
-}
-
-/* Line clamp utilities */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-1 {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Grid utilities for even card heights */
-.auto-rows-fr {
-  grid-auto-rows: 1fr;
-}
-
-/* Enhanced project card styling */
-.project-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.project-card-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Better contrast and hierarchy */
-.card-title {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1.25rem;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-}
-
-.card-description {
-  color: #cbd5e1;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  flex: 1;
-}
-
-.card-tech-stack {
-  margin-top: auto;
-  padding-top: 1rem;
-}
-
-/* Improved loading states */
 .loading-skeleton {
   background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
   background-size: 200% 100%;
@@ -156,29 +90,16 @@ body {
 }
 
 @keyframes loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* Better scrollbar styling */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+@keyframes ctxIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(30, 41, 59, 0.3);
-  border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(59, 130, 246, 0.6);
-  border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(59, 130, 246, 0.8);
-}
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 3px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.15); }

@@ -48,6 +48,7 @@ function Experience({ containerId }) {
             scrollTrigger: {
               trigger: ".experience-container",
               start: "top 70%",
+              once: true,
             }
           }
         );
@@ -63,8 +64,7 @@ function Experience({ containerId }) {
   if (loading) {
     return (
       <div className="experience-container flex flex-col items-center justify-center min-h-screen relative py-16 md:py-24" id={containerId}>
-        <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
-        <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
+        <div className="section-overlay" />
         <LoadingSpinner text="Loading experiences..." />
       </div>
     );
@@ -72,34 +72,33 @@ function Experience({ containerId }) {
 
   return (
     <div className="experience-container flex flex-col items-center justify-center min-h-screen relative py-16 md:py-24" id={containerId}>
-        <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
-      <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
+      <div className="section-overlay" />
 
-      <header className="text-3xl md:text-5xl text-white font-bold relative z-[10] text-center px-4 mb-8 md:mb-16">
-        Experience
-        <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
+      <header className="section-content text-center mb-12 md:mb-16">
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-heading tracking-tight">Experience</h2>
+        <div className="mt-3 mx-auto w-16 h-1 bg-gold rounded-full" />
       </header>
 
       {experienceData.length === 0 ? (
-        <div className="text-[var(--text-medium)] text-center z-[10] relative">
+        <div className="text-body text-center section-content">
           No experience data available.
         </div>
       ) : (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-[10] relative">
-          <div className="experience-content-box p-4 sm:p-6 lg:p-8 text-[var(--text-light)] grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 bg-[#1A1D24]/70 backdrop-blur-sm rounded-xl shadow-xl">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 section-content">
+          <div className="experience-content-box p-4 sm:p-6 lg:p-8 text-heading grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 bg-surface/70 backdrop-blur-sm rounded-xl shadow-xl">
             <div className="lg:col-span-1 pb-4 lg:pb-0 lg:pr-6">
             {experienceData.map((data) => (
               <div
                 key={data.id}
                 className={`py-3 px-4 mt-3 cursor-pointer rounded-lg transition-all duration-200 ${
                   showExperience === data.position
-                    ? "bg-[#f3d800]/10 text-[#f3d800] shadow-md"
-                    : "text-[var(--text-medium)] hover:text-[var(--text-light)] hover:bg-[#1A1D24]/60"
+                    ? "bg-gold/10 text-gold shadow-md"
+                    : "text-body hover:text-heading hover:bg-surface/60"
                 }`}
                 onClick={() => handleClick(data.position)}
               >
                 <div className="text-lg font-medium">{data.position}</div>
-                <div className="text-sm text-[var(--text-medium)]">{data.company}</div>
+                <div className="text-sm text-body">{data.company}</div>
               </div>
             ))}
           </div>

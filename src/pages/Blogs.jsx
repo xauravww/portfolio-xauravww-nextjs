@@ -46,6 +46,7 @@ const Blogs = ({ containerId }) => {
         scrollTrigger: {
           trigger: ".Blogs",
           start: "top 70%",
+          once: true,
         }
       }
     );
@@ -65,6 +66,7 @@ const Blogs = ({ containerId }) => {
             scrollTrigger: {
               trigger: ".blog-grid",
               start: "top 80%",
+              once: true,
             }
           }
         );
@@ -77,30 +79,29 @@ const Blogs = ({ containerId }) => {
       className="Blogs min-h-screen relative flex flex-col items-center py-16 md:py-24"
       id={containerId}
     >
-      <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
-      <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
+      <div className="section-overlay" />
 
       {/* Header */}
-      <header className="text-3xl md:text-5xl text-white font-bold relative z-[3] text-center px-4 mb-12">
-        Latest Blog Posts
-        <div className="underline-below-header absolute w-3/5 h-1 bg-[#f3d800] bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1"></div>
+      <header className="section-content text-center mb-12 md:mb-16">
+        <h2 className="font-display text-3xl md:text-4xl font-bold text-heading tracking-tight">Latest Blog Posts</h2>
+        <div className="mt-3 mx-auto w-16 h-1 bg-gold rounded-full" />
       </header>
 
       {/* Content */}
-      <div className="blog-content z-[3] relative w-full max-w-7xl px-4 opacity-0">
+      <div className="blog-content section-content w-full max-w-7xl px-4">
         {loading ? (
           <LoadingSpinner text="Loading blog posts..." />
         ) : error ? (
-           <div className="bg-[#1A1D24]/80 backdrop-blur-sm rounded-xl p-8 text-center shadow-xl">
-             <div className="text-red-400 text-lg mb-4">Failed to load blog posts</div>
-             <p className="text-[var(--text-medium)] mb-6">
+           <div className="bg-surface/80 backdrop-blur-sm rounded-xl p-8 text-center shadow-xl">
+             <div className="text-error text-lg mb-4">Failed to load blog posts</div>
+             <p className="text-body mb-6">
                Unable to fetch posts from Hashnode. Please check your configuration.
              </p>
              <a
                href="https://xauravww.hashnode.dev"
                target="_blank"
                rel="noopener noreferrer"
-               className="bg-[#f3d800] text-[#1A1D24] px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity inline-flex items-center"
+               className="bg-gold text-inverse px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity inline-flex items-center"
              >
                Visit Blog Directly
               <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,13 +110,13 @@ const Blogs = ({ containerId }) => {
             </a>
           </div>
          ) : posts.length === 0 ? (
-            <div className="bg-[#1A1D24]/80 backdrop-blur-sm rounded-xl p-8 text-center shadow-xl">
-              <div className="text-[var(--text-light)] text-lg mb-4">No blog posts found</div>
+            <div className="bg-surface/80 backdrop-blur-sm rounded-xl p-8 text-center shadow-xl">
+              <div className="text-heading text-lg mb-4">No blog posts found</div>
              <a
                href="https://xauravww.hashnode.dev"
                target="_blank"
                rel="noopener noreferrer"
-               className="bg-[#f3d800] text-[#1A1D24] px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity inline-flex items-center"
+               className="bg-gold text-inverse px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity inline-flex items-center"
              >
                Visit Blog Directly
               <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -140,7 +141,7 @@ const Blogs = ({ containerId }) => {
                  href="https://xauravww.hashnode.dev"
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="bg-[#f3d800] !text-[#1A1D24] px-8 py-3 rounded-lg font-medium hover:bg-[#f3d800]/90 transition-all inline-flex items-center"
+                 className="bg-gold !text-inverse px-8 py-3 rounded-lg font-medium hover:bg-gold/90 transition-all inline-flex items-center"
                >
                  View All Posts
                 <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

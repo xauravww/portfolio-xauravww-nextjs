@@ -63,20 +63,19 @@ const Home = ({ containerId }) => {
       id={containerId}
     >
       {/* Initial loading overlay */}
-      <div className="home-intro-overlay absolute top-0 left-0 h-full w-full bg-[var(--bg-dark)] z-[10] flex items-center justify-center">
-        <div className="text-[#f3d800] text-4xl">SM</div>
+      <div className="home-intro-overlay absolute top-0 left-0 h-full w-full bg-surface z-[10] flex items-center justify-center">
+        <div className="text-gold text-4xl">SM</div>
       </div>
       
-      <div className="mask absolute top-0 left-0 h-full w-full bg-[rgba(0,0,0,0.6)] z-[2]"></div>
-      <div className="pattern2 absolute top-0 left-0 right-0 h-full w-full bg-[url('/assets/pattern2.png')] z-[1] backdrop-blur bg-fixed bg-center bg-no-repeat bg-cover"></div>
+      <div className="section-overlay" />
 
-      <div className="home-content-block flex flex-col items-center justify-center text-center z-[3] px-4">
-        <h1 className="home-name font-['Cyborg'] text-6xl md:text-8xl lg:text-9xl font-bold text-[var(--text-light)] mb-4 md:mb-6 tracking-tight">
+      <div className="home-content-block section-content flex flex-col items-center justify-center text-center px-4">
+        <h1 className="home-name font-display text-5xl md:text-6xl lg:text-7xl font-bold text-heading mb-4 md:mb-6 tracking-tight">
           Hello, I&apos;m Saurav Maheshwari
         </h1>
-        <div className="home-description text-lg md:text-xl lg:text-2xl text-[var(--text-medium)] max-w-xl md:max-w-2xl mb-8 md:mb-10">
+        <div className="home-description text-base md:text-lg text-body max-w-xl md:max-w-2xl mb-8 md:mb-10">
           Full-Stack Developer crafting AI-powered solutions where{" "}
-          <span className="text-[#f3d800] font-semibold">
+          <span className="text-gold font-semibold">
             <Typewriter
               options={{
                 strings: [
@@ -97,12 +96,12 @@ const Home = ({ containerId }) => {
 
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <ScrollLink
-            to="section3"
+            to="projects"
             spy={true}
             smooth={true}
             offset={0}
             duration={500}
-            className="cta-button inline-block bg-[#f3d800] text-black font-semibold py-3 px-8 rounded-md text-lg md:text-xl hover:bg-[#f3d800]/90 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg"
+            className="cta-button inline-block bg-gold text-inverse font-semibold py-3 px-8 rounded-md text-sm hover:bg-gold/90 hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg"
           >
             View My Work
           </ScrollLink>
@@ -110,8 +109,8 @@ const Home = ({ containerId }) => {
         
         {/* Scroll indicator */}
         <div className="scroll-indicator absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center opacity-0">
-          <p className="text-[var(--text-medium)] text-sm mb-2">Scroll Down</p>
-          <svg className="w-6 h-6 text-[var(--text-medium)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <p className="text-body text-sm mb-2">Scroll Down</p>
+          <svg className="w-6 h-6 text-body" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </div>
