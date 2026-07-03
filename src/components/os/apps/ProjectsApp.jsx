@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { Page, Card, Tag, Button, SectionLabel, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
 import OptimizedImage from '../../OptimizedImage';
-import { useWindows } from '../../../context/windowContext';
 
 const TECH_MAP = {
   'React': { name: 'React', icon: '/assets/techstack/react.png' },
@@ -41,7 +40,7 @@ const FilterIcon = <svg className="w-3 h-3" fill="none" stroke="currentColor" vi
 const ChevronLeft = <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>;
 const ChevronRight = <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>;
 
-const ProjectCard = ({ project, onOpenLive }) => {
+const ProjectCard = ({ project }) => {
   const repo = project.url?.repo;
   const live = project.url?.live;
 
@@ -83,7 +82,7 @@ const ProjectCard = ({ project, onOpenLive }) => {
 
         <div className="flex gap-2 mt-auto pt-1">
           {repo && <Button href={repo} variant="default" icon={GitHubIcon} className="text-[11px] !px-2.5 !py-[4px]">Code</Button>}
-          {live && <Button onClick={() => onOpenLive(live, project.title)} variant="accent" icon={ExternalIcon} className="text-[11px] !px-2.5 !py-[4px]">Live</Button>}
+          {live && <Button href={live} variant="accent" icon={ExternalIcon} className="text-[11px] !px-2.5 !py-[4px]">Live</Button>}
         </div>
       </div>
     </Card>
@@ -200,9 +199,6 @@ const ProjectsApp = () => {
   const [activeFilters, setActiveFilters] = useState({ techStacks: [], difficulty: null, techFilterMode: 'AND' });
   const scrollRef = useRef(null);
   const perPage = 4;
-  const { openBrowser } = useWindows();
-
-  const openLive = (url, title) => openBrowser({ url, title: title || url, mode: 'web' });
 
   const changePage = (page) => {
     setCurrentPage(page);
@@ -258,7 +254,7 @@ const ProjectsApp = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {posts.length > 0 ? posts.map(p => (
-          <ProjectCard key={p.id} project={p} onOpenLive={openLive} />
+          <ProjectCard key={p.id} project={p} />
         )) : (
           <div className="col-span-full py-10 text-center text-white/30 text-[13px]">No matching projects.</div>
         )}

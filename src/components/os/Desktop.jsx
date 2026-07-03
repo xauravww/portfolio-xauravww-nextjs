@@ -50,7 +50,7 @@ const SVG = {
 };
 
 function DesktopSurface() {
-  const { openWindow, windows, closeWindow, getOpenWindows, openBrowser } = useWindows();
+  const { openWindow, windows, closeWindow, getOpenWindows } = useWindows();
   const [menu, setMenu] = useState(null);
   const [selected, setSelected] = useState(null);
 
@@ -66,7 +66,7 @@ function DesktopSurface() {
         { label: 'Close All Windows', icon: SVG.close, disabled: !anyOpen, action: () => getOpenWindows().forEach(([id]) => closeWindow(id)) },
         { divider: true },
         { label: 'Change Desktop Background', icon: SVG.image, action: () => window.dispatchEvent(new Event('change-wallpaper')) },
-        { label: 'View on GitHub', icon: SVG.github, action: () => openBrowser({ url: 'https://github.com/xauravww', title: 'GitHub · xauravww', mode: 'web' }, { size: WINDOW_SIZES.safari }) },
+        { label: 'View on GitHub', icon: SVG.github, action: () => window.open('https://github.com/xauravww', '_blank') },
         { label: 'Refresh', icon: SVG.refresh, shortcut: '⌘R', action: () => window.location.reload() },
       ],
     });

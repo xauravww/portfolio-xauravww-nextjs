@@ -32,7 +32,7 @@ const liftFor = (dist) => {
 };
 
 const Dock = ({ defaultSizes, onItemContextMenu }) => {
-  const { windows, openWindow, focusWindow, openBrowser } = useWindows();
+  const { windows, openWindow, focusWindow } = useWindows();
   const [hovered, setHovered] = useState(null);
 
   const handleClick = (item) => {
@@ -95,7 +95,7 @@ const Dock = ({ defaultSizes, onItemContextMenu }) => {
             </div>
           )}
           <button
-            onClick={() => openBrowser({ url: 'https://github.com/xauravww', title: 'GitHub · xauravww', mode: 'web' }, { size: defaultSizes?.safari })}
+            onClick={() => window.open('https://github.com/xauravww', '_blank')}
             onMouseEnter={() => setHovered('gh')}
             className="outline-none origin-bottom"
             style={{ transform: `scale(${hovered === 'gh' ? 1.5 : 1}) translateY(${hovered === 'gh' ? -16 : 0}px)`, transition: 'transform 180ms cubic-bezier(0.25,0.8,0.25,1)' }}
