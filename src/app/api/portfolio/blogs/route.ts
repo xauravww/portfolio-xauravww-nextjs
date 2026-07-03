@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 
-const HASHNODE_RSS_URL = 'https://xauravww.hashnode.dev/rss.xml';
-
 function extractTag(xml: string, tag: string): string {
   const match = xml.match(new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tag}>`, 'i'))
     || xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i'));
@@ -32,6 +30,18 @@ function estimateReadTime(html: string): number {
 
 function extractSlug(url: string): string {
   return url.split('/').pop() || '';
+}
+
+// Strip dangerous nodes/attrs from RSS article HTML before it is rendered
+// via dangerouslySetInnerHTML in the in-app Safari reader.
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
+    .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
+    .replace(/\son\w+\s*=\s*[^\s>]+/gi, '')
+    .replace(/javascript:/gi, '');
 }
 
 export async function GET() {
@@ -67,6 +77,7 @@ export async function GET() {
         },
         publishedAt: extractTag(item, 'pubDate'),
         readTimeInMinutes: estimateReadTime(content || extractTag(item, 'description')),
+        content: sanitizeHtml(content),
         tags,
       };
     });

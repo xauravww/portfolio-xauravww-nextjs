@@ -11,6 +11,8 @@ export function WindowProvider({ children }) {
   const [windows, setWindows] = useState({});
   const [topZ, setTopZ] = useState(BASE_Z);
   const [activeWindowId, setActiveWindowId] = useState(null);
+  // In-app Safari browser: current page + back/forward history.
+  const [browser, setBrowser] = useState({ history: [], index: -1 });
 
   const openWindow = useCallback((id, opts = {}) => {
     const newZ = topZ + 1;
@@ -68,6 +70,24 @@ export function WindowProvider({ children }) {
     setWindows(prev => ({ ...prev, [id]: { ...prev[id], position } }));
   }, []);
 
+  // Navigate the in-app Safari to a page and open/focus its window.
+  // page = { url, title, mode: 'reader'|'web', content? }
+  const openBrowser = useCallback((page, opts = {}) => {
+    setBrowser(prev => {
+      const trimmed = prev.history.slice(0, prev.index + 1);
+      return { history: [...trimmed, page], index: trimmed.length };
+    });
+    openWindow('safari', { size: opts.size });
+  }, [openWindow]);
+
+  const browserBack = useCallback(() => {
+    setBrowser(prev => prev.index > 0 ? { ...prev, index: prev.index - 1 } : prev);
+  }, []);
+
+  const browserForward = useCallback(() => {
+    setBrowser(prev => prev.index < prev.history.length - 1 ? { ...prev, index: prev.index + 1 } : prev);
+  }, []);
+
   const getOpenWindows = useCallback(() => {
     return Object.entries(windows)
       .filter(([, w]) => w.isOpen && !w.isMinimized)
@@ -77,7 +97,8 @@ export function WindowProvider({ children }) {
   return (
     <WindowContext.Provider value={{
       windows, activeWindowId, openWindow, closeWindow, minimizeWindow,
-      toggleMaximize, focusWindow, updatePosition, getOpenWindows
+      toggleMaximize, focusWindow, updatePosition, getOpenWindows,
+      browser, openBrowser, browserBack, browserForward
     }}>
       {children}
     </WindowContext.Provider>

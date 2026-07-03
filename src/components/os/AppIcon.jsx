@@ -115,6 +115,25 @@ const ICONS = {
       </g>
     ),
   },
+  safari: {
+    c1: '#E8EDF2', c2: '#AEB8C2',
+    symbol: (
+      <g transform="translate(50,50)">
+        <circle cx="0" cy="0" r="30" fill="#1E88E5" />
+        <g stroke={white(0.85)} strokeWidth="1.6">
+          {Array.from({ length: 24 }).map((_, i) => {
+            const a = (i * 15 * Math.PI) / 180;
+            const r1 = 27, r2 = i % 6 === 0 ? 22 : 24.5;
+            return <line key={i} x1={Math.sin(a) * r1} y1={-Math.cos(a) * r1} x2={Math.sin(a) * r2} y2={-Math.cos(a) * r2} />;
+          })}
+        </g>
+        <polygon points="0,-16 5,0 0,16 -5,0" fill="#F5F5F7" />
+        <polygon points="0,-16 5,0 0,0" fill="#FF3B30" />
+        <polygon points="0,16 -5,0 0,0" fill="#FF6B60" />
+        <circle cx="0" cy="0" r="2.2" fill="#1E88E5" stroke={white(0.9)} strokeWidth="1" />
+      </g>
+    ),
+  },
 };
 
 export default AppIcon;

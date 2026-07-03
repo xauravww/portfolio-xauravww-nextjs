@@ -15,6 +15,7 @@ import ExperienceApp from './apps/ExperienceApp';
 import BlogsApp from './apps/BlogsApp';
 import EducationApp from './apps/EducationApp';
 import ContactApp from './apps/ContactApp';
+import SafariApp from './apps/SafariApp';
 
 const DESKTOP_ICONS = [
   { id: 'about', name: 'About Me' },
@@ -34,6 +35,7 @@ const WINDOW_SIZES = {
   blogs: { w: 840, h: 540 },
   education: { w: 780, h: 500 },
   contact: { w: 460, h: 560 },
+  safari: { w: 900, h: 620 },
 };
 
 const SVG = {
@@ -48,7 +50,7 @@ const SVG = {
 };
 
 function DesktopSurface() {
-  const { openWindow, windows, closeWindow, getOpenWindows } = useWindows();
+  const { openWindow, windows, closeWindow, getOpenWindows, openBrowser } = useWindows();
   const [menu, setMenu] = useState(null);
   const [selected, setSelected] = useState(null);
 
@@ -64,7 +66,7 @@ function DesktopSurface() {
         { label: 'Close All Windows', icon: SVG.close, disabled: !anyOpen, action: () => getOpenWindows().forEach(([id]) => closeWindow(id)) },
         { divider: true },
         { label: 'Change Desktop Background', icon: SVG.image, action: () => window.dispatchEvent(new Event('change-wallpaper')) },
-        { label: 'View on GitHub', icon: SVG.github, action: () => window.open('https://github.com/xauravww', '_blank') },
+        { label: 'View on GitHub', icon: SVG.github, action: () => openBrowser({ url: 'https://github.com/xauravww', title: 'GitHub · xauravww', mode: 'web' }, { size: WINDOW_SIZES.safari }) },
         { label: 'Refresh', icon: SVG.refresh, shortcut: '⌘R', action: () => window.location.reload() },
       ],
     });
@@ -148,6 +150,9 @@ function DesktopSurface() {
       </Window>
       <Window id="contact" title="Contact" defaultSize={WINDOW_SIZES.contact}>
         <ContactApp />
+      </Window>
+      <Window id="safari" title="Safari" defaultSize={WINDOW_SIZES.safari}>
+        <SafariApp />
       </Window>
 
       <Dock defaultSizes={WINDOW_SIZES} onItemContextMenu={iconMenu} />

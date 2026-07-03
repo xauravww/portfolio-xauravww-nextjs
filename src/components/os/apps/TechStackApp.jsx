@@ -5,9 +5,33 @@ import LoadingSpinner from '../../LoadingSpinner';
 
 const CAT_LABELS = {
   frontend: 'Frontend', backend: 'Backend', database: 'Database',
-  devops: 'DevOps & Tools', design: 'Design', other: 'Other',
+  devops: 'DevOps & Tools', mobile: 'Mobile', design: 'Design', other: 'Other',
 };
-const CAT_ORDER = ['frontend', 'backend', 'database', 'devops', 'design', 'other'];
+const CAT_ORDER = ['frontend', 'backend', 'database', 'devops', 'mobile', 'design', 'other'];
+
+// Local fallback shown when the DB has no tech stacks seeded.
+const FALLBACK = [
+  { name: 'HTML & CSS', icon: '/assets/techstack/html-css.png', category: 'frontend' },
+  { name: 'JavaScript', icon: '/assets/techstack/js.png', category: 'frontend' },
+  { name: 'TypeScript', icon: '/assets/typescript.png', category: 'frontend' },
+  { name: 'React.js', icon: '/assets/techstack/react.png', category: 'frontend' },
+  { name: 'Tailwind CSS', icon: '/assets/tailwind.png', category: 'frontend' },
+  { name: 'Redux Toolkit', icon: '/assets/redux-toolkit.png', category: 'frontend' },
+  { name: 'XML', icon: '/assets/techstack/xml.png', category: 'frontend' },
+  { name: 'Node.js', icon: '/assets/techstack/nodejs.png', category: 'backend' },
+  { name: 'Express.js', icon: '/assets/techstack/express-js.webp', category: 'backend' },
+  { name: 'GraphQL', icon: '/assets/graphql.png', category: 'backend' },
+  { name: 'Notion API', icon: '/assets/techstack/notion.png', category: 'backend' },
+  { name: 'MongoDB', icon: '/assets/techstack/mongodb.png', category: 'database' },
+  { name: 'Redis', icon: '/assets/techstack/redis.png', category: 'database' },
+  { name: 'Sanity CMS', icon: '/assets/techstack/sanity.png', category: 'database' },
+  { name: 'N8N', icon: '/assets/techstack/n8n.jpg', category: 'devops' },
+  { name: 'Postman', icon: '/assets/postman.png', category: 'devops' },
+  { name: 'React Native', icon: '/assets/techstack/react-native.png', category: 'mobile' },
+  { name: 'Kotlin', icon: '/assets/techstack/kotlin.png', category: 'mobile' },
+  { name: 'Android', icon: '/assets/techstack/android.png', category: 'mobile' },
+  { name: 'C++', icon: '/assets/techstack/cpp.png', category: 'mobile' },
+].map((t, i) => ({ ...t, id: `fb-${i}` }));
 
 const TechStackApp = () => {
   const [grouped, setGrouped] = useState({});
@@ -17,12 +41,14 @@ const TechStackApp = () => {
     (async () => {
       try {
         const res = await fetch('/api/portfolio/techstacks');
-        if (res.ok) {
-          const data = await res.json();
-          const g = data.reduce((acc, t) => { (acc[t.category] = acc[t.category] || []).push(t); return acc; }, {});
-          setGrouped(g);
-        }
-      } catch (e) { console.error('Error fetching tech stacks:', e); }
+        let data = res.ok ? await res.json() : [];
+        if (!Array.isArray(data) || data.length === 0) data = FALLBACK;
+        const g = data.reduce((acc, t) => { (acc[t.category || 'other'] = acc[t.category || 'other'] || []).push(t); return acc; }, {});
+        setGrouped(g);
+      } catch (e) {
+        console.error('Error fetching tech stacks:', e);
+        setGrouped(FALLBACK.reduce((acc, t) => { (acc[t.category] = acc[t.category] || []).push(t); return acc; }, {}));
+      }
       finally { setLoading(false); }
     })();
   }, []);
