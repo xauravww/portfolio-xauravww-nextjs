@@ -2,28 +2,25 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-const ContextMenu = ({ menu, onClose }) => {
+const ContextMenu = ({ x, y, items, onClose }) => {
   const ref = useRef(null);
-  const [pos, setPos] = useState({ x: menu.x, y: menu.y, ready: false });
+  const [pos, setPos] = useState({ x, y, ready: false });
 
-  // Clamp to viewport after mount (measure real size)
   useEffect(() => {
     if (!ref.current) return;
     const { offsetWidth: w, offsetHeight: h } = ref.current;
-    let { x, y } = menu;
-    if (x + w > window.innerWidth - 8) x = window.innerWidth - w - 8;
-    if (y + h > window.innerHeight - 8) y = window.innerHeight - h - 8;
-    setPos({ x: Math.max(8, x), y: Math.max(32, y), ready: true });
-  }, [menu]);
+    let cx = x, cy = y;
+    if (cx + w > window.innerWidth - 8) cx = window.innerWidth - w - 8;
+    if (cy + h > window.innerHeight - 8) cy = window.innerHeight - h - 8;
+    setPos({ x: Math.max(8, cx), y: Math.max(32, cy), ready: true });
+  }, [x, y]);
 
   useEffect(() => {
-    // Close on any pointer press outside the menu
     const onPointer = (e) => {
       if (ref.current && !ref.current.contains(e.target)) onClose();
     };
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
     const onScroll = () => onClose();
-    // Attach next tick so the opening right-click doesn't self-close
     const id = setTimeout(() => {
       window.addEventListener('pointerdown', onPointer, true);
       window.addEventListener('keydown', onKey);
@@ -54,7 +51,7 @@ const ContextMenu = ({ menu, onClose }) => {
       }}
       onContextMenu={(e) => e.preventDefault()}
     >
-      {menu.items.map((item, i) => {
+      {items.map((item, i) => {
         if (item.divider) return <div key={i} className="h-px my-1.5 mx-2 bg-white/[0.09]" />;
         return (
           <button
