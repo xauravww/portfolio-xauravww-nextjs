@@ -218,8 +218,22 @@ const ProjectsApp = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState({ techStacks: [], difficulty: null, techFilterMode: 'AND' });
-  const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilters, setActiveFilters] = useState(() => {
+    const initial = typeof window !== 'undefined' ? window.__projectsAppInitialFilter : null;
+    if (initial) {
+      if (typeof window !== 'undefined') window.__projectsAppInitialFilter = null;
+      return { techStacks: [initial], difficulty: null, techFilterMode: 'AND' };
+    }
+    return { techStacks: [], difficulty: null, techFilterMode: 'AND' };
+  });
+  const [searchTerm, setSearchTerm] = useState(() => {
+    const initialSearch = typeof window !== 'undefined' ? window.__projectsAppInitialSearch : null;
+    if (initialSearch) {
+      if (typeof window !== 'undefined') window.__projectsAppInitialSearch = null;
+      return initialSearch;
+    }
+    return '';
+  });
   const scrollRef = useRef(null);
   const perPage = 4;
 
@@ -232,6 +246,23 @@ const ProjectsApp = () => {
     const scrollParent = scrollRef.current?.closest('.custom-scrollbar');
     if (scrollParent) scrollParent.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  useEffect(() => {
+    const handleFilterEvent = (e) => {
+      const { skill, search } = e.detail;
+      if (skill) {
+        setActiveFilters(prev => ({ ...prev, techStacks: [skill] }));
+      }
+      if (search !== undefined) {
+        setSearchTerm(search);
+      } else {
+        setSearchTerm('');
+      }
+      setCurrentPage(1);
+    };
+    window.addEventListener('filter-projects-by-skill', handleFilterEvent);
+    return () => window.removeEventListener('filter-projects-by-skill', handleFilterEvent);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -263,9 +294,15 @@ const ProjectsApp = () => {
       if (!matchTitle && !matchDesc && !matchTech) return false;
     }
     if (activeFilters.techStacks.length > 0) {
+      const normalize = (t) => t.toLowerCase().replace(/\.js$/, '').replace(/\s+/g, '').trim();
+      const matchStack = (f, pStacks) => pStacks.some(s => {
+        const nf = normalize(f);
+        const ns = normalize(s);
+        return nf === ns || nf.includes(ns) || ns.includes(nf);
+      });
       const ok = activeFilters.techFilterMode === 'AND'
-        ? activeFilters.techStacks.every(f => p.techStacks?.includes(f))
-        : activeFilters.techStacks.some(f => p.techStacks?.includes(f));
+        ? activeFilters.techStacks.every(f => matchStack(f, p.techStacks || []))
+        : activeFilters.techStacks.some(f => matchStack(f, p.techStacks || []));
       if (!ok) return false;
     }
     if (activeFilters.difficulty && p.difficulty !== activeFilters.difficulty) return false;

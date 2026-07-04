@@ -56,6 +56,8 @@ const TechStack = ({ containerId }) => {
   const [techStackData, setTechStackData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [groupedTechStacks, setGroupedTechStacks] = useState({});
+  const [projects, setProjects] = useState([]);
+  const [selectedSkill, setSelectedSkill] = useState(null);
 
   useEffect(() => {
     // Fetch tech stack data from database
@@ -104,6 +106,19 @@ const TechStack = ({ containerId }) => {
     };
 
     fetchTechStacks();
+
+    // Fetch projects
+    (async () => {
+      try {
+        const response = await fetch('/api/portfolio/projects');
+        if (response.ok) {
+          const data = await response.json();
+          setProjects(data);
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    })();
   }, []);
 
   useEffect(() => {
@@ -157,7 +172,15 @@ const TechStack = ({ containerId }) => {
     return titles[category] || category;
   };
 
-
+  const skillsMatch = (pTechs, filterSkill) => {
+    if (!pTechs) return false;
+    const normalize = (t) => t.toLowerCase().replace(/\.js$/, '').replace(/\s+/g, '').trim();
+    const cleanFilter = normalize(filterSkill);
+    return pTechs.some(tech => {
+      const cleanTech = normalize(tech);
+      return cleanTech === cleanFilter || cleanTech.includes(cleanFilter) || cleanFilter.includes(cleanTech);
+    });
+  };
 
   const techStackItemsCss = "tech-stack-item-img w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 object-contain transition-all duration-300 hover:scale-110 hover:drop-shadow-lg";
 
@@ -199,7 +222,11 @@ const TechStack = ({ containerId }) => {
             </h3>
             <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 lg:gap-10">
               {techs.map((tech) => (
-                <div key={tech.id} className="tech-icon-item flex flex-col items-center group">
+                <div
+                  key={tech.id}
+                  onClick={() => setSelectedSkill(tech)}
+                  className="tech-icon-item flex flex-col items-center group cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
+                >
                   <div className={`backdrop-blur-sm rounded-xl p-3 md:p-4 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10 ${
                     (tech.name.toLowerCase().includes('node') || tech.name.toLowerCase().includes('prisma')) ? 'bg-white hover:bg-white/90' : 'bg-surface/80 hover:bg-surface/90'
                   }`}>
@@ -226,6 +253,78 @@ const TechStack = ({ containerId }) => {
           </div>
         ))}
       </div>
+
+      {/* Standalone Details Popover Modal */}
+      {selectedSkill && (() => {
+        const matching = projects.filter(p => skillsMatch(p.techStacks, selectedSkill.name));
+        return (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#2a2a2c] border border-white/[0.08] rounded-2xl w-full max-w-[340px] overflow-hidden shadow-2xl animate-fade-in flex flex-col max-h-[80%] text-heading">
+              
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-white/[0.06] bg-[#323234] shrink-0">
+                <div className="flex items-center gap-2.5">
+                  <div className={`w-6 h-6 rounded-[6px] flex items-center justify-center ${
+                    (selectedSkill.name.toLowerCase().includes('node') || selectedSkill.name.toLowerCase().includes('prisma')) ? 'bg-white p-[1px]' : 'bg-white/5'
+                  }`}>
+                    <img src={selectedSkill.icon} alt={selectedSkill.name} className="w-4.5 h-4.5 object-contain"
+                      onError={(e) => { e.target.style.display='none'; }} />
+                  </div>
+                  <span className="text-base font-bold text-white leading-tight">{selectedSkill.name}</span>
+                </div>
+                <button
+                  onClick={() => setSelectedSkill(null)}
+                  className="text-white/40 hover:text-white/70 transition-colors p-1"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Matching Projects List */}
+              <div className="flex-1 overflow-y-auto divide-y divide-white/[0.04] bg-[#2a2a2c] py-2 custom-scrollbar">
+                {matching.length > 0 ? (
+                  matching.map(p => (
+                    <button
+                      key={p.id || p.title}
+                      onClick={() => {
+                        window.location.href = `/ProjectOverview?filter=${encodeURIComponent(selectedSkill.name)}&search=${encodeURIComponent(p.title)}`;
+                      }}
+                      className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.04] transition-all text-left group"
+                    >
+                      <div className="min-w-0 flex-1 pr-3">
+                        <div className="text-[13px] font-bold text-white/95 truncate group-hover:text-gold transition-colors">{p.title}</div>
+                        <div className="text-[10.5px] text-white/45 truncate mt-0.5 leading-relaxed">{p.description}</div>
+                      </div>
+                      <svg className="w-4 h-4 text-white/20 shrink-0 group-hover:text-gold group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-8 text-center text-xs text-white/40">
+                    No active projects listed for this skill.
+                  </div>
+                )}
+              </div>
+
+              {/* Footer Button */}
+              <div className="p-4 border-t border-white/[0.06] bg-[#323234] flex flex-col gap-2 shrink-0">
+                <button
+                  onClick={() => {
+                    window.location.href = `/ProjectOverview?filter=${encodeURIComponent(selectedSkill.name)}`;
+                  }}
+                  className="w-full bg-gold hover:bg-gold/90 text-black text-xs font-bold py-2.5 rounded-xl active:scale-[0.98] transition-all text-center select-none cursor-pointer"
+                >
+                  🎯 Filter Projects by this Skill
+                </button>
+              </div>
+
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

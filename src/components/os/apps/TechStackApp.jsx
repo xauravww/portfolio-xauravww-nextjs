@@ -1,7 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Page, Card, SectionLabel, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
+import { useWindows } from '../../../context/windowContext';
 
 const CAT_LABELS = {
   frontend: 'Frontend', backend: 'Backend', database: 'Database',
@@ -58,8 +59,11 @@ const FALLBACK = [
 ].map((t, i) => ({ ...t, id: `fb-${i}` }));
 
 const TechStackApp = () => {
+  const { openWindow } = useWindows();
   const [grouped, setGrouped] = useState({});
   const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState([]);
+  const [selectedSkill, setSelectedSkill] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -84,21 +88,46 @@ const TechStackApp = () => {
       }
       finally { setLoading(false); }
     })();
+
+    // Fetch projects to list inside details popup
+    (async () => {
+      try {
+        const res = await fetch('/api/portfolio/projects');
+        if (res.ok) setProjects(await res.json());
+      } catch (e) {
+        console.error('Error fetching projects:', e);
+      }
+    })();
   }, []);
+
+  // Helper matching function
+  const skillsMatch = (pTechs, filterSkill) => {
+    if (!pTechs) return false;
+    const normalize = (t) => t.toLowerCase().replace(/\.js$/, '').replace(/\s+/g, '').trim();
+    const cleanFilter = normalize(filterSkill);
+    return pTechs.some(tech => {
+      const cleanTech = normalize(tech);
+      return cleanTech === cleanFilter || cleanTech.includes(cleanFilter) || cleanFilter.includes(cleanTech);
+    });
+  };
 
   if (loading) return <Centered><LoadingSpinner text="Loading skills..." /></Centered>;
 
   const cats = CAT_ORDER.filter(c => grouped[c]).concat(Object.keys(grouped).filter(c => !CAT_ORDER.includes(c)));
 
   return (
-    <Page className="space-y-4">
+    <Page className="space-y-4 relative min-h-full">
       {cats.map(cat => (
         <div key={cat}>
           <SectionLabel>{CAT_LABELS[cat] || cat}</SectionLabel>
           <Card>
             <div className="p-3 grid grid-cols-4 sm:grid-cols-6 gap-x-2 gap-y-3">
               {grouped[cat].map(t => (
-                <div key={t.id} className="flex flex-col items-center gap-1.5 group">
+                <div
+                  key={t.id}
+                  onClick={() => setSelectedSkill(t)}
+                  className="flex flex-col items-center gap-1.5 group cursor-pointer hover:scale-105 active:scale-95 transition-all select-none"
+                >
                   <div className={`w-11 h-11 rounded-[10px] flex items-center justify-center group-hover:brightness-110 transition-all ${
                     (t.name.toLowerCase().includes('node') || t.name.toLowerCase().includes('prisma')) ? 'bg-white p-[3px]' : 'bg-white/[0.05] group-hover:bg-white/[0.09]'
                   }`}>
@@ -113,6 +142,89 @@ const TechStackApp = () => {
           </Card>
         </div>
       ))}
+
+      {/* macOS Popover Details Overlay */}
+      {selectedSkill && (() => {
+        const matching = projects.filter(p => skillsMatch(p.techStacks, selectedSkill.name));
+        return (
+          <div className="absolute inset-0 bg-black/45 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#2a2a2c] border border-white/[0.08] rounded-xl w-full max-w-[290px] overflow-hidden shadow-2xl animate-fade-in flex flex-col max-h-[85%]">
+              
+              {/* Popover Header */}
+              <div className="flex items-center justify-between p-3 border-b border-white/[0.06] bg-[#323234] shrink-0">
+                <div className="flex items-center gap-2">
+                  <div className={`w-5 h-5 rounded-[4px] flex items-center justify-center ${
+                    (selectedSkill.name.toLowerCase().includes('node') || selectedSkill.name.toLowerCase().includes('prisma')) ? 'bg-white p-[1px]' : 'bg-white/5'
+                  }`}>
+                    <img src={selectedSkill.icon} alt={selectedSkill.name} className="w-4 h-4 object-contain"
+                      onError={(e) => { e.target.style.display='none'; }} />
+                  </div>
+                  <span className="text-[13px] font-bold text-white leading-tight">{selectedSkill.name}</span>
+                </div>
+                <button
+                  onClick={() => setSelectedSkill(null)}
+                  className="text-white/40 hover:text-white/70 transition-colors p-1"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Popover List */}
+              <div className="flex-1 overflow-y-auto divide-y divide-white/[0.04] bg-[#2a2a2c] py-1 custom-scrollbar">
+                {matching.length > 0 ? (
+                  matching.map(p => (
+                    <button
+                      key={p.id || p.title}
+                      onClick={() => {
+                        openWindow('projects');
+                        window.__projectsAppInitialFilter = selectedSkill.name;
+                        window.__projectsAppInitialSearch = p.title;
+                        window.dispatchEvent(new CustomEvent('filter-projects-by-skill', {
+                          detail: { skill: selectedSkill.name, search: p.title }
+                        }));
+                        setSelectedSkill(null);
+                      }}
+                      className="w-full flex items-center justify-between px-3.5 py-2.5 hover:bg-white/[0.04] transition-all text-left group"
+                    >
+                      <div className="min-w-0 flex-1 pr-2">
+                        <div className="text-[11.5px] font-semibold text-white/90 truncate group-hover:text-[#0A84FF] transition-colors">{p.title}</div>
+                        <div className="text-[9.5px] text-white/40 truncate mt-0.5">{p.description}</div>
+                      </div>
+                      <svg className="w-3 h-3 text-white/20 shrink-0 group-hover:text-[#0A84FF] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-6 text-center text-[11px] text-white/35">
+                    No active projects listed for this skill.
+                  </div>
+                )}
+              </div>
+
+              {/* Popover Footer Action */}
+              <div className="p-3 border-t border-white/[0.06] bg-[#323234] flex flex-col gap-2 shrink-0">
+                <button
+                  onClick={() => {
+                    openWindow('projects');
+                    window.__projectsAppInitialFilter = selectedSkill.name;
+                    window.dispatchEvent(new CustomEvent('filter-projects-by-skill', {
+                      detail: { skill: selectedSkill.name }
+                    }));
+                    setSelectedSkill(null);
+                  }}
+                  className="w-full bg-[#0A84FF] hover:bg-[#0a78e8] text-white text-[11px] font-medium py-1.5 rounded-lg active:scale-[0.98] transition-all text-center select-none cursor-default"
+                >
+                  🎯 Filter Projects by this Skill
+                </button>
+              </div>
+
+            </div>
+          </div>
+        );
+      })()}
     </Page>
   );
 };

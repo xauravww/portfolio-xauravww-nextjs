@@ -62,6 +62,21 @@ const ProjectOverview = ({ containerId }) => {
     techFilterMode: 'AND', // Default to AND mode
   });
 
+  // Handle URL query parameters for cross-linking
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const skillParam = params.get('filter');
+      const searchParam = params.get('search');
+      if (skillParam) {
+        setActiveFilters(prev => ({ ...prev, techStacks: [skillParam] }));
+      }
+      if (searchParam) {
+        setSearchTerm(searchParam);
+      }
+    }
+  }, []);
+
   const availableTechStacks = useMemo(() => {
     const allStacks = projectData.reduce((acc, project) => {
       project.techStacks.forEach(stack => acc.add(stack));
@@ -82,14 +97,20 @@ const ProjectOverview = ({ containerId }) => {
       }
       // Tech Stack check (using AND or OR based on mode)
       if (activeFilters.techStacks.length > 0) {
+        const normalize = (t) => t.toLowerCase().replace(/\.js$/, '').replace(/\s+/g, '').trim();
+        const matchStack = (f, pStacks) => pStacks.some(s => {
+          const nf = normalize(f);
+          const ns = normalize(s);
+          return nf === ns || nf.includes(ns) || ns.includes(nf);
+        });
         if (activeFilters.techFilterMode === 'AND') {
           // AND logic: Project must include ALL selected techs
-          if (!activeFilters.techStacks.every(filterStack => project.techStacks.includes(filterStack))) {
+          if (!activeFilters.techStacks.every(filterStack => matchStack(filterStack, project.techStacks || []))) {
             return false;
           }
         } else {
           // OR logic: Project must include AT LEAST ONE selected tech
-          if (!activeFilters.techStacks.some(filterStack => project.techStacks.includes(filterStack))) {
+          if (!activeFilters.techStacks.some(filterStack => matchStack(filterStack, project.techStacks || []))) {
             return false;
           }
         }
