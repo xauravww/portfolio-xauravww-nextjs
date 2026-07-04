@@ -209,10 +209,20 @@ const TechStack = ({ containerId }) => {
     >
       <div className="section-overlay" />
 
-      <header className="section-content text-center mb-12 md:mb-16">
+      <header className="section-content text-center mb-6">
         <h2 className="font-display text-3xl md:text-4xl font-bold text-heading tracking-tight">Tech Stack</h2>
         <div className="mt-3 mx-auto w-16 h-1 bg-gold rounded-full" />
       </header>
+
+      {/* Interactive tip hint */}
+      <div className="section-content w-full max-w-md mx-auto mb-10 px-4">
+        <div className="bg-gold/10 border border-gold/20 rounded-xl p-3 flex items-center gap-2.5 text-heading text-center justify-center select-none">
+          <span className="text-sm shrink-0">💡</span>
+          <p className="text-[11px] leading-relaxed">
+            <span className="font-semibold text-gold">Tip:</span> Click any skill icon below to view matching projects and apply instant filters.
+          </p>
+        </div>
+      </div>
 
       <div className="tech-stack-container section-content w-full max-w-7xl px-4 space-y-12">
         {Object.entries(groupedTechStacks).map(([category, techs]) => (

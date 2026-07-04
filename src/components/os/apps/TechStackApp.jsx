@@ -117,6 +117,14 @@ const TechStackApp = () => {
 
   return (
     <Page className="space-y-4 relative min-h-full">
+      {/* Interactive tip hint */}
+      <div className="bg-[#0A84FF]/10 border border-[#0A84FF]/20 rounded-xl p-3 flex items-center gap-2.5 text-white/90 select-none">
+        <span className="text-sm shrink-0">💡</span>
+        <p className="text-[11px] leading-relaxed">
+          <span className="font-semibold text-[#0A84FF]">Tip:</span> Click any skill icon to view matching portfolio projects and apply instant filters.
+        </p>
+      </div>
+
       {cats.map(cat => (
         <div key={cat}>
           <SectionLabel>{CAT_LABELS[cat] || cat}</SectionLabel>
@@ -147,7 +155,7 @@ const TechStackApp = () => {
       {selectedSkill && (() => {
         const matching = projects.filter(p => skillsMatch(p.techStacks, selectedSkill.name));
         return (
-          <div className="absolute inset-0 bg-black/45 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/45 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-[#2a2a2c] border border-white/[0.08] rounded-xl w-full max-w-[290px] overflow-hidden shadow-2xl animate-fade-in flex flex-col max-h-[85%]">
               
               {/* Popover Header */}
