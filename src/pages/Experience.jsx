@@ -7,10 +7,37 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 function Experience({ containerId }) {
-  const [showExperience, setShowExperience] = useState(null);
+  const [showExperience, setShowExperience] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('search') || null;
+    }
+    return null;
+  });
   const [experienceData, setExperienceData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('filter') || '';
+    }
+    return '';
+  });
+
+  // Handle URL query parameters for cross-linking after mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const skillParam = params.get('filter');
+      const positionParam = params.get('search');
+      if (skillParam) {
+        setSearchTerm(skillParam);
+      }
+      if (positionParam) {
+        setShowExperience(positionParam);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -23,7 +50,7 @@ function Experience({ containerId }) {
           const data = await response.json();
           setExperienceData(data);
           if (data.length > 0) {
-            setShowExperience(data[0].position);
+            setShowExperience(prev => prev || data[0].position);
           }
         }
       } catch (error) {

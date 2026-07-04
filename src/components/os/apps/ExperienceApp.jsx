@@ -23,11 +23,28 @@ function formatDate(d) {
 
 const ExperienceApp = () => {
   const [data, setData] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(() => {
+    const initial = typeof window !== 'undefined' ? window.__experienceAppInitialSelected : null;
+    if (initial) {
+      if (typeof window !== 'undefined') window.__experienceAppInitialSelected = null;
+      return initial;
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  const [mobileView, setMobileView] = useState('list'); // 'list' or 'detail'
-  const [searchTerm, setSearchTerm] = useState('');
+  const [mobileView, setMobileView] = useState(() => {
+    const initial = typeof window !== 'undefined' ? window.__experienceAppInitialSelected : null;
+    return initial ? 'detail' : 'list';
+  });
+  const [searchTerm, setSearchTerm] = useState(() => {
+    const initialSearch = typeof window !== 'undefined' ? window.__experienceAppInitialSearch : null;
+    if (initialSearch) {
+      if (typeof window !== 'undefined') window.__experienceAppInitialSearch = null;
+      return initialSearch;
+    }
+    return '';
+  });
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -37,13 +54,28 @@ const ExperienceApp = () => {
   }, []);
 
   useEffect(() => {
+    const handleFilterEvent = (e) => {
+      const { skill, position } = e.detail;
+      if (position) {
+        setSelected(position);
+        setMobileView('detail');
+      }
+      if (skill !== undefined) {
+        setSearchTerm(skill);
+      }
+    };
+    window.addEventListener('filter-experiences-by-skill', handleFilterEvent);
+    return () => window.removeEventListener('filter-experiences-by-skill', handleFilterEvent);
+  }, []);
+
+  useEffect(() => {
     (async () => {
       try {
         const res = await fetch('/api/portfolio/experiences');
         if (res.ok) {
           const d = await res.json();
           setData(d);
-          if (d.length > 0) setSelected(d[0].position);
+          if (d.length > 0) setSelected(prev => prev || d[0].position);
         }
       } catch (e) { console.error('Error fetching experiences:', e); }
       finally { setLoading(false); }

@@ -57,6 +57,7 @@ const TechStack = ({ containerId }) => {
   const [loading, setLoading] = useState(true);
   const [groupedTechStacks, setGroupedTechStacks] = useState({});
   const [projects, setProjects] = useState([]);
+  const [experiences, setExperiences] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState(null);
 
   useEffect(() => {
@@ -117,6 +118,19 @@ const TechStack = ({ containerId }) => {
         }
       } catch (error) {
         console.error('Error fetching projects:', error);
+      }
+    })();
+
+    // Fetch experiences
+    (async () => {
+      try {
+        const response = await fetch('/api/portfolio/experiences');
+        if (response.ok) {
+          const data = await response.json();
+          setExperiences(data);
+        }
+      } catch (error) {
+        console.error('Error fetching experiences:', error);
       }
     })();
   }, []);
@@ -266,7 +280,8 @@ const TechStack = ({ containerId }) => {
 
       {/* Standalone Details Popover Modal */}
       {selectedSkill && (() => {
-        const matching = projects.filter(p => skillsMatch(p.techStacks, selectedSkill.name));
+        const matchingProjects = projects.filter(p => skillsMatch(p.techStacks, selectedSkill.name));
+        const matchingExperiences = experiences.filter(e => skillsMatch(e.skills, selectedSkill.name));
         return (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-[#2a2a2c] border border-white/[0.08] rounded-2xl w-full max-w-[340px] overflow-hidden shadow-2xl animate-fade-in flex flex-col max-h-[80%] text-heading">
@@ -292,34 +307,62 @@ const TechStack = ({ containerId }) => {
                 </button>
               </div>
 
-              {/* Matching Projects List */}
-              <div className="flex-1 overflow-y-auto divide-y divide-white/[0.04] bg-[#2a2a2c] py-2 custom-scrollbar">
-                {matching.length > 0 ? (
-                  matching.map(p => (
-                    <button
-                      key={p.id || p.title}
-                      onClick={() => {
-                        window.location.href = `/ProjectOverview?filter=${encodeURIComponent(selectedSkill.name)}&search=${encodeURIComponent(p.title)}`;
-                      }}
-                      className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.04] transition-all text-left group"
-                    >
-                      <div className="min-w-0 flex-1 pr-3">
-                        <div className="text-[13px] font-bold text-white/95 truncate group-hover:text-gold transition-colors">{p.title}</div>
-                        <div className="text-[10.5px] text-white/45 truncate mt-0.5 leading-relaxed">{p.description}</div>
-                      </div>
-                      <svg className="w-4 h-4 text-white/20 shrink-0 group-hover:text-gold group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  ))
-                ) : (
-                  <div className="p-8 text-center text-xs text-white/40">
-                    No active projects listed for this skill.
-                  </div>
-                )}
+              {/* Matching Projects & Experiences List */}
+              <div className="flex-1 overflow-y-auto bg-[#2a2a2c] py-2 custom-scrollbar">
+                {/* Projects Section */}
+                <div className="px-4 py-2 text-[10px] font-bold text-white/35 uppercase tracking-wide bg-[#323234]/30 select-none">Projects ({matchingProjects.length})</div>
+                <div className="divide-y divide-white/[0.04] mb-4">
+                  {matchingProjects.length > 0 ? (
+                    matchingProjects.map(p => (
+                      <button
+                        key={p.id || p.title}
+                        onClick={() => {
+                          window.location.href = `/ProjectOverview?filter=${encodeURIComponent(selectedSkill.name)}&search=${encodeURIComponent(p.title)}`;
+                        }}
+                        className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.04] transition-all text-left group"
+                      >
+                        <div className="min-w-0 flex-1 pr-3">
+                          <div className="text-[13px] font-bold text-white/95 truncate group-hover:text-gold transition-colors">{p.title}</div>
+                          <div className="text-[10.5px] text-white/45 truncate mt-0.5 leading-relaxed">{p.description}</div>
+                        </div>
+                        <svg className="w-4 h-4 text-white/20 shrink-0 group-hover:text-gold group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center text-xs text-white/40">No related projects.</div>
+                  )}
+                </div>
+
+                {/* Experiences Section */}
+                <div className="px-4 py-2 text-[10px] font-bold text-white/35 uppercase tracking-wide bg-[#323234]/30 select-none">Work Experience ({matchingExperiences.length})</div>
+                <div className="divide-y divide-white/[0.04]">
+                  {matchingExperiences.length > 0 ? (
+                    matchingExperiences.map(exp => (
+                      <button
+                        key={exp.id || exp.position}
+                        onClick={() => {
+                          window.location.href = `/Experience?filter=${encodeURIComponent(selectedSkill.name)}&search=${encodeURIComponent(exp.position)}`;
+                        }}
+                        className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.04] transition-all text-left group"
+                      >
+                        <div className="min-w-0 flex-1 pr-3">
+                          <div className="text-[13px] font-bold text-white/95 truncate group-hover:text-gold transition-colors">{exp.position}</div>
+                          <div className="text-[10.5px] text-white/45 truncate mt-0.5 leading-relaxed">{exp.company}</div>
+                        </div>
+                        <svg className="w-4 h-4 text-white/20 shrink-0 group-hover:text-gold group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center text-xs text-white/40">No related work experience.</div>
+                  )}
+                </div>
               </div>
 
-              {/* Footer Button */}
+              {/* Footer Buttons */}
               <div className="p-4 border-t border-white/[0.06] bg-[#323234] flex flex-col gap-2 shrink-0">
                 <button
                   onClick={() => {
@@ -328,6 +371,14 @@ const TechStack = ({ containerId }) => {
                   className="w-full bg-gold hover:bg-gold/90 text-black text-xs font-bold py-2.5 rounded-xl active:scale-[0.98] transition-all text-center select-none cursor-pointer"
                 >
                   🎯 Filter Projects by this Skill
+                </button>
+                <button
+                  onClick={() => {
+                    window.location.href = `/Experience?filter=${encodeURIComponent(selectedSkill.name)}`;
+                  }}
+                  className="w-full bg-[#323234] hover:bg-[#3d3d40] text-white text-xs font-bold py-2.5 rounded-xl active:scale-[0.98] transition-all text-center border border-white/[0.08] select-none cursor-pointer"
+                >
+                  💼 Filter Experience by this Skill
                 </button>
               </div>
 

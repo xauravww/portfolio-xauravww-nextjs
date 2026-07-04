@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Page, Card, SectionLabel, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
 import { useWindows } from '../../../context/windowContext';
@@ -63,6 +63,7 @@ const TechStackApp = () => {
   const [grouped, setGrouped] = useState({});
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
+  const [experiences, setExperiences] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState(null);
 
   useEffect(() => {
@@ -96,6 +97,16 @@ const TechStackApp = () => {
         if (res.ok) setProjects(await res.json());
       } catch (e) {
         console.error('Error fetching projects:', e);
+      }
+    })();
+
+    // Fetch experiences to list inside details popup
+    (async () => {
+      try {
+        const res = await fetch('/api/portfolio/experiences');
+        if (res.ok) setExperiences(await res.json());
+      } catch (e) {
+        console.error('Error fetching experiences:', e);
       }
     })();
   }, []);
@@ -153,7 +164,8 @@ const TechStackApp = () => {
 
       {/* macOS Popover Details Overlay */}
       {selectedSkill && (() => {
-        const matching = projects.filter(p => skillsMatch(p.techStacks, selectedSkill.name));
+        const matchingProjects = projects.filter(p => skillsMatch(p.techStacks, selectedSkill.name));
+        const matchingExperiences = experiences.filter(e => skillsMatch(e.skills, selectedSkill.name));
         return (
           <div className="fixed inset-0 bg-black/45 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-[#2a2a2c] border border-white/[0.08] rounded-xl w-full max-w-[290px] overflow-hidden shadow-2xl animate-fade-in flex flex-col max-h-[85%]">
@@ -180,44 +192,82 @@ const TechStackApp = () => {
               </div>
 
               {/* Popover List */}
-              <div className="flex-1 overflow-y-auto divide-y divide-white/[0.04] bg-[#2a2a2c] py-1 custom-scrollbar">
-                {matching.length > 0 ? (
-                  matching.map(p => (
-                    <button
-                      key={p.id || p.title}
-                      onClick={() => {
-                        const isMobileSize = typeof window !== 'undefined' && window.innerWidth < 768;
-                        openWindow('projects');
-                        if (isMobileSize) {
-                          closeWindow('techstack');
-                        }
-                        window.__projectsAppInitialFilter = selectedSkill.name;
-                        window.__projectsAppInitialSearch = p.title;
-                        window.dispatchEvent(new CustomEvent('filter-projects-by-skill', {
-                          detail: { skill: selectedSkill.name, search: p.title }
-                        }));
-                        setSelectedSkill(null);
-                      }}
-                      className="w-full flex items-center justify-between px-3.5 py-2.5 hover:bg-white/[0.04] transition-all text-left group"
-                    >
-                      <div className="min-w-0 flex-1 pr-2">
-                        <div className="text-[11.5px] font-semibold text-white/90 truncate group-hover:text-[#0A84FF] transition-colors">{p.title}</div>
-                        <div className="text-[9.5px] text-white/40 truncate mt-0.5">{p.description}</div>
-                      </div>
-                      <svg className="w-3 h-3 text-white/20 shrink-0 group-hover:text-[#0A84FF] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  ))
-                ) : (
-                  <div className="p-6 text-center text-[11px] text-white/35">
-                    No active projects listed for this skill.
-                  </div>
-                )}
+              <div className="flex-1 overflow-y-auto bg-[#2a2a2c] py-1 custom-scrollbar">
+                {/* Projects Section */}
+                <div className="px-3 py-1.5 text-[9px] font-bold text-white/35 uppercase tracking-wide bg-[#323234]/30 select-none">Projects ({matchingProjects.length})</div>
+                <div className="divide-y divide-white/[0.04] mb-3">
+                  {matchingProjects.length > 0 ? (
+                    matchingProjects.map(p => (
+                      <button
+                        key={p.id || p.title}
+                        onClick={() => {
+                          const isMobileSize = typeof window !== 'undefined' && window.innerWidth < 768;
+                          openWindow('projects');
+                          if (isMobileSize) {
+                            closeWindow('techstack');
+                          }
+                          window.__projectsAppInitialFilter = selectedSkill.name;
+                          window.__projectsAppInitialSearch = p.title;
+                          window.dispatchEvent(new CustomEvent('filter-projects-by-skill', {
+                            detail: { skill: selectedSkill.name, search: p.title }
+                          }));
+                          setSelectedSkill(null);
+                        }}
+                        className="w-full flex items-center justify-between px-3.5 py-2.5 hover:bg-white/[0.04] transition-all text-left group"
+                      >
+                        <div className="min-w-0 flex-1 pr-2">
+                          <div className="text-[11.5px] font-semibold text-white/90 truncate group-hover:text-[#0A84FF] transition-colors">{p.title}</div>
+                          <div className="text-[9.5px] text-white/40 truncate mt-0.5">{p.description}</div>
+                        </div>
+                        <svg className="w-3 h-3 text-white/20 shrink-0 group-hover:text-[#0A84FF] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="p-3.5 text-center text-[10px] text-white/35">No related projects.</div>
+                  )}
+                </div>
+
+                {/* Work Experience Section */}
+                <div className="px-3 py-1.5 text-[9px] font-bold text-white/35 uppercase tracking-wide bg-[#323234]/30 select-none">Work Experience ({matchingExperiences.length})</div>
+                <div className="divide-y divide-white/[0.04]">
+                  {matchingExperiences.length > 0 ? (
+                    matchingExperiences.map(exp => (
+                      <button
+                        key={exp.id || exp.position}
+                        onClick={() => {
+                          const isMobileSize = typeof window !== 'undefined' && window.innerWidth < 768;
+                          openWindow('experience');
+                          if (isMobileSize) {
+                            closeWindow('techstack');
+                          }
+                          window.__experienceAppInitialSearch = selectedSkill.name;
+                          window.__experienceAppInitialSelected = exp.position;
+                          window.dispatchEvent(new CustomEvent('filter-experiences-by-skill', {
+                            detail: { skill: selectedSkill.name, position: exp.position }
+                          }));
+                          setSelectedSkill(null);
+                        }}
+                        className="w-full flex items-center justify-between px-3.5 py-2.5 hover:bg-white/[0.04] transition-all text-left group"
+                      >
+                        <div className="min-w-0 flex-1 pr-2">
+                          <div className="text-[11.5px] font-semibold text-white/90 truncate group-hover:text-[#0A84FF] transition-colors">{exp.position}</div>
+                          <div className="text-[9.5px] text-white/45 truncate mt-0.5">{exp.company}</div>
+                        </div>
+                        <svg className="w-3 h-3 text-white/20 shrink-0 group-hover:text-[#0A84FF] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="p-3.5 text-center text-[10px] text-white/35">No related work experience.</div>
+                  )}
+                </div>
               </div>
 
-              {/* Popover Footer Action */}
-              <div className="p-3 border-t border-white/[0.06] bg-[#323234] flex flex-col gap-2 shrink-0">
+              {/* Popover Footer Actions */}
+              <div className="p-3 border-t border-white/[0.06] bg-[#323234] flex flex-col gap-1.5 shrink-0">
                 <button
                   onClick={() => {
                     const isMobileSize = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -234,6 +284,23 @@ const TechStackApp = () => {
                   className="w-full bg-[#0A84FF] hover:bg-[#0a78e8] text-white text-[11px] font-medium py-1.5 rounded-lg active:scale-[0.98] transition-all text-center select-none cursor-default"
                 >
                   🎯 Filter Projects by this Skill
+                </button>
+                <button
+                  onClick={() => {
+                    const isMobileSize = typeof window !== 'undefined' && window.innerWidth < 768;
+                    openWindow('experience');
+                    if (isMobileSize) {
+                      closeWindow('techstack');
+                    }
+                    window.__experienceAppInitialSearch = selectedSkill.name;
+                    window.dispatchEvent(new CustomEvent('filter-experiences-by-skill', {
+                      detail: { skill: selectedSkill.name }
+                    }));
+                    setSelectedSkill(null);
+                  }}
+                  className="w-full bg-white/[0.07] hover:bg-white/[0.1] text-white/90 text-[11px] font-medium py-1.5 rounded-lg active:scale-[0.98] transition-all text-center border border-white/[0.06] select-none cursor-default"
+                >
+                  💼 Filter Experience by this Skill
                 </button>
               </div>
 
