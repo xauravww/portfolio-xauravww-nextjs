@@ -237,6 +237,7 @@ const ContactMe = ({ containerId }) => {
                                 Sending...
                             </span>
                         ) : "Send Message"}
+                            </button>
                 </form>
 
                 <div className="mt-6 text-center text-body text-sm font-medium">

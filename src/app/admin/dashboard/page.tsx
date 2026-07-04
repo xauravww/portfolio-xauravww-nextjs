@@ -5,16 +5,30 @@ import { getAllTechStacks, TechStack } from '@/models/TechStack';
 import { getQueries, getQueryCount, getNewQueryCount, Query } from '@/models/Query';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboardPage() {
-  const [projects, experiences, educations, techStacks, queries, totalQueries, newQueries]: [Project[], Experience[], Education[], TechStack[], Query[], number, number] = await Promise.all([
-    getProjects(),
-    getExperiences(),
-    getEducations(),
-    getAllTechStacks(),
-    getQueries(),
-    getQueryCount(),
-    getNewQueryCount()
-  ]);
+  let projects: Project[] = [];
+  let experiences: Experience[] = [];
+  let educations: Education[] = [];
+  let techStacks: TechStack[] = [];
+  let queries: Query[] = [];
+  let totalQueries = 0;
+  let newQueries = 0;
+
+  try {
+    [projects, experiences, educations, techStacks, queries, totalQueries, newQueries] = await Promise.all([
+      getProjects(),
+      getExperiences(),
+      getEducations(),
+      getAllTechStacks(),
+      getQueries(),
+      getQueryCount(),
+      getNewQueryCount()
+    ]);
+  } catch (error) {
+    console.error('Failed to fetch dashboard data:', error);
+  }
 
   return (
       <div className="py-8 px-4 sm:px-6 lg:px-8">
