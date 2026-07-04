@@ -59,7 +59,7 @@ const FALLBACK = [
 ].map((t, i) => ({ ...t, id: `fb-${i}` }));
 
 const TechStackApp = () => {
-  const { openWindow } = useWindows();
+  const { openWindow, closeWindow } = useWindows();
   const [grouped, setGrouped] = useState({});
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
@@ -186,7 +186,11 @@ const TechStackApp = () => {
                     <button
                       key={p.id || p.title}
                       onClick={() => {
+                        const isMobileSize = typeof window !== 'undefined' && window.innerWidth < 768;
                         openWindow('projects');
+                        if (isMobileSize) {
+                          closeWindow('techstack');
+                        }
                         window.__projectsAppInitialFilter = selectedSkill.name;
                         window.__projectsAppInitialSearch = p.title;
                         window.dispatchEvent(new CustomEvent('filter-projects-by-skill', {
@@ -216,7 +220,11 @@ const TechStackApp = () => {
               <div className="p-3 border-t border-white/[0.06] bg-[#323234] flex flex-col gap-2 shrink-0">
                 <button
                   onClick={() => {
+                    const isMobileSize = typeof window !== 'undefined' && window.innerWidth < 768;
                     openWindow('projects');
+                    if (isMobileSize) {
+                      closeWindow('techstack');
+                    }
                     window.__projectsAppInitialFilter = selectedSkill.name;
                     window.dispatchEvent(new CustomEvent('filter-projects-by-skill', {
                       detail: { skill: selectedSkill.name }
