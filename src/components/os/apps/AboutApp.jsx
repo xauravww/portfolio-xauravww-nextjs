@@ -25,22 +25,51 @@ const AboutApp = () => (
     <Card className="mb-4">
       <div className="p-3.5 space-y-2.5">
         <p className="text-[13px] text-white/75 leading-relaxed">
-          Passionate about building AI-powered solutions and modern web applications. I work across
-          the stack with React, Node.js, and cloud technologies — creating products that merge clean
-          architecture with thoughtful design.
+          I&apos;m a Full-Stack Developer with a strong problem-solving mindset and a focus on automation, web scraping, and AI agents. I work daily with React, Node.js, TypeScript, and modern database designs, building everything from custom social media automations and live data agents to secure legal systems, e-commerce platforms, and international community portals.
         </p>
         <p className="text-[13px] text-white/75 leading-relaxed">
-          When I&apos;m not coding, I write about web development and contribute to open-source projects.
+          I believe in shipping clean, simple, and high-performance code that works smoothly. Beyond development, I write about practical programming on my blog and contribute to open-source tools.
         </p>
       </div>
     </Card>
 
-    {/* Stack */}
-    <SectionLabel>Stack</SectionLabel>
+    {/* Focus Areas */}
+    <SectionLabel>Focus Areas</SectionLabel>
     <Card>
-      <div className="p-3 flex flex-wrap gap-1.5">
-        {TAGS.map(t => <Tag key={t}>{t}</Tag>)}
-      </div>
+      <List>
+        <Row
+          left={
+            <div className="flex flex-col py-0.5">
+              <span className="text-[12.5px] font-semibold text-white/90">🤖 AI Agents & Data Scraping</span>
+              <span className="text-[11px] text-white/35 mt-0.5">Building custom AI agents, LangChain workflows, and live scraping scripts</span>
+            </div>
+          }
+        />
+        <Row
+          left={
+            <div className="flex flex-col py-0.5">
+              <span className="text-[12.5px] font-semibold text-white/90">⚙️ Workflow & Social Automation</span>
+              <span className="text-[11px] text-white/35 mt-0.5">Orchestrating Telegram bots, social media automations, and cron pipelines</span>
+            </div>
+          }
+        />
+        <Row
+          left={
+            <div className="flex flex-col py-0.5">
+              <span className="text-[12.5px] font-semibold text-white/90">💼 E-Commerce & Enterprise Tools</span>
+              <span className="text-[11px] text-white/35 mt-0.5">Developing secure legal systems, project managers, and shopping platforms</span>
+            </div>
+          }
+        />
+        <Row
+          left={
+            <div className="flex flex-col py-0.5">
+              <span className="text-[12.5px] font-semibold text-white/90">🌐 Communities & Visually Rich Sites</span>
+              <span className="text-[11px] text-white/35 mt-0.5">Crafting international portal hubs and responsive, stunning landing pages</span>
+            </div>
+          }
+        />
+      </List>
     </Card>
   </Page>
 );

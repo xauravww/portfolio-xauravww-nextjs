@@ -120,7 +120,7 @@ const SafariApp = () => {
               {BOOKMARKS.map((bookmark) => (
                 <button
                   key={bookmark.id}
-                  onClick={() => openBrowser({ url: bookmark.url, title: bookmark.title, mode: 'web' })}
+                  onClick={() => window.open(bookmark.url, '_blank')}
                   className="flex flex-col items-center gap-1.5 group w-[72px] focus:outline-none"
                 >
                   <div className="w-[50px] h-[50px] rounded-[22%] overflow-hidden shadow-md active:scale-95 group-hover:brightness-110 transition-all">

@@ -1,0 +1,312 @@
+[
+  {
+    "_id": "68b096c1b3bd70dc16a6a7ae",
+    "name": "React.js",
+    "icon": "/assets/techstack/react.png",
+    "category": "frontend",
+    "status": "active",
+    "order": 1,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7af",
+    "name": "Next.js",
+    "icon": "/assets/techstack/next-js.svg",
+    "category": "frontend",
+    "status": "active",
+    "order": 2,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b0",
+    "name": "TypeScript",
+    "icon": "/assets/techstack/typescript.svg",
+    "category": "frontend",
+    "status": "active",
+    "order": 3,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b1",
+    "name": "JavaScript",
+    "icon": "/assets/techstack/javascript.png",
+    "category": "frontend",
+    "status": "active",
+    "order": 4,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b2",
+    "name": "HTML & CSS",
+    "icon": "/assets/techstack/html-css.png",
+    "category": "frontend",
+    "status": "active",
+    "order": 5,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b3",
+    "name": "Tailwind CSS",
+    "icon": "/assets/techstack/tailwind-css.svg",
+    "category": "frontend",
+    "status": "active",
+    "order": 6,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b4",
+    "name": "Redux Toolkit",
+    "icon": "/assets/techstack/redux-toolkit.png",
+    "category": "frontend",
+    "status": "active",
+    "order": 7,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b5",
+    "name": "XML",
+    "icon": "/assets/techstack/xml.png",
+    "category": "frontend",
+    "status": "active",
+    "order": 8,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b6",
+    "name": "Node.js",
+    "icon": "/assets/techstack/nodejs.png",
+    "category": "backend",
+    "status": "active",
+    "order": 9,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b7",
+    "name": "Express.js",
+    "icon": "/assets/techstack/express.webp",
+    "category": "backend",
+    "status": "active",
+    "order": 10,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b8",
+    "name": "Prisma",
+    "icon": "/assets/techstack/prisma.svg",
+    "category": "backend",
+    "status": "active",
+    "order": 11,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7b9",
+    "name": "GraphQL",
+    "icon": "/assets/techstack/graphql-square.svg",
+    "category": "backend",
+    "status": "active",
+    "order": 12,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7ba",
+    "name": "Notion API",
+    "icon": "/assets/techstack/notion.png",
+    "category": "backend",
+    "status": "active",
+    "order": 13,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7bb",
+    "name": "Gram.js",
+    "icon": "/assets/techstack/gram-js.png",
+    "category": "backend",
+    "status": "active",
+    "order": 14,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7bc",
+    "name": "JWT",
+    "icon": "/assets/techstack/jwt-colorful.svg",
+    "category": "backend",
+    "status": "active",
+    "order": 15,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7bd",
+    "name": "MongoDB",
+    "icon": "/assets/techstack/mongodb.png",
+    "category": "database",
+    "status": "active",
+    "order": 16,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7be",
+    "name": "PostgreSQL",
+    "icon": "/assets/techstack/postgresql.svg",
+    "category": "database",
+    "status": "active",
+    "order": 17,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7bf",
+    "name": "Redis",
+    "icon": "/assets/techstack/redis.png",
+    "category": "database",
+    "status": "active",
+    "order": 18,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c0",
+    "name": "Sanity CMS",
+    "icon": "/assets/techstack/sanity.png",
+    "category": "database",
+    "status": "active",
+    "order": 19,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c1",
+    "name": "Docker",
+    "icon": "/assets/techstack/docker-square.png",
+    "category": "devops",
+    "status": "active",
+    "order": 20,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c2",
+    "name": "Git",
+    "icon": "/assets/techstack/git-square.png",
+    "category": "devops",
+    "status": "active",
+    "order": 21,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c3",
+    "name": "GitHub",
+    "icon": "/assets/techstack/github-square.png",
+    "category": "devops",
+    "status": "active",
+    "order": 22,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c4",
+    "name": "N8N",
+    "icon": "/assets/techstack/n8n.jpg",
+    "category": "devops",
+    "status": "active",
+    "order": 23,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c5",
+    "name": "Postman",
+    "icon": "/assets/techstack/postman-square.svg",
+    "category": "devops",
+    "status": "active",
+    "order": 24,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c6",
+    "name": "React Native",
+    "icon": "/assets/techstack/react-native.png",
+    "category": "mobile",
+    "status": "active",
+    "order": 25,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c7",
+    "name": "Kotlin",
+    "icon": "/assets/techstack/kotlin.png",
+    "category": "mobile",
+    "status": "active",
+    "order": 26,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c8",
+    "name": "Android",
+    "icon": "/assets/techstack/android.png",
+    "category": "mobile",
+    "status": "active",
+    "order": 27,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7c9",
+    "name": "C++",
+    "icon": "/assets/techstack/cpp.png",
+    "category": "mobile",
+    "status": "active",
+    "order": 28,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7ca",
+    "name": "Figma",
+    "icon": "/assets/techstack/figma-square.png",
+    "category": "design",
+    "status": "active",
+    "order": 29,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7cb",
+    "name": "LangChain",
+    "icon": "/assets/techstack/langchain-square.png",
+    "category": "other",
+    "status": "active",
+    "order": 30,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  },
+  {
+    "_id": "68b096c1b3bd70dc16a6a7cc",
+    "name": "OpenAI API",
+    "icon": "/assets/techstack/openai-square.png",
+    "category": "other",
+    "status": "active",
+    "order": 31,
+    "createdAt": "2025-08-28T17:49:15.389Z",
+    "updatedAt": "2025-08-28T17:49:15.389Z"
+  }
+]

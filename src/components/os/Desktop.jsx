@@ -93,6 +93,23 @@ function DesktopSurface() {
 
   const openApp = useCallback((id) => openWindow(id, { size: WINDOW_SIZES[id] }), [openWindow]);
 
+  const handleResetLayout = useCallback(() => {
+    setIconOffsets({
+      about: { x: 0, y: 0 },
+      techstack: { x: 0, y: 0 },
+      projects: { x: 0, y: 0 },
+      experience: { x: 0, y: 0 },
+      blogs: { x: 0, y: 0 },
+      education: { x: 0, y: 0 },
+      contact: { x: 0, y: 0 },
+    });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('reset-icon-layout', handleResetLayout);
+    return () => window.removeEventListener('reset-icon-layout', handleResetLayout);
+  }, [handleResetLayout]);
+
   const desktopMenu = (e) => {
     e.preventDefault();
     if (isMobile) return;
@@ -104,6 +121,7 @@ function DesktopSurface() {
         { label: 'Close All Windows', icon: SVG.close, disabled: !anyOpen, action: () => getOpenWindows().forEach(([id]) => closeWindow(id)) },
         { divider: true },
         { label: 'Change Desktop Background', icon: SVG.image, action: () => window.dispatchEvent(new Event('change-wallpaper')) },
+        { label: 'Reset Icon Layout', icon: SVG.grid, action: handleResetLayout },
         { label: 'View on GitHub', icon: SVG.github, action: () => window.open('https://github.com/xauravww', '_blank') },
         { label: 'Refresh', icon: SVG.refresh, shortcut: '⌘R', action: () => window.location.reload() },
       ],

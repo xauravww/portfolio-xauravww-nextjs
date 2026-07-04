@@ -76,13 +76,15 @@ const ProjectItem = ({ img, description, techStacks = [], url, projectTitle, tec
                 className="group/tech relative"
                 title={tech}
               >
-                <div className="w-8 h-8 rounded-lg bg-surface/80 p-1.5 hover:bg-border/80 transition-all duration-200 flex items-center justify-center">
+                <div className={`w-8 h-8 rounded-lg p-1.5 transition-all duration-200 flex items-center justify-center ${
+                  (tech.toLowerCase().includes('node') || tech.toLowerCase().includes('prisma')) ? 'bg-white hover:bg-white/90 p-[2px]' : 'bg-surface/80 hover:bg-border/80'
+                }`}>
                   <OptimizedImage
                     className="w-full h-full object-contain"
                     src={getTechStackIcon(tech)}
                     alt={tech}
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                   />
                 </div>
                 {/* Enhanced Tooltip */}

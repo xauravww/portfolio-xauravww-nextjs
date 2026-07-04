@@ -48,6 +48,12 @@ const ProjectOverview = ({ containerId }) => {
 
   const [currentPage, setcurrentPage] = useState(1);
   const [postPerPage, setpostPerPage] = useState(3);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Reset page when search term changes
+  useEffect(() => {
+    setcurrentPage(1);
+  }, [searchTerm]);
 
   // Updated activeFilters state to include techFilterMode
   const [activeFilters, setActiveFilters] = useState({
@@ -67,6 +73,13 @@ const ProjectOverview = ({ containerId }) => {
   // Updated filtering logic to use techFilterMode
   const filteredProjects = useMemo(() => {
     return projectData.filter(project => {
+      if (searchTerm.trim()) {
+        const term = searchTerm.toLowerCase();
+        const matchTitle = project.title?.toLowerCase().includes(term);
+        const matchDesc = project.description?.toLowerCase().includes(term);
+        const matchTech = project.techStacks?.some(t => t.toLowerCase().includes(term));
+        if (!matchTitle && !matchDesc && !matchTech) return false;
+      }
       // Tech Stack check (using AND or OR based on mode)
       if (activeFilters.techStacks.length > 0) {
         if (activeFilters.techFilterMode === 'AND') {
@@ -87,7 +100,7 @@ const ProjectOverview = ({ containerId }) => {
       }
       return true;
     });
-  }, [activeFilters, projectData]); // Re-filter when ANY active filter changes
+  }, [activeFilters, projectData, searchTerm]); // Re-filter when ANY active filter changes
 
   const lastPageIndex = currentPage * postPerPage;
   const firstPageIndex = lastPageIndex - postPerPage;
@@ -139,17 +152,44 @@ const ProjectOverview = ({ containerId }) => {
           <div className="mt-3 mx-auto w-16 h-1 bg-gold rounded-full" />
         </header>
 
-        <div className="section-content flex justify-center mb-8">
+        <div className="section-content flex items-center justify-center gap-3 w-full max-w-md mx-auto mb-8 px-4">
+          {/* iPhone style search bar */}
+          <div className="relative flex-1 flex items-center">
+            <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-heading/30">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            </span>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search projects..."
+              className="w-full bg-[#1e1e24] border border-border/40 text-sm text-heading placeholder-body/40 rounded-xl pl-9 pr-8 py-2.5 outline-none focus:border-gold/40 transition-all focus:bg-[#25252d]"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute inset-y-0 right-3 flex items-center text-body/55 hover:text-heading"
+              >
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </button>
+            )}
+          </div>
+
           <button
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-2 bg-surface border border-border px-4 py-2 rounded-lg text-sm font-medium text-heading hover:bg-border/50 transition-colors"
+            className="inline-flex items-center gap-2 bg-[#1e1e24] border border-border/45 px-4 py-2.5 rounded-xl text-sm font-medium text-heading hover:bg-[#25252d] transition-all shrink-0"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-heading/75" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
             </svg>
-            Filter
-            {(activeFilters.techStacks.length > 0 || activeFilters.difficulty) && (
-              <span className="w-2 h-2 bg-gold rounded-full" />
+            <span>Filter</span>
+            {(activeFilters.techStacks.length > 0 || activeFilters.difficulty || searchTerm.trim()) && (
+              <span className="w-1.5 h-1.5 bg-gold rounded-full" />
             )}
           </button>
         </div>

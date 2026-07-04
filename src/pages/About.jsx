@@ -56,25 +56,37 @@ const About = ({ containerId }) => {
                 Saurav Maheshwari
               </h3>
               <p className="text-body text-sm md:text-base leading-relaxed">
-                Full-Stack Developer passionate about building AI-powered solutions and modern
-                web applications. I work across the stack with React, Node.js, and cloud
-                technologies &mdash; creating products that merge clean architecture with thoughtful design.
+                I&apos;m a Full-Stack Developer with a strong problem-solving mindset and a focus on automation, web scraping, and AI agents. I work daily with React, Node.js, TypeScript, and modern database designs, building everything from custom social media automations and live data agents to secure legal systems, e-commerce platforms, and international community portals.
               </p>
               <p className="text-body text-sm md:text-base leading-relaxed">
-                When I&apos;m not coding, I write about web development on my blog and
-                contribute to open-source projects. I believe in shipping fast, iterating
-                often, and always learning something new.
+                I believe in shipping clean, simple, and high-performance code that works smoothly. Beyond development, I write about practical programming on my blog and contribute to open-source tools.
               </p>
 
-              <div className="flex flex-wrap gap-2 pt-2">
-                {['React', 'Node.js', 'Next.js', 'TypeScript', 'AI/ML', 'MongoDB'].map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 py-1 bg-gold/15 text-gold text-xs font-medium rounded-full border border-gold/20"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                <div className="bg-surface/40 border border-border/40 rounded-xl p-3.5 hover:border-gold/30 transition-colors">
+                  <h4 className="text-gold font-semibold text-sm flex items-center gap-1.5">
+                    <span>🤖</span> AI Agents & Data Scraping
+                  </h4>
+                  <p className="text-body text-xs mt-1 leading-relaxed">Building custom AI agents, LangChain workflows, and live scraping scripts.</p>
+                </div>
+                <div className="bg-surface/40 border border-border/40 rounded-xl p-3.5 hover:border-gold/30 transition-colors">
+                  <h4 className="text-gold font-semibold text-sm flex items-center gap-1.5">
+                    <span>⚙️</span> Workflow & Social Automation
+                  </h4>
+                  <p className="text-body text-xs mt-1 leading-relaxed">Orchestrating Telegram bots, social media automations, and cron pipelines.</p>
+                </div>
+                <div className="bg-surface/40 border border-border/40 rounded-xl p-3.5 hover:border-gold/30 transition-colors">
+                  <h4 className="text-gold font-semibold text-sm flex items-center gap-1.5">
+                    <span>💼</span> E-Commerce & Enterprise Tools
+                  </h4>
+                  <p className="text-body text-xs mt-1 leading-relaxed">Developing secure legal systems, project managers, and shopping platforms.</p>
+                </div>
+                <div className="bg-surface/40 border border-border/40 rounded-xl p-3.5 hover:border-gold/30 transition-colors">
+                  <h4 className="text-gold font-semibold text-sm flex items-center gap-1.5">
+                    <span>🌐</span> Communities & Rich Landing Sites
+                  </h4>
+                  <p className="text-body text-xs mt-1 leading-relaxed">Crafting international portal hubs and responsive, stunning landing pages.</p>
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4">

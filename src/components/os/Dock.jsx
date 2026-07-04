@@ -40,7 +40,7 @@ const Dock = ({ onItemContextMenu }) => {
   }, []);
 
   const handleSocialClick = (item) => {
-    openBrowser({ url: item.url, title: `${item.name} — xauravww`, mode: 'web' }, { size: { w: 900, h: 600 } });
+    window.open(item.url, '_blank');
   };
 
   const openList = getOpenWindows();

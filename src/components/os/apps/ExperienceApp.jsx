@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Page, Card, SectionLabel, Tag, SidebarItem, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
 
@@ -27,6 +27,7 @@ const ExperienceApp = () => {
   const [loading, setLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileView, setMobileView] = useState('list'); // 'list' or 'detail'
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -49,10 +50,28 @@ const ExperienceApp = () => {
     })();
   }, []);
 
+  // Filter logic
+  const filteredData = useMemo(() => {
+    if (!searchTerm.trim()) return data;
+    const term = searchTerm.toLowerCase();
+    return data.filter(d => 
+      d.position.toLowerCase().includes(term) ||
+      d.company.toLowerCase().includes(term) ||
+      (d.skills && d.skills.some(s => s.toLowerCase().includes(term)))
+    );
+  }, [data, searchTerm]);
+
+  // Desktop selection sync
+  useEffect(() => {
+    if (!isMobile && filteredData.length > 0 && !filteredData.some(d => d.position === selected)) {
+      setSelected(filteredData[0].position);
+    }
+  }, [filteredData, selected, isMobile]);
+
   if (loading) return <Centered><LoadingSpinner text="Loading experience..." /></Centered>;
   if (data.length === 0) return <Centered>No experience data available.</Centered>;
 
-  const exp = data.find(d => d.position === selected);
+  const exp = filteredData.find(d => d.position === selected) || data.find(d => d.position === selected);
   const descriptionArray = exp
     ? Array.isArray(exp.description) ? exp.description : exp.description.split('\n').filter(l => l.trim())
     : [];
@@ -60,25 +79,65 @@ const ExperienceApp = () => {
     ? `${formatDate(exp.startDate)} - ${exp.isCurrentJob || !exp.endDate ? 'Present' : formatDate(exp.endDate)}`
     : '';
 
+  // Render Search Bar Component
+  const renderSearchBar = () => (
+    <div className="relative flex items-center w-full px-1.5 py-1">
+      <div className="relative w-full">
+        <span className="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-white/30">
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </span>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search..."
+          className="w-full bg-white/[0.07] hover:bg-white/[0.1] focus:bg-white/[0.1] text-[12.5px] text-white placeholder-white/30 rounded-[10px] pl-8 pr-7 py-1.5 outline-none border border-transparent focus:border-white/[0.05] transition-all"
+        />
+        {searchTerm && (
+          <button
+            onClick={() => setSearchTerm('')}
+            className="absolute inset-y-0 right-2 flex items-center text-white/30 hover:text-white/60"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+          </button>
+        )}
+      </div>
+    </div>
+  );
+
   if (isMobile) {
     if (mobileView === 'list') {
       return (
-        <div className="h-full overflow-y-auto p-3">
-          <SectionLabel className="px-1.5 py-1">Experience List</SectionLabel>
-          <div className="space-y-1">
-            {data.map(d => (
-              <SidebarItem
-                key={d.id}
-                active={selected === d.position}
-                title={d.position}
-                subtitle={d.company}
-                showChevron={true}
-                onClick={() => {
-                  setSelected(d.position);
-                  setMobileView('detail');
-                }}
-              />
-            ))}
+        <div className="h-full flex flex-col bg-[#1c1c1e]">
+          <div className="px-3 pt-3 shrink-0">
+            {renderSearchBar()}
+          </div>
+          <div className="flex-1 overflow-y-auto p-3">
+            <SectionLabel className="px-1.5 py-1">Experience List</SectionLabel>
+            <div className="space-y-1">
+              {filteredData.length > 0 ? (
+                filteredData.map(d => (
+                  <SidebarItem
+                    key={d.id}
+                    active={selected === d.position}
+                    title={d.position}
+                    subtitle={d.company}
+                    showChevron={true}
+                    onClick={() => {
+                      setSelected(d.position);
+                      setMobileView('detail');
+                    }}
+                  />
+                ))
+              ) : (
+                <div className="text-[12px] text-white/30 text-center py-8">No experiences found.</div>
+              )}
+            </div>
           </div>
         </div>
       );
@@ -136,20 +195,29 @@ const ExperienceApp = () => {
 
   return (
     <div className="flex flex-col lg:flex-row h-full">
-      <div className="lg:w-56 shrink-0 border-b lg:border-b-0 lg:border-r border-white/[0.06] p-2 overflow-y-auto">
-        {data.map(d => (
-          <SidebarItem
-            key={d.id}
-            active={selected === d.position}
-            title={d.position}
-            subtitle={d.company}
-            onClick={() => setSelected(d.position)}
-          />
-        ))}
+      <div className="lg:w-56 shrink-0 border-b lg:border-b-0 lg:border-r border-white/[0.06] p-2 flex flex-col overflow-hidden">
+        <div className="pb-2 shrink-0">
+          {renderSearchBar()}
+        </div>
+        <div className="flex-1 overflow-y-auto space-y-1 custom-scrollbar">
+          {filteredData.length > 0 ? (
+            filteredData.map(d => (
+              <SidebarItem
+                key={d.id}
+                active={selected === d.position}
+                title={d.position}
+                subtitle={d.company}
+                onClick={() => setSelected(d.position)}
+              />
+            ))
+          ) : (
+            <div className="text-[12px] text-white/30 text-center py-4">No results.</div>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {exp && (
+        {exp ? (
           <Page>
             <h2 className="text-[16px] font-bold text-white leading-tight">{exp.position}</h2>
             <p className="text-[12.5px] text-[#0A84FF] font-medium mt-0.5">{exp.company}</p>
@@ -182,6 +250,10 @@ const ExperienceApp = () => {
               </>
             )}
           </Page>
+        ) : (
+          <Centered>
+            <p className="text-white/30 text-[13px]">Select an experience to view details.</p>
+          </Centered>
         )}
       </div>
     </div>

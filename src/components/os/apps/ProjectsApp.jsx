@@ -68,7 +68,17 @@ const ProjectCard = ({ project, onOpenUrl }) => {
               const icon = TECH_MAP[t]?.icon;
               return (
                 <span key={t} className="inline-flex items-center gap-1 px-2 py-[2px] rounded-full text-[10px] font-medium" style={{ background: 'rgba(255,255,255,0.09)', color: 'rgba(255,255,255,0.75)' }}>
-                  {icon && <OptimizedImage src={icon} alt={t} width={12} height={12} className="w-3 h-3 object-contain" />}
+                  {icon && (
+                    <OptimizedImage 
+                      src={icon} 
+                      alt={t} 
+                      width={12} 
+                      height={12} 
+                      className={`w-3 h-3 object-contain ${
+                        (t.toLowerCase().includes('node') || t.toLowerCase().includes('prisma')) ? 'bg-white rounded-full p-[1px]' : ''
+                      }`} 
+                    />
+                  )}
                   {t}
                 </span>
               );
@@ -82,8 +92,8 @@ const ProjectCard = ({ project, onOpenUrl }) => {
         )}
 
         <div className="flex gap-2 mt-auto pt-1">
-          {repo && <Button onClick={() => onOpenUrl(repo, project.title + ' — Code')} variant="default" icon={GitHubIcon} className="text-[11px] !px-2.5 !py-[4px]">Code</Button>}
-          {live && <Button onClick={() => onOpenUrl(live, project.title)} variant="accent" icon={ExternalIcon} className="text-[11px] !px-2.5 !py-[4px]">Live</Button>}
+          {repo && <Button onClick={() => window.open(repo, '_blank')} variant="default" icon={GitHubIcon} className="text-[11px] !px-2.5 !py-[4px]">Code</Button>}
+          {live && <Button onClick={() => window.open(live, '_blank')} variant="accent" icon={ExternalIcon} className="text-[11px] !px-2.5 !py-[4px]">Live</Button>}
         </div>
       </div>
     </Card>
@@ -177,7 +187,17 @@ const FilterSheet = ({ isOpen, onClose, availableTechs, activeFilters, onApply }
                   <button key={t} onClick={() => toggleTech(t)}
                     className="w-full flex items-center justify-between px-3.5 py-2.5 text-[12.5px] text-white/80 hover:bg-white/[0.04] transition-colors">
                     <span className="flex items-center gap-2">
-                      {TECH_MAP[t]?.icon && <OptimizedImage src={TECH_MAP[t].icon} alt={t} width={16} height={16} className="w-4 h-4 object-contain" />}
+                      {TECH_MAP[t]?.icon && (
+                        <OptimizedImage 
+                          src={TECH_MAP[t].icon} 
+                          alt={t} 
+                          width={16} 
+                          height={16} 
+                          className={`w-4 h-4 object-contain ${
+                            (t.toLowerCase().includes('node') || t.toLowerCase().includes('prisma')) ? 'bg-white rounded-full p-[1px]' : ''
+                          }`} 
+                        />
+                      )}
                       {t}
                     </span>
                     {techs.includes(t) && <svg className="w-4 h-4 text-[#0A84FF]" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
@@ -199,6 +219,7 @@ const ProjectsApp = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState({ techStacks: [], difficulty: null, techFilterMode: 'AND' });
+  const [searchTerm, setSearchTerm] = useState('');
   const scrollRef = useRef(null);
   const perPage = 4;
 
@@ -222,6 +243,11 @@ const ProjectsApp = () => {
     })();
   }, []);
 
+  // Reset page when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const availableTechs = useMemo(() => {
     const s = new Set();
     projects.forEach(p => p.techStacks?.forEach(t => s.add(t)));
@@ -229,6 +255,13 @@ const ProjectsApp = () => {
   }, [projects]);
 
   const filtered = useMemo(() => projects.filter(p => {
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      const matchTitle = p.title?.toLowerCase().includes(term);
+      const matchDesc = p.description?.toLowerCase().includes(term);
+      const matchTech = p.techStacks?.some(t => t.toLowerCase().includes(term));
+      if (!matchTitle && !matchDesc && !matchTech) return false;
+    }
     if (activeFilters.techStacks.length > 0) {
       const ok = activeFilters.techFilterMode === 'AND'
         ? activeFilters.techStacks.every(f => p.techStacks?.includes(f))
@@ -237,24 +270,52 @@ const ProjectsApp = () => {
     }
     if (activeFilters.difficulty && p.difficulty !== activeFilters.difficulty) return false;
     return true;
-  }), [activeFilters, projects]);
+  }), [activeFilters, projects, searchTerm]);
 
   const posts = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
-  const hasActiveFilter = activeFilters.techStacks.length > 0 || activeFilters.difficulty;
+  const hasActiveFilter = activeFilters.techStacks.length > 0 || activeFilters.difficulty || searchTerm.trim();
 
   if (loading) return <Centered><LoadingSpinner text="Loading projects..." /></Centered>;
 
   return (
     <Page>
       <div ref={scrollRef} />
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-[11px] text-white/35">{filtered.length} project{filtered.length !== 1 ? 's' : ''}</span>
+      <div className="flex items-center gap-3 mb-3 select-none">
+        <span className="text-[11px] text-white/35 shrink-0">{filtered.length} project{filtered.length !== 1 ? 's' : ''}</span>
+        
+        {/* iPhone-style Search Bar */}
+        <div className="flex-1 relative flex items-center">
+          <span className="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-white/30">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </span>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search projects..."
+            className="w-full bg-white/[0.07] hover:bg-white/[0.1] focus:bg-white/[0.1] text-[11px] text-white placeholder-white/30 rounded-[7px] pl-8 pr-7 py-1.5 outline-none border border-transparent focus:border-white/[0.05] transition-all"
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="absolute inset-y-0 right-2 flex items-center text-white/30 hover:text-white/60"
+            >
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
+        </div>
+
         <button onClick={() => setFilterOpen(true)}
-          className="inline-flex items-center gap-1.5 px-2.5 py-[5px] rounded-[7px] text-[11px] font-medium text-white/60 border border-white/[0.1] hover:bg-white/[0.06] transition-colors"
+          className="inline-flex items-center gap-1.5 px-2.5 py-[5px] rounded-[7px] text-[11px] font-medium text-white/60 border border-white/[0.1] hover:bg-white/[0.06] transition-colors shrink-0"
           style={{ background: 'linear-gradient(180deg, #4a4a4c, #3e3e40)', boxShadow: '0 1px 1px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08)' }}>
           {FilterIcon}
           Filter
-          {hasActiveFilter && <span className="w-1.5 h-1.5 bg-[#0A84FF] rounded-full" />}
+          {(activeFilters.techStacks.length > 0 || activeFilters.difficulty) && <span className="w-1.5 h-1.5 bg-[#0A84FF] rounded-full" />}
         </button>
       </div>
 

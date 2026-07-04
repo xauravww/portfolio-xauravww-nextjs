@@ -5,6 +5,53 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LoadingSpinner from "../components/LoadingSpinner";
 
+const FALLBACK = [
+  // Frontend
+  { name: 'React.js', icon: '/assets/techstack/react.png', category: 'frontend' },
+  { name: 'Next.js', icon: '/assets/techstack/next-js.svg', category: 'frontend' },
+  { name: 'TypeScript', icon: '/assets/techstack/typescript.svg', category: 'frontend' },
+  { name: 'JavaScript', icon: '/assets/techstack/javascript.png', category: 'frontend' },
+  { name: 'HTML & CSS', icon: '/assets/techstack/html-css.png', category: 'frontend' },
+  { name: 'Tailwind CSS', icon: '/assets/techstack/tailwind-css.svg', category: 'frontend' },
+  { name: 'Redux Toolkit', icon: '/assets/techstack/redux-toolkit.png', category: 'frontend' },
+  { name: 'XML', icon: '/assets/techstack/xml.png', category: 'frontend' },
+
+  // Backend
+  { name: 'Node.js', icon: '/assets/techstack/nodejs.png', category: 'backend' },
+  { name: 'Express.js', icon: '/assets/techstack/express.webp', category: 'backend' },
+  { name: 'Prisma', icon: '/assets/techstack/prisma.svg', category: 'backend' },
+  { name: 'GraphQL', icon: '/assets/techstack/graphql-square.svg', category: 'backend' },
+  { name: 'Notion API', icon: '/assets/techstack/notion.png', category: 'backend' },
+  { name: 'Gram.js', icon: '/assets/techstack/gram-js.png', category: 'backend' },
+  { name: 'JWT', icon: '/assets/techstack/jwt-colorful.svg', category: 'backend' },
+
+  // Databases
+  { name: 'MongoDB', icon: '/assets/techstack/mongodb.png', category: 'database' },
+  { name: 'PostgreSQL', icon: '/assets/techstack/postgresql.svg', category: 'database' },
+  { name: 'Redis', icon: '/assets/techstack/redis.png', category: 'database' },
+  { name: 'Sanity CMS', icon: '/assets/techstack/sanity.png', category: 'database' },
+
+  // DevOps & Tools
+  { name: 'Docker', icon: '/assets/techstack/docker-square.png', category: 'devops' },
+  { name: 'Git', icon: '/assets/techstack/git-square.png', category: 'devops' },
+  { name: 'GitHub', icon: '/assets/techstack/github-square.png', category: 'devops' },
+  { name: 'N8N', icon: '/assets/techstack/n8n.jpg', category: 'devops' },
+  { name: 'Postman', icon: '/assets/techstack/postman-square.svg', category: 'devops' },
+
+  // Mobile
+  { name: 'React Native', icon: '/assets/techstack/react-native.png', category: 'mobile' },
+  { name: 'Kotlin', icon: '/assets/techstack/kotlin.png', category: 'mobile' },
+  { name: 'Android', icon: '/assets/techstack/android.png', category: 'mobile' },
+  { name: 'C++', icon: '/assets/techstack/cpp.png', category: 'mobile' },
+
+  // Design
+  { name: 'Figma', icon: '/assets/techstack/figma-square.png', category: 'design' },
+
+  // Other / AI
+  { name: 'LangChain', icon: '/assets/techstack/langchain-square.png', category: 'other' },
+  { name: 'OpenAI API', icon: '/assets/techstack/openai-square.png', category: 'other' },
+].map((t, i) => ({ ...t, id: `fb-${i}` }));
+
 const TechStack = ({ containerId }) => {
   const [techStackData, setTechStackData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,23 +62,42 @@ const TechStack = ({ containerId }) => {
     const fetchTechStacks = async () => {
       try {
         const response = await fetch('/api/portfolio/techstacks');
-        if (response.ok) {
-          const data = await response.json();
+        let dbData = response.ok ? await response.json() : [];
+        if (!Array.isArray(dbData)) dbData = [];
 
-          // Group by category
-          const grouped = data.reduce((acc, tech) => {
-            if (!acc[tech.category]) {
-              acc[tech.category] = [];
-            }
-            acc[tech.category].push(tech);
-            return acc;
-          }, {});
+        // Merge database data with fallback data so no key skills are missing
+        const data = [...dbData];
+        FALLBACK.forEach(fb => {
+          if (!data.some(d => d.name.toLowerCase() === fb.name.toLowerCase())) {
+            data.push(fb);
+          }
+        });
 
-          setGroupedTechStacks(grouped);
-          setTechStackData(data);
-        }
+        // Group by category
+        const grouped = data.reduce((acc, tech) => {
+          const cat = tech.category || 'other';
+          if (!acc[cat]) {
+            acc[cat] = [];
+          }
+          acc[cat].push(tech);
+          return acc;
+        }, {});
+
+        setGroupedTechStacks(grouped);
+        setTechStackData(data);
       } catch (error) {
         console.error('Error fetching tech stacks:', error);
+        // Fallback on error
+        const grouped = FALLBACK.reduce((acc, tech) => {
+          const cat = tech.category || 'other';
+          if (!acc[cat]) {
+            acc[cat] = [];
+          }
+          acc[cat].push(tech);
+          return acc;
+        }, {});
+        setGroupedTechStacks(grouped);
+        setTechStackData(FALLBACK);
       } finally {
         setLoading(false);
       }
@@ -134,7 +200,9 @@ const TechStack = ({ containerId }) => {
             <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 lg:gap-10">
               {techs.map((tech) => (
                 <div key={tech.id} className="tech-icon-item flex flex-col items-center group">
-                  <div className="bg-surface/80 backdrop-blur-sm rounded-xl p-3 md:p-4 hover:bg-surface/90 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10">
+                  <div className={`backdrop-blur-sm rounded-xl p-3 md:p-4 transition-all duration-300 hover:shadow-lg hover:shadow-gold/10 ${
+                    (tech.name.toLowerCase().includes('node') || tech.name.toLowerCase().includes('prisma')) ? 'bg-white hover:bg-white/90' : 'bg-surface/80 hover:bg-surface/90'
+                  }`}>
                     <img
                       src={tech.icon}
                       className={techStackItemsCss}
