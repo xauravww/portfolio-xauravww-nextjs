@@ -13,17 +13,32 @@ const MenuBar = () => {
   const { activeWindowId, openWindow, closeWindow, minimizeWindow, focusWindow, getOpenWindows, windows } = useWindows();
   const [time, setTime] = useState('');
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [openMenu, setOpenMenu] = useState(null); // menu key currently open
   const barRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
-    const update = () => setTime(new Date().toLocaleString('en-US', {
-      weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
-    }));
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    const update = () => {
+      const now = new Date();
+      if (window.innerWidth < 768) {
+        // iOS time format (e.g., 9:41)
+        setTime(now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: false }));
+      } else {
+        setTime(now.toLocaleString('en-US', {
+          weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+        }));
+      }
+    };
     update();
     const id = setInterval(update, 20000);
-    return () => clearInterval(id);
+    window.addEventListener('resize', check);
+    return () => {
+      clearInterval(id);
+      window.removeEventListener('resize', check);
+    };
   }, []);
 
   // Close on outside click / escape
@@ -129,6 +144,38 @@ const MenuBar = () => {
       </div>
     );
   };
+
+  if (isMobile) {
+    return (
+      <div className="fixed top-0 left-0 right-0 h-7 bg-black/15 backdrop-blur-md flex items-center justify-between px-5 z-[150] select-none text-[11.5px] font-semibold text-white/95">
+        {/* Left: Time */}
+        <span className="tabular-nums tracking-tight">{time}</span>
+
+        {/* Right: Signal, Wifi, Battery */}
+        <div className="flex items-center gap-1.5 opacity-90 scale-[0.9] origin-right">
+          {/* Signal Strength (4 Bars) */}
+          <svg className="w-[15px] h-[10px]" viewBox="0 0 17 12" fill="currentColor">
+            <rect x="0" y="8" width="2.5" height="4" rx="0.5" />
+            <rect x="3.5" y="6" width="2.5" height="6" rx="0.5" />
+            <rect x="7" y="3.5" width="2.5" height="8.5" rx="0.5" />
+            <rect x="10.5" y="0.5" width="2.5" height="11.5" rx="0.5" />
+          </svg>
+          {/* Wifi */}
+          <svg className="w-[14px] h-[10px]" viewBox="0 0 15 12" fill="currentColor">
+            <path d="M7.5 11c.7 0 1.25-.56 1.25-1.25S8.2 8.5 7.5 8.5s-1.25.56-1.25 1.25S6.8 11 7.5 11zm-5-3.5c2.76-2.76 7.24-2.76 10 0l-1.1 1.1c-2.15-2.15-5.65-2.15-7.8 0l-1.1-1.1zm-2-2C3.89 2.11 11.11 2.11 14.5 5.5l-1.1 1.1c-2.76-2.76-7.24-2.76-10 0L.5 5.5z" />
+          </svg>
+          {/* Battery */}
+          <div className="flex items-center">
+            <svg className="w-[22px] h-[11px]" viewBox="0 0 24 12" fill="none" stroke="currentColor" strokeWidth={1.5}>
+              <rect x="1" y="1" width="19" height="10" rx="3" />
+              <path d="M21 4v4" strokeLinecap="round" />
+              <rect x="3" y="3" width="13" height="6" rx="1.5" fill="currentColor" stroke="none" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={barRef} className="fixed top-0 left-0 right-0 h-7 bg-[#1c1c1e]/95 backdrop-blur-2xl border-b border-white/[0.06] flex items-center justify-between px-2 z-[150] select-none text-[11px]">

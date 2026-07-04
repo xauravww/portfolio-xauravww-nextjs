@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { useWindows } from '../../../context/windowContext';
 import { Page, Card, Tag, Button, SectionLabel, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
 import OptimizedImage from '../../OptimizedImage';
@@ -40,7 +41,7 @@ const FilterIcon = <svg className="w-3 h-3" fill="none" stroke="currentColor" vi
 const ChevronLeft = <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>;
 const ChevronRight = <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>;
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, onOpenUrl }) => {
   const repo = project.url?.repo;
   const live = project.url?.live;
 
@@ -81,8 +82,8 @@ const ProjectCard = ({ project }) => {
         )}
 
         <div className="flex gap-2 mt-auto pt-1">
-          {repo && <Button href={repo} variant="default" icon={GitHubIcon} className="text-[11px] !px-2.5 !py-[4px]">Code</Button>}
-          {live && <Button href={live} variant="accent" icon={ExternalIcon} className="text-[11px] !px-2.5 !py-[4px]">Live</Button>}
+          {repo && <Button onClick={() => onOpenUrl(repo, project.title + ' — Code')} variant="default" icon={GitHubIcon} className="text-[11px] !px-2.5 !py-[4px]">Code</Button>}
+          {live && <Button onClick={() => onOpenUrl(live, project.title)} variant="accent" icon={ExternalIcon} className="text-[11px] !px-2.5 !py-[4px]">Live</Button>}
         </div>
       </div>
     </Card>
@@ -192,6 +193,7 @@ const FilterSheet = ({ isOpen, onClose, availableTechs, activeFilters, onApply }
 };
 
 const ProjectsApp = () => {
+  const { openBrowser } = useWindows();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -199,6 +201,10 @@ const ProjectsApp = () => {
   const [activeFilters, setActiveFilters] = useState({ techStacks: [], difficulty: null, techFilterMode: 'AND' });
   const scrollRef = useRef(null);
   const perPage = 4;
+
+  const openUrl = (url, title) => {
+    openBrowser({ url, title: title || url, mode: 'web' }, { size: { w: 900, h: 600 } });
+  };
 
   const changePage = (page) => {
     setCurrentPage(page);
@@ -254,7 +260,7 @@ const ProjectsApp = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {posts.length > 0 ? posts.map(p => (
-          <ProjectCard key={p.id} project={p} />
+          <ProjectCard key={p.id} project={p} onOpenUrl={openUrl} />
         )) : (
           <div className="col-span-full py-10 text-center text-white/30 text-[13px]">No matching projects.</div>
         )}

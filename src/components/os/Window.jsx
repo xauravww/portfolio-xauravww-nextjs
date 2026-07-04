@@ -72,7 +72,7 @@ const Window = ({ id, title, children, defaultSize = { w: 700, h: 500 } }) => {
   const isMax = win.isMaximized;
   const hidden = win.isMinimized;
   const style = isMobile
-    ? { position: 'fixed', inset: 0, zIndex: win.zIndex }
+    ? { position: 'fixed', left: 0, right: 0, top: 28, bottom: 0, zIndex: win.zIndex }
     : isMax
       ? { position: 'fixed', left: 0, top: 28, right: 0, bottom: 64, zIndex: win.zIndex }
       : { position: 'fixed', left: pos.x, top: pos.y, width: defaultSize.w, height: defaultSize.h, zIndex: win.zIndex };
@@ -87,9 +87,11 @@ const Window = ({ id, title, children, defaultSize = { w: 700, h: 500 } }) => {
       style={{
         ...style,
         opacity: hidden ? 0 : appeared ? 1 : 0,
-        transform: hidden ? 'scale(0.9) translateY(40px)' : appeared ? 'scale(1)' : 'scale(0.96)',
+        transform: isMobile
+          ? (hidden ? 'translateY(100%)' : appeared ? 'translateY(0)' : 'translateY(100%)')
+          : (hidden ? 'scale(0.9) translateY(40px)' : appeared ? 'scale(1)' : 'scale(0.96)'),
         transformOrigin: 'center bottom',
-        transition: isDragging ? 'none' : 'opacity 200ms ease-out, transform 220ms cubic-bezier(0.2,0.9,0.3,1)',
+        transition: isDragging ? 'none' : 'opacity 200ms ease-out, transform 300ms cubic-bezier(0.16, 1, 0.3, 1)',
       }}
       onMouseDown={() => focusWindow(id)}
     >
@@ -104,18 +106,34 @@ const Window = ({ id, title, children, defaultSize = { w: 700, h: 500 } }) => {
       >
         {/* Title bar */}
         <div
-          className={`flex items-center relative px-3 h-[30px] shrink-0 select-none ${!isMobile && !isMax ? 'cursor-grab active:cursor-grabbing' : ''}`}
-          style={{ background: 'linear-gradient(180deg, #3a3a3c 0%, #303032 100%)' }}
+          className={`flex items-center relative select-none ${
+            isMobile ? 'h-[44px] bg-[#1c1c1e]/90 border-b border-white/[0.08]' : 'px-3 h-[30px] cursor-grab active:cursor-grabbing'
+          }`}
+          style={!isMobile ? { background: 'linear-gradient(180deg, #3a3a3c 0%, #303032 100%)' } : undefined}
           onMouseDown={!isMobile ? onTitleMouseDown : undefined}
           onDoubleClick={!isMobile ? handleMaxToggle : undefined}
         >
           {isMobile ? (
-            <>
-              <span className="text-[13px] text-white/70 font-semibold flex-1 text-center">{title}</span>
-              <button onClick={() => closeWindow(id)} className="absolute right-2 text-white/50 hover:text-white/80 transition-colors">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            <div className="w-full flex items-center justify-between px-3 h-[44px]">
+              {/* Left: Home Button */}
+              <button
+                onClick={() => closeWindow(id)}
+                className="flex items-center gap-1 text-[#0A84FF] text-[15px] font-normal active:opacity-60 transition-opacity"
+              >
+                <svg className="w-5 h-5 -ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>Home</span>
               </button>
-            </>
+
+              {/* Center: Title */}
+              <span className="absolute left-1/2 -translate-x-1/2 text-[16px] text-white font-semibold tracking-tight">
+                {title}
+              </span>
+
+              {/* Right: Dummy spacer for symmetry */}
+              <div className="w-12" />
+            </div>
           ) : (
             <>
               <div className="flex items-center gap-[8px] z-10 group/lights">
@@ -140,6 +158,15 @@ const Window = ({ id, title, children, defaultSize = { w: 700, h: 500 } }) => {
         <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar" style={{ background: '#2a2a2c' }}>
           {children}
         </div>
+        {/* iOS Home Indicator */}
+        {isMobile && (
+          <div
+            onClick={() => closeWindow(id)}
+            className="h-[34px] flex items-end justify-center pb-2 bg-[#2a2a2c] shrink-0 select-none cursor-pointer"
+          >
+            <div className="w-[134px] h-[5px] bg-white/25 rounded-full hover:bg-white/40 active:bg-white/50 transition-colors" />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -80,14 +80,21 @@ export const Avatar = ({ src, alt, size = 72, radius = 16 }) => (
 );
 
 // Sidebar item (for master-detail apps like Experience / Education)
-export const SidebarItem = ({ active, title, subtitle, onClick }) => (
+export const SidebarItem = ({ active, title, subtitle, onClick, showChevron }) => (
   <button
     onClick={onClick}
-    className={`w-full text-left px-2.5 py-2 rounded-[7px] mb-0.5 transition-colors ${
+    className={`w-full text-left px-3 py-2.5 rounded-[7px] mb-0.5 transition-colors flex items-center justify-between gap-3 ${
       active ? 'bg-[#0A84FF] text-white' : 'text-white/70 hover:bg-white/[0.06]'}`}
   >
-    <div className="text-[12.5px] font-medium leading-tight truncate">{title}</div>
-    {subtitle && <div className={`text-[11px] leading-tight truncate mt-0.5 ${active ? 'text-white/80' : 'text-white/35'}`}>{subtitle}</div>}
+    <div className="min-w-0 flex-1">
+      <div className="text-[12.5px] font-medium leading-tight truncate">{title}</div>
+      {subtitle && <div className={`text-[11px] leading-tight truncate mt-0.5 ${active ? 'text-white/80' : 'text-white/35'}`}>{subtitle}</div>}
+    </div>
+    {showChevron && (
+      <svg className={`w-3.5 h-3.5 shrink-0 ${active ? 'text-white/70' : 'text-white/30'}`} fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    )}
   </button>
 );
 

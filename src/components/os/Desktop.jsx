@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { WindowProvider, useWindows } from '../../context/windowContext';
 import MenuBar from './MenuBar';
 import Dock from './Dock';
@@ -53,11 +53,49 @@ function DesktopSurface() {
   const { openWindow, windows, closeWindow, getOpenWindows } = useWindows();
   const [menu, setMenu] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [widgetTime, setWidgetTime] = useState('');
+  const [widgetDate, setWidgetDate] = useState('');
+
+  // Icon dragging offsets (relative to initial static base positions in DOM)
+  const [draggedId, setDraggedId] = useState(null);
+  const [iconOffsets, setIconOffsets] = useState({
+    about: { x: 0, y: 0 },
+    techstack: { x: 0, y: 0 },
+    projects: { x: 0, y: 0 },
+    experience: { x: 0, y: 0 },
+    blogs: { x: 0, y: 0 },
+    education: { x: 0, y: 0 },
+    contact: { x: 0, y: 0 },
+  });
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [initialOffset, setInitialOffset] = useState({ x: 0, y: 0 });
+  const [prevCleanOffset, setPrevCleanOffset] = useState({ x: 0, y: 0 });
+  const [hasMoved, setHasMoved] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      setWidgetTime(now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }));
+      setWidgetDate(now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }));
+    };
+    update();
+    const timer = setInterval(update, 30000);
+    return () => clearInterval(timer);
+  }, []);
 
   const openApp = useCallback((id) => openWindow(id, { size: WINDOW_SIZES[id] }), [openWindow]);
 
   const desktopMenu = (e) => {
     e.preventDefault();
+    if (isMobile) return;
     const anyOpen = getOpenWindows().length > 0;
     setMenu({
       x: e.clientX, y: e.clientY,
@@ -75,6 +113,7 @@ function DesktopSurface() {
   const iconMenu = (e, item) => {
     e.preventDefault();
     e.stopPropagation();
+    if (isMobile) return;
     const isOpen = windows[item.id]?.isOpen && !windows[item.id]?.isMinimized;
     setMenu({
       x: e.clientX, y: e.clientY,
@@ -87,6 +126,128 @@ function DesktopSurface() {
     });
   };
 
+  // Dragging event callbacks
+  const handleDragStart = useCallback((id, e) => {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    setDraggedId(id);
+    setDragStart({ x: clientX, y: clientY });
+    
+    const currentOffset = iconOffsets[id] || { x: 0, y: 0 };
+    setInitialOffset(currentOffset);
+    setPrevCleanOffset(currentOffset);
+
+    setHasMoved(false);
+    setSelected(id);
+  }, [iconOffsets]);
+
+  const handleDragMove = useCallback((clientX, clientY) => {
+    if (!draggedId) return;
+
+    const dx = clientX - dragStart.x;
+    const dy = clientY - dragStart.y;
+
+    if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+      setHasMoved(true);
+    }
+
+    setIconOffsets(prev => ({
+      ...prev,
+      [draggedId]: {
+        x: initialOffset.x + dx,
+        y: initialOffset.y + dy
+      }
+    }));
+  }, [draggedId, dragStart, initialOffset]);
+
+  const handleDragEnd = useCallback(() => {
+    if (!draggedId) return;
+
+    const currentOffset = iconOffsets[draggedId] || { x: 0, y: 0 };
+    const draggedIdx = DESKTOP_ICONS.findIndex(it => it.id === draggedId);
+
+    // Collision detection: Check if bounding boxes of folders overlap
+    const collides = DESKTOP_ICONS.some((other, otherIdx) => {
+      if (other.id === draggedId) return false;
+      
+      const otherOffset = iconOffsets[other.id] || { x: 0, y: 0 };
+
+      if (isMobile) {
+        // Mobile layout: left, top
+        const initialColDragged = draggedIdx % 4;
+        const initialRowDragged = Math.floor(draggedIdx / 4);
+        const leftDragged = initialColDragged * 80 + currentOffset.x;
+        const topDragged = initialRowDragged * 92 + currentOffset.y;
+
+        const initialColOther = otherIdx % 4;
+        const initialRowOther = Math.floor(otherIdx / 4);
+        const leftOther = initialColOther * 80 + otherOffset.x;
+        const topOther = initialRowOther * 92 + otherOffset.y;
+
+        // Folders are roughly 72x80 on mobile. If overlapping by less than 68x76, it's a collision
+        return Math.abs(leftDragged - leftOther) < 68 && Math.abs(topDragged - topOther) < 76;
+      } else {
+        // Desktop layout: right, top
+        const initialColDragged = Math.floor(draggedIdx / 6);
+        const initialRowDragged = draggedIdx % 6;
+        const rightDragged = initialColDragged * 84 - currentOffset.x;
+        const topDragged = initialRowDragged * 80 + currentOffset.y;
+
+        const initialColOther = Math.floor(otherIdx / 6);
+        const initialRowOther = otherIdx % 6;
+        const rightOther = initialColOther * 84 - otherOffset.x;
+        const topOther = initialRowOther * 80 + otherOffset.y;
+
+        // Folders are roughly 76x80 on desktop. Overlap threshold = 70px
+        return Math.abs(rightDragged - rightOther) < 70 && Math.abs(topDragged - topOther) < 70;
+      }
+    });
+
+    if (collides) {
+      // Collision detected! Snap back to previous clean position
+      setIconOffsets(prev => ({
+        ...prev,
+        [draggedId]: prevCleanOffset
+      }));
+    } else {
+      // No collision! Keep free-form coordinates exactly where dropped
+    }
+
+    setDraggedId(null);
+  }, [draggedId, iconOffsets, prevCleanOffset, isMobile]);
+
+  // Bind move/end events globally
+  useEffect(() => {
+    if (!draggedId) return;
+
+    const handleMove = (e) => {
+      if (e.cancelable) e.preventDefault();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      handleDragMove(clientX, clientY);
+    };
+
+    const handleEnd = () => {
+      handleDragEnd();
+    };
+
+    window.addEventListener('mousemove', handleMove, { passive: false });
+    window.addEventListener('mouseup', handleEnd);
+    window.addEventListener('touchmove', handleMove, { passive: false });
+    window.addEventListener('touchend', handleEnd);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', handleEnd);
+    };
+  }, [draggedId, handleDragMove, handleDragEnd]);
+
+  const openList = getOpenWindows();
+  const hasOpenWindow = openList.length > 0;
+
   return (
     <div className="os-ui">
       <Wallpaper />
@@ -98,35 +259,115 @@ function DesktopSurface() {
         onContextMenu={desktopMenu}
         onMouseDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}
       >
-        {/* Desktop icons — right-aligned grid, desktop only (macOS convention) */}
-        <div className="hidden md:grid grid-flow-col grid-rows-6 gap-x-2 gap-y-1 absolute top-10 right-3 justify-items-center">
-          {DESKTOP_ICONS.map((item) => (
-            <button
-              key={item.id}
-              onClick={(e) => { e.stopPropagation(); setSelected(item.id); }}
-              onDoubleClick={() => openApp(item.id)}
-              onContextMenu={(e) => { setSelected(item.id); iconMenu(e, item); }}
-              className="group flex flex-col items-center gap-0.5 w-[76px] cursor-default rounded-md p-1.5 transition-colors"
-            >
-              <AppIcon appId={item.id} className="w-[48px] h-[48px]" />
-              <span className={`desktop-label text-[11px] font-medium text-center leading-tight px-1 rounded ${
-                selected === item.id ? 'bg-[#0A84FF] text-white' : 'text-white'
-              }`}>
-                {item.name}
-              </span>
-            </button>
-          ))}
+        {/* Desktop icons */}
+        <div className="hidden md:block absolute top-10 right-3 bottom-20 left-10 pointer-events-none">
+          {DESKTOP_ICONS.map((item, idx) => {
+            const offset = iconOffsets[item.id] || { x: 0, y: 0 };
+            const isDragged = draggedId === item.id;
+            
+            // Base layout matches index (0 to 5 in first column, 6+ in second)
+            const initialCol = Math.floor(idx / 6);
+            const initialRow = idx % 6;
+
+            return (
+              <button
+                key={item.id}
+                onMouseDown={(e) => {
+                  if (e.button !== 0) return;
+                  e.stopPropagation();
+                  handleDragStart(item.id, e);
+                }}
+                onTouchStart={(e) => {
+                  e.stopPropagation();
+                  handleDragStart(item.id, e);
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelected(item.id);
+                }}
+                onDoubleClick={() => {
+                  if (!hasMoved) openApp(item.id);
+                }}
+                onContextMenu={(e) => { setSelected(item.id); iconMenu(e, item); }}
+                className={`absolute pointer-events-auto group flex flex-col items-center gap-0.5 w-[76px] cursor-default rounded-md p-1.5 transition-colors select-none ${
+                  isDragged ? 'opacity-75 z-50 scale-[1.03]' : ''
+                }`}
+                style={{
+                  right: `${initialCol * 84}px`,
+                  top: `${initialRow * 80}px`,
+                  transform: `translate3d(${offset.x}px, ${offset.y}px, 0)`,
+                  transition: isDragged ? 'none' : 'transform 150ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+                }}
+              >
+                <AppIcon appId={item.id} className="w-[48px] h-[48px] pointer-events-none" />
+                <span className={`desktop-label text-[11px] font-medium text-center leading-tight px-1 rounded select-none ${
+                  selected === item.id ? 'bg-[#0A84FF] text-white' : 'text-white'
+                }`}>
+                  {item.name}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Mobile: greeting in center */}
-        <div className="md:hidden flex flex-col items-center justify-center h-full px-8 -mt-8">
-          <div className="w-16 h-16 rounded-2xl bg-gold/20 flex items-center justify-center mb-4">
-            <span className="text-gold font-display text-2xl font-bold">SM</span>
+        {/* Mobile: iOS-style Home Screen */}
+        {isMobile && !hasOpenWindow && (
+          <div className="flex flex-col items-center justify-start h-full px-6 pt-8 overflow-y-auto">
+            {/* iOS Calendar / Time Widget */}
+            <div className="w-full max-w-[320px] bg-white/[0.08] border border-white/10 backdrop-blur-md rounded-[22px] p-5 mb-8 flex flex-col items-start gap-0.5 shadow-lg">
+              <span className="text-[#0A84FF] text-[10px] font-bold tracking-widest uppercase">{widgetDate.split(',')[0]}</span>
+              <span className="text-white text-3xl font-semibold tracking-tight">{widgetTime.replace(/\s[A-Z]+$/, '')}</span>
+              <span className="text-white/60 text-[12px] font-medium mt-1">Saurav Maheshwari</span>
+              <span className="text-white/35 text-[10px]">Full-Stack Developer</span>
+            </div>
+
+            {/* iOS App Grid Container */}
+            <div className="relative w-[320px] h-[280px]">
+              {DESKTOP_ICONS.map((item, idx) => {
+                const offset = iconOffsets[item.id] || { x: 0, y: 0 };
+                const isDragged = draggedId === item.id;
+
+                // Base layout is row-first wrapping every 4 slots
+                const initialCol = idx % 4;
+                const initialRow = Math.floor(idx / 4);
+
+                return (
+                  <button
+                    key={item.id}
+                    onMouseDown={(e) => {
+                      if (e.button !== 0) return;
+                      e.stopPropagation();
+                      handleDragStart(item.id, e);
+                    }}
+                    onTouchStart={(e) => {
+                      e.stopPropagation();
+                      handleDragStart(item.id, e);
+                    }}
+                    onClick={() => {
+                      if (!hasMoved) openApp(item.id);
+                    }}
+                    className={`absolute flex flex-col items-center gap-1 w-[72px] focus:outline-none select-none ${
+                      isDragged ? 'opacity-75 z-50 scale-[1.03]' : ''
+                    }`}
+                    style={{
+                      left: `${initialCol * 80}px`,
+                      top: `${initialRow * 92}px`,
+                      transform: `translate3d(${offset.x}px, ${offset.y}px, 0)`,
+                      transition: isDragged ? 'none' : 'transform 150ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+                    }}
+                  >
+                    <div className="w-[54px] h-[54px] rounded-[22%] overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.25)] pointer-events-none">
+                      <AppIcon appId={item.id} className="w-full h-full" />
+                    </div>
+                    <span className="text-white text-[11px] font-medium leading-tight text-center truncate w-full px-0.5 select-none">
+                      {item.name}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <h1 className="text-white font-display text-2xl font-bold mb-1 text-center">Saurav Maheshwari</h1>
-          <p className="text-white/40 text-sm">Full-Stack Developer</p>
-          <p className="text-white/25 text-xs mt-4">Tap an icon below to explore</p>
-        </div>
+        )}
       </div>
 
       {/* Windows */}
@@ -139,25 +380,26 @@ function DesktopSurface() {
       <Window id="projects" title="Projects" defaultSize={WINDOW_SIZES.projects}>
         <ProjectsApp />
       </Window>
-      <Window id="experience" title="Experience" defaultSize={WINDOW_SIZES.experience}>
+      <Window id="experience" title="Work Experience" defaultSize={WINDOW_SIZES.experience}>
         <ExperienceApp />
       </Window>
-      <Window id="blogs" title="Blogs" defaultSize={WINDOW_SIZES.blogs}>
+      <Window id="blogs" title="Blog Posts" defaultSize={WINDOW_SIZES.blogs}>
         <BlogsApp />
       </Window>
-      <Window id="education" title="Education" defaultSize={WINDOW_SIZES.education}>
+      <Window id="education" title="Education History" defaultSize={WINDOW_SIZES.education}>
         <EducationApp />
       </Window>
-      <Window id="contact" title="Contact" defaultSize={WINDOW_SIZES.contact}>
+      <Window id="contact" title="Mail" defaultSize={WINDOW_SIZES.contact}>
         <ContactApp />
       </Window>
       <Window id="safari" title="Safari" defaultSize={WINDOW_SIZES.safari}>
         <SafariApp />
       </Window>
 
-      <Dock defaultSizes={WINDOW_SIZES} onItemContextMenu={iconMenu} />
+      {/* Context Menu */}
+      {menu && <ContextMenu x={menu.x} y={menu.y} items={menu.items} onClose={() => setMenu(null)} />}
 
-      {menu && <ContextMenu menu={menu} onClose={() => setMenu(null)} />}
+      <Dock defaultSizes={WINDOW_SIZES} />
     </div>
   );
 }

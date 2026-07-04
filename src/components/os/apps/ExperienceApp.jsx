@@ -25,6 +25,15 @@ const ExperienceApp = () => {
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileView, setMobileView] = useState('list'); // 'list' or 'detail'
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -50,6 +59,80 @@ const ExperienceApp = () => {
   const timeStr = exp
     ? `${formatDate(exp.startDate)} - ${exp.isCurrentJob || !exp.endDate ? 'Present' : formatDate(exp.endDate)}`
     : '';
+
+  if (isMobile) {
+    if (mobileView === 'list') {
+      return (
+        <div className="h-full overflow-y-auto p-3">
+          <SectionLabel className="px-1.5 py-1">Experience List</SectionLabel>
+          <div className="space-y-1">
+            {data.map(d => (
+              <SidebarItem
+                key={d.id}
+                active={selected === d.position}
+                title={d.position}
+                subtitle={d.company}
+                showChevron={true}
+                onClick={() => {
+                  setSelected(d.position);
+                  setMobileView('detail');
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="h-full overflow-y-auto">
+        {exp && (
+          <Page>
+            <button
+              onClick={() => setMobileView('list')}
+              className="inline-flex items-center gap-1 text-[#0A84FF] text-[15px] font-normal mb-4 active:opacity-60 transition-opacity"
+            >
+              <svg className="w-5 h-5 -ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Back</span>
+            </button>
+
+            <h2 className="text-[17px] font-bold text-white leading-tight">{exp.position}</h2>
+            <p className="text-[13px] text-[#0A84FF] font-medium mt-0.5">{exp.company}</p>
+
+            <div className="flex flex-wrap items-center gap-3 mt-2.5 text-[11.5px] text-white/45">
+              <span className="flex items-center gap-1">{CalendarIcon}{timeStr}</span>
+              {exp.location && <span className="flex items-center gap-1">{MapPinIcon}{exp.location}</span>}
+            </div>
+
+            <Card className="mt-4 mb-4">
+              <div className="p-3.5">
+                {descriptionArray.length > 1 ? (
+                  <ul className="space-y-2 text-[13px] text-white/75 leading-relaxed list-disc pl-4">
+                    {descriptionArray.map((point, i) => <li key={i}>{point}</li>)}
+                  </ul>
+                ) : (
+                  <p className="text-[13px] text-white/75 leading-relaxed">{exp.description}</p>
+                )}
+              </div>
+            </Card>
+
+            {exp.skills?.length > 0 && (
+              <>
+                <SectionLabel>Technologies & Skills</SectionLabel>
+                <Card>
+                  <div className="p-3 flex flex-wrap gap-1.5">
+                    {exp.skills.map(s => <Tag key={s}>{s}</Tag>)}
+                  </div>
+                </Card>
+              </>
+            )}
+          </Page>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row h-full">

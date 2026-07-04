@@ -71,7 +71,8 @@ export function WindowProvider({ children }) {
   }, []);
 
   // Navigate the in-app Safari to a page and open/focus its window.
-  // page = { url, title, mode: 'reader'|'web', content? }
+  // page = { url, title, mode: 'reader'|'web', content?, meta? }
+  // mode 'web' loads via proxy iframe; 'reader' renders pre-fetched content.
   const openBrowser = useCallback((page, opts = {}) => {
     setBrowser(prev => {
       const trimmed = prev.history.slice(0, prev.index + 1);
@@ -81,11 +82,15 @@ export function WindowProvider({ children }) {
   }, [openWindow]);
 
   const browserBack = useCallback(() => {
-    setBrowser(prev => prev.index > 0 ? { ...prev, index: prev.index - 1 } : prev);
+    setBrowser(prev => prev.index >= 0 ? { ...prev, index: prev.index - 1 } : prev);
   }, []);
 
   const browserForward = useCallback(() => {
     setBrowser(prev => prev.index < prev.history.length - 1 ? { ...prev, index: prev.index + 1 } : prev);
+  }, []);
+
+  const browserHome = useCallback(() => {
+    setBrowser(prev => ({ ...prev, index: -1 }));
   }, []);
 
   const getOpenWindows = useCallback(() => {
@@ -98,7 +103,7 @@ export function WindowProvider({ children }) {
     <WindowContext.Provider value={{
       windows, activeWindowId, openWindow, closeWindow, minimizeWindow,
       toggleMaximize, focusWindow, updatePosition, getOpenWindows,
-      browser, openBrowser, browserBack, browserForward
+      browser, openBrowser, browserBack, browserForward, browserHome
     }}>
       {children}
     </WindowContext.Provider>

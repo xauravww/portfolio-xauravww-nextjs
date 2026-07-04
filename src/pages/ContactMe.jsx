@@ -237,8 +237,14 @@ const ContactMe = ({ containerId }) => {
                                 Sending...
                             </span>
                         ) : "Send Message"}
-                    </button>
                 </form>
+
+                <div className="mt-6 text-center text-body text-sm font-medium">
+                    <span>Or email directly: </span>
+                    <a href="mailto:sauravmaheshwari8@gmail.com" className="text-gold hover:underline transition-all duration-200">
+                        sauravmaheshwari8@gmail.com
+                    </a>
+                </div>
             </div>
 
             {/* Mobile social links */}
@@ -250,8 +256,8 @@ const ContactMe = ({ containerId }) => {
                     <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
                         <img className={sidebarImgCSS} src="/assets/linkedin.png" alt="LinkedIn" />
                     </a>
-                    <a href={process.env.NEXT_PUBLIC_SHOWWCASE_URL} target="_blank" rel="noopener noreferrer" aria-label="Showwcase" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
-                        <img className={sidebarImgCSS} src="/assets/showwcase.png" alt="Showwcase" />
+                    <a href={process.env.NEXT_PUBLIC_GITHUB_URL} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hover:scale-110 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
+                        <img className={sidebarImgCSS} src="/assets/github.svg" alt="GitHub" />
                     </a>
                 </div>
             </div>

@@ -97,6 +97,14 @@ const ContactApp = () => {
             {GitHubIcon}<span>GitHub</span>
             <svg className="w-3 h-3 ml-auto text-white/25" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
           </a>
+          <a href="mailto:sauravmaheshwari8@gmail.com"
+            className="flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] text-white/70 hover:bg-white/[0.04] transition-colors">
+            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span>Email</span>
+            <svg className="w-3 h-3 ml-auto text-white/25" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </a>
         </div>
       </Card>
 
