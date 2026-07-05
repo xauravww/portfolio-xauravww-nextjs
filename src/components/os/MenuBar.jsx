@@ -173,9 +173,9 @@ const MenuBar = () => {
 
     let newHeight = 0;
     if (drawerOpen) {
-      newHeight = Math.max(0, Math.min(380, 380 + deltaY));
+      newHeight = Math.max(0, Math.min(480, 480 + deltaY));
     } else {
-      newHeight = Math.max(0, Math.min(380, deltaY));
+      newHeight = Math.max(0, Math.min(480, deltaY));
     }
     setDrawerHeight(newHeight);
   }, [drawerOpen, isDraggingDrawer]);
@@ -190,24 +190,24 @@ const MenuBar = () => {
         setDrawerHeight(0);
       } else {
         setDrawerOpen(true);
-        setDrawerHeight(380);
+        setDrawerHeight(480);
       }
       return;
     }
 
     // Drag release threshold commit
     if (drawerOpen) {
-      if (drawerHeight < 280) {
+      if (drawerHeight < 380) { // Threshold for closing
         setDrawerOpen(false);
         setDrawerHeight(0);
       } else {
         setDrawerOpen(true);
-        setDrawerHeight(380);
+        setDrawerHeight(480);
       }
     } else {
       if (drawerHeight > 100) {
         setDrawerOpen(true);
-        setDrawerHeight(380);
+        setDrawerHeight(480);
       } else {
         setDrawerOpen(false);
         setDrawerHeight(0);
@@ -224,7 +224,7 @@ const MenuBar = () => {
             onClick={() => { setDrawerOpen(false); setDrawerHeight(0); }}
             className="fixed inset-0 bg-black/45 backdrop-blur-sm z-[130]"
             style={{
-              opacity: drawerHeight / 380,
+              opacity: drawerHeight / 480,
               transition: isDraggingDrawer ? 'none' : 'opacity 250ms ease-out',
             }}
           />
@@ -234,8 +234,8 @@ const MenuBar = () => {
         <div 
           className="fixed top-0 left-0 right-0 z-[140] bg-[#1c1c1e]/90 backdrop-blur-3xl border-b border-white/[0.08] rounded-b-[24px] shadow-[0_12px_48px_rgba(0,0,0,0.5)] flex flex-col pt-8 pb-1 text-white overflow-hidden select-none"
           style={{
-            height: '380px',
-            transform: `translate3d(0, ${drawerHeight - 380}px, 0)`,
+            height: '480px',
+            transform: `translate3d(0, ${drawerHeight - 480}px, 0)`,
             transition: isDraggingDrawer ? 'none' : 'transform 250ms cubic-bezier(0.25, 0.8, 0.25, 1)',
           }}
         >
