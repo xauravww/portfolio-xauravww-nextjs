@@ -40,8 +40,10 @@ export default function MusicApp() {
   const [audioLoading, setAudioLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [useIframeFallback, setUseIframeFallback] = useState(false);
   
   const playerRef = useRef(null);
+  const audioRef = useRef(null);
   const progressInterval = useRef(null);
 
   useEffect(() => {
@@ -92,9 +94,9 @@ export default function MusicApp() {
     fetchHomeData();
   }, []);
 
-  // Poll for progress updates
+  // Poll for progress updates (only used when in iframe fallback mode)
   useEffect(() => {
-    if (isPlaying) {
+    if (isPlaying && useIframeFallback) {
       progressInterval.current = setInterval(async () => {
         if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
           try {
@@ -107,7 +109,24 @@ export default function MusicApp() {
       clearInterval(progressInterval.current);
     }
     return () => clearInterval(progressInterval.current);
-  }, [isPlaying]);
+  }, [isPlaying, useIframeFallback]);
+
+  // Handle Play/Pause synchronization for Native Audio
+  useEffect(() => {
+    if (!useIframeFallback && audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play().catch(e => console.error('Audio play blocked:', e));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying, currentTrack, useIframeFallback]);
+
+  // Reset fallback on track change
+  useEffect(() => {
+    setUseIframeFallback(false);
+    setAudioLoading(true);
+  }, [currentTrack]);
 
   // Register Media Session for Lock Screen Controls
   useEffect(() => {
@@ -126,7 +145,7 @@ export default function MusicApp() {
   }, [currentTrack]);
 
   const togglePlay = () => {
-    if (playerRef.current) {
+    if (useIframeFallback && playerRef.current) {
       if (isPlaying) playerRef.current.pauseVideo();
       else playerRef.current.playVideo();
     }
@@ -371,10 +390,14 @@ export default function MusicApp() {
               value={progress}
               onChange={(e) => {
                 const newTime = Number(e.target.value);
-                if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
-                  playerRef.current.seekTo(newTime, true);
-                  setProgress(newTime);
+                if (useIframeFallback) {
+                  if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
+                    playerRef.current.seekTo(newTime, true);
+                  }
+                } else if (audioRef.current) {
+                  audioRef.current.currentTime = newTime;
                 }
+                setProgress(newTime);
               }}
               className="flex-1 h-1 bg-white/20 rounded-full appearance-none outline-none hover:[&::-webkit-slider-thumb]:bg-[#1ed760] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full cursor-pointer"
               style={{ background: `linear-gradient(to right, white ${(progress / (duration || 1)) * 100}%, rgba(255,255,255,0.2) ${(progress / (duration || 1)) * 100}%)` }}
@@ -389,34 +412,54 @@ export default function MusicApp() {
         </div>
       </div>
 
-      <div className="absolute opacity-0 pointer-events-none -z-50 top-[-9999px]">
-        <YouTube 
-          videoId={currentTrack.id} 
-          opts={{ height: '0', width: '0', playerVars: { autoplay: isPlaying ? 1 : 0, controls: 0, disablekb: 1 } }} 
-          onReady={(e) => { 
-            playerRef.current = e.target; 
-            if (isPlaying) playerRef.current.playVideo(); 
-          }} 
-          onStateChange={(e) => {
-            if (e.data === 1) { // Playing
-              setIsPlaying(true);
-              setAudioLoading(false);
-              setDuration(e.target.getDuration());
-            } else if (e.data === 2) { // Paused
-              setIsPlaying(false);
-            } else if (e.data === 0) { // Ended
-              playNext();
-            } else if (e.data === 3) { // Buffering
-              setAudioLoading(true);
-            }
-          }}
-          onError={() => {
-            setAudioLoading(false);
-            setIsPlaying(false);
-            playNext(); // Skip broken tracks automatically
+      {/* Native Audio Engine (Supports Screen-Off & Background Playback) */}
+      {!useIframeFallback && (
+        <audio 
+          ref={audioRef} 
+          src={`/api/stream?id=${currentTrack.id}`} 
+          onPlaying={() => setAudioLoading(false)}
+          onCanPlay={() => setAudioLoading(false)}
+          onTimeUpdate={() => setProgress(audioRef.current?.currentTime || 0)}
+          onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+          onEnded={playNext}
+          onError={(e) => {
+            console.warn("Native audio failed, falling back to YouTube iframe.");
+            setUseIframeFallback(true);
           }}
         />
-      </div>
+      )}
+
+      {/* YouTube Iframe Fallback (Used only when ytdl stream fails) */}
+      {useIframeFallback && (
+        <div className="absolute opacity-0 pointer-events-none -z-50 top-[-9999px]">
+          <YouTube 
+            videoId={currentTrack.id} 
+            opts={{ height: '0', width: '0', playerVars: { autoplay: isPlaying ? 1 : 0, controls: 0, disablekb: 1 } }} 
+            onReady={(e) => { 
+              playerRef.current = e.target; 
+              if (isPlaying) playerRef.current.playVideo(); 
+            }} 
+            onStateChange={(e) => {
+              if (e.data === 1) { // Playing
+                setIsPlaying(true);
+                setAudioLoading(false);
+                setDuration(e.target.getDuration());
+              } else if (e.data === 2) { // Paused
+                setIsPlaying(false);
+              } else if (e.data === 0) { // Ended
+                playNext();
+              } else if (e.data === 3) { // Buffering
+                setAudioLoading(true);
+              }
+            }}
+            onError={() => {
+              setAudioLoading(false);
+              setIsPlaying(false);
+              playNext(); // Skip totally broken tracks automatically
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import ytdl from '@distube/ytdl-core';
+import play from 'play-dl';
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {
@@ -10,17 +10,15 @@ export async function GET(request) {
   }
 
   try {
-    const info = await ytdl.getInfo(id);
-    const format = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
+    const streamInfo = await play.stream(`https://www.youtube.com/watch?v=${id}`);
     
-    if (format && format.url) {
-      // Redirect directly to the raw audio stream URL
-      return NextResponse.redirect(format.url);
+    if (streamInfo && streamInfo.url) {
+      return NextResponse.redirect(streamInfo.url);
     } else {
       return NextResponse.json({ error: 'Audio format not found' }, { status: 404 });
     }
   } catch (error) {
-    console.error('YTDL Stream Error:', error);
+    console.error('Play-DL Stream Error:', error);
     return NextResponse.json({ error: 'Failed to fetch audio stream' }, { status: 500 });
   }
 }
