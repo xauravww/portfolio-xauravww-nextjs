@@ -140,6 +140,76 @@ const ICONS = {
       </g>
     ),
   },
+  snake: {
+    c1: '#34D399', c2: '#059669',
+    symbol: (
+      <g transform="translate(50,50)">
+        <path d="M-15 15 L-15 5 L-5 5 L-5 -15 L15 -15 L15 -5 L5 -5 L5 15 Z" fill={white(0.95)} />
+        <circle cx="10" cy="-10" r="2.5" fill="#059669" />
+      </g>
+    ),
+  },
+  tictactoe: {
+    c1: '#FF6482', c2: '#FF2D55',
+    symbol: (
+      <g transform="translate(50,50)">
+        <line x1="-12" y1="-24" x2="-12" y2="24" stroke={white(0.95)} strokeWidth="4" strokeLinecap="round" />
+        <line x1="12" y1="-24" x2="12" y2="24" stroke={white(0.95)} strokeWidth="4" strokeLinecap="round" />
+        <line x1="-24" y1="-12" x2="24" y2="-12" stroke={white(0.95)} strokeWidth="4" strokeLinecap="round" />
+        <line x1="-24" y1="12" x2="24" y2="12" stroke={white(0.95)} strokeWidth="4" strokeLinecap="round" />
+        <circle cx="0" cy="0" r="6" fill="none" stroke={white(0.95)} strokeWidth="4" />
+      </g>
+    ),
+  },
+  breakout: {
+    c1: '#0077B5', c2: '#005582',
+    symbol: (
+      <g transform="translate(50,50)">
+        <rect x="-24" y="-20" width="14" height="8" rx="2" fill={white(0.95)} />
+        <rect x="-8" y="-20" width="14" height="8" rx="2" fill={white(0.95)} />
+        <rect x="8" y="-20" width="14" height="8" rx="2" fill={white(0.95)} />
+        
+        <rect x="-16" y="-10" width="14" height="8" rx="2" fill={white(0.95)} />
+        <rect x="0" y="-10" width="14" height="8" rx="2" fill={white(0.95)} />
+        
+        <circle cx="0" cy="8" r="4" fill={white(0.95)} />
+        
+        <rect x="-14" y="20" width="28" height="6" rx="3" fill="#64D2FF" />
+      </g>
+    ),
+  },
+  folderGames: {
+    c1: '#64D2FF', c2: '#0A84FF',
+    symbol: (
+      <g transform="translate(50,52)">
+        <path d="M-26 18 L-26 -14 C-26 -16 -24 -18 -22 -18 L-6 -18 C-4 -18 -3 -17 -2 -15 L1 -11 L22 -11 C24 -11 26 -9 26 -7 L26 18 Z" fill={white(0.85)} />
+        <path d="M-26 18 L-26 -7 C-26 -9 -24 -11 -22 -11 L22 -11 C24 -11 26 -9 26 -7 L26 18 C26 20 24 22 22 22 L-22 22 C-24 22 -26 20 -26 18 Z" fill={white(0.98)} />
+        <path d="M-6 4 L-6 8 M-8 6 L-4 6 M6 4 A 1 1 0 1 1 6 4.1 M10 6 A 1 1 0 1 1 10 6.1" stroke="#0A84FF" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+        <rect x="-12" y="0" width="24" height="12" rx="6" fill="none" stroke="#0A84FF" strokeWidth="1.5" opacity="0.6" />
+      </g>
+    ),
+  },
+  resume: {
+    c1: '#4A5568', c2: '#2D3748',
+    symbol: (
+      <g transform="translate(50,50)">
+        <rect x="-16" y="-22" width="32" height="44" rx="3" fill={white(0.95)} />
+        <circle cx="-10" cy="-10" r="3" fill="#2D3748" opacity="0.8" />
+        <rect x="-4" y="-11" width="14" height="2" rx="1" fill="#2D3748" opacity="0.8" />
+        <rect x="-10" y="-1" width="20" height="2" rx="1" fill="#2D3748" opacity="0.5" />
+        <rect x="-10" y="5" width="20" height="2" rx="1" fill="#2D3748" opacity="0.5" />
+        <rect x="-10" y="11" width="14" height="2" rx="1" fill="#2D3748" opacity="0.5" />
+      </g>
+    ),
+  },
+  game2048: {
+    c1: '#EDC22E', c2: '#EDC53F',
+    symbol: (
+      <g transform="translate(50,50)">
+        <text x="0" y="8" fontSize="26" fontWeight="bold" fill={white(0.95)} textAnchor="middle" fontFamily="sans-serif">2048</text>
+      </g>
+    ),
+  },
   github: {
     c1: '#2c2c2e', c2: '#111111',
     symbol: (

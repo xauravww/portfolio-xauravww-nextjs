@@ -16,7 +16,13 @@ import BlogsApp from './apps/BlogsApp';
 import EducationApp from './apps/EducationApp';
 import ContactApp from './apps/ContactApp';
 import SafariApp from './apps/SafariApp';
+import ResumeApp from './apps/ResumeApp';
+import MusicApp from './apps/MusicApp';
 import GithubWidget from './GithubWidget';
+import Game2048Widget from './Game2048Widget';
+import SnakeWidget from './SnakeWidget';
+import TicTacToeWidget from './TicTacToeWidget';
+import BreakoutWidget from './BreakoutWidget';
 
 const DESKTOP_ICONS = [
   { id: 'about', name: 'About Me' },
@@ -26,6 +32,9 @@ const DESKTOP_ICONS = [
   { id: 'blogs', name: 'Blogs' },
   { id: 'education', name: 'Education' },
   { id: 'contact', name: 'Contact' },
+  { id: 'resume', name: 'Resume' },
+  { id: 'music', name: 'Music' },
+  { id: 'folderGames', name: 'Games' },
 ];
 
 const WINDOW_SIZES = {
@@ -37,6 +46,13 @@ const WINDOW_SIZES = {
   education: { w: 780, h: 500 },
   contact: { w: 460, h: 560 },
   safari: { w: 900, h: 620 },
+  resume: { w: 750, h: 850 },
+  music: { w: 800, h: 540 },
+  folderGames: { w: 600, h: 400 },
+  game2048: { w: 500, h: 660 },
+  snake: { w: 500, h: 600 },
+  tictactoe: { w: 450, h: 550 },
+  breakout: { w: 500, h: 600 },
 };
 
 const SVG = {
@@ -62,15 +78,27 @@ function DesktopSurface() {
 
   // Icon dragging offsets (relative to initial static base positions in DOM)
   const [draggedId, setDraggedId] = useState(null);
-  const [iconOffsets, setIconOffsets] = useState({
-    about: { x: 0, y: 0 },
-    techstack: { x: 0, y: 0 },
-    projects: { x: 0, y: 0 },
-    experience: { x: 0, y: 0 },
-    blogs: { x: 0, y: 0 },
-    education: { x: 0, y: 0 },
-    contact: { x: 0, y: 0 },
-    githubWidget: { x: 0, y: 0 },
+  const [iconOffsets, setIconOffsets] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('desktop_icon_offsets');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch(e) {}
+      }
+    }
+    return {
+      about: { x: 0, y: 0 },
+      techstack: { x: 0, y: 0 },
+      projects: { x: 0, y: 0 },
+      experience: { x: 0, y: 0 },
+      blogs: { x: 0, y: 0 },
+      education: { x: 0, y: 0 },
+      contact: { x: 0, y: 0 },
+      resume: { x: 0, y: 0 },
+      folderGames: { x: 0, y: 0 },
+      githubWidget: { x: 0, y: 0 },
+    };
   });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [initialOffset, setInitialOffset] = useState({ x: 0, y: 0 });
@@ -98,7 +126,7 @@ function DesktopSurface() {
   const openApp = useCallback((id) => openWindow(id, { size: WINDOW_SIZES[id] }), [openWindow]);
 
   const handleResetLayout = useCallback(() => {
-    setIconOffsets({
+    const reset = {
       about: { x: 0, y: 0 },
       techstack: { x: 0, y: 0 },
       projects: { x: 0, y: 0 },
@@ -106,14 +134,24 @@ function DesktopSurface() {
       blogs: { x: 0, y: 0 },
       education: { x: 0, y: 0 },
       contact: { x: 0, y: 0 },
+      resume: { x: 0, y: 0 },
+      folderGames: { x: 0, y: 0 },
       githubWidget: { x: 0, y: 0 },
-    });
+    };
+    setIconOffsets(reset);
+    localStorage.setItem('desktop_icon_offsets', JSON.stringify(reset));
   }, []);
 
   useEffect(() => {
     window.addEventListener('reset-icon-layout', handleResetLayout);
     return () => window.removeEventListener('reset-icon-layout', handleResetLayout);
   }, [handleResetLayout]);
+
+  useEffect(() => {
+    if (!draggedId && typeof window !== 'undefined') {
+      localStorage.setItem('desktop_icon_offsets', JSON.stringify(iconOffsets));
+    }
+  }, [iconOffsets, draggedId]);
 
   const desktopMenu = (e) => {
     e.preventDefault();
@@ -559,6 +597,65 @@ function DesktopSurface() {
       </Window>
       <Window id="safari" title="Safari" defaultSize={WINDOW_SIZES.safari}>
         <SafariApp />
+      </Window>
+      <Window id="resume" title="Resume" defaultSize={WINDOW_SIZES.resume}>
+        <ResumeApp />
+      </Window>
+      <Window id="music" title="Music" defaultSize={WINDOW_SIZES.music}>
+        <MusicApp />
+      </Window>
+      <Window id="folderGames" title="Games" defaultSize={WINDOW_SIZES.folderGames}>
+        <div className="w-full h-full bg-[#1c1c1e] p-6 flex flex-wrap content-start items-start justify-start gap-6">
+          <button
+            onDoubleClick={() => openWindow('game2048', { size: WINDOW_SIZES.game2048 })}
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col items-center gap-1 w-[76px] cursor-pointer rounded-md p-1.5 hover:bg-white/10 transition-colors"
+          >
+            <AppIcon appId="game2048" className="w-[48px] h-[48px] pointer-events-none" />
+            <span className="text-white text-[11px] font-medium text-center">2048</span>
+          </button>
+          
+          <button
+            onDoubleClick={() => openWindow('snake', { size: WINDOW_SIZES.snake })}
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col items-center gap-1 w-[76px] cursor-pointer rounded-md p-1.5 hover:bg-white/10 transition-colors"
+          >
+            <AppIcon appId="snake" className="w-[48px] h-[48px] pointer-events-none" />
+            <span className="text-white text-[11px] font-medium text-center">Snake</span>
+          </button>
+
+          <button
+            onDoubleClick={() => openWindow('tictactoe', { size: WINDOW_SIZES.tictactoe })}
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col items-center gap-1 w-[76px] cursor-pointer rounded-md p-1.5 hover:bg-white/10 transition-colors"
+          >
+            <AppIcon appId="tictactoe" className="w-[48px] h-[48px] pointer-events-none" />
+            <span className="text-white text-[11px] font-medium text-center">TicTacToe</span>
+          </button>
+
+          <button
+            onDoubleClick={() => openWindow('breakout', { size: WINDOW_SIZES.breakout })}
+            onClick={(e) => e.stopPropagation()}
+            className="flex flex-col items-center gap-1 w-[76px] cursor-pointer rounded-md p-1.5 hover:bg-white/10 transition-colors"
+          >
+            <AppIcon appId="breakout" className="w-[48px] h-[48px] pointer-events-none" />
+            <span className="text-white text-[11px] font-medium text-center">Breakout</span>
+          </button>
+        </div>
+      </Window>
+      <Window id="game2048" title="2048" defaultSize={WINDOW_SIZES.game2048}>
+        <div className="w-full h-full bg-[#faf8ef] flex items-center justify-center overflow-auto hide-scroll">
+          <Game2048Widget className="w-[340px] sm:w-[420px] scale-90 sm:scale-100 shadow-none border border-[#776e65]/10" />
+        </div>
+      </Window>
+      <Window id="snake" title="Snake" defaultSize={WINDOW_SIZES.snake}>
+        <SnakeWidget />
+      </Window>
+      <Window id="tictactoe" title="TicTacToe" defaultSize={WINDOW_SIZES.tictactoe}>
+        <TicTacToeWidget />
+      </Window>
+      <Window id="breakout" title="Breakout" defaultSize={WINDOW_SIZES.breakout}>
+        <BreakoutWidget />
       </Window>
 
       {/* Context Menu */}

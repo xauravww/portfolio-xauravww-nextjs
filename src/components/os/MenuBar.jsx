@@ -6,9 +6,11 @@ import AppIcon from './AppIcon';
 const APP_LABELS = {
   about: 'About', techstack: 'Skills', projects: 'Projects',
   experience: 'Experience', blogs: 'Blogs', education: 'Education', contact: 'Mail',
+  resume: 'Resume', folderGames: 'Games', game2048: '2048',
+  snake: 'Snake', tictactoe: 'TicTacToe', breakout: 'Breakout',
 };
 
-const APP_IDS = ['about', 'techstack', 'projects', 'experience', 'blogs', 'education', 'contact'];
+const APP_IDS = ['about', 'techstack', 'projects', 'experience', 'blogs', 'education', 'contact', 'resume', 'folderGames', 'game2048', 'snake', 'tictactoe', 'breakout'];
 
 const MenuBar = () => {
   const { activeWindowId, openWindow, closeWindow, minimizeWindow, focusWindow, getOpenWindows, windows } = useWindows();
@@ -537,6 +539,18 @@ const MenuBar = () => {
 
       {/* Right: status icons + clock */}
       <div className="flex items-center gap-1 text-white/70">
+        {/* Fullscreen Toggle */}
+        <button onClick={() => {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen?.();
+          } else {
+            document.exitFullscreen?.();
+          }
+        }} className="hidden sm:flex items-center px-1.5 hover:text-white transition-colors" title="Toggle Fullscreen">
+          <svg className="w-[14px] h-[14px]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+        </button>
         {/* Battery */}
         <span className="hidden sm:flex items-center px-1.5" title="Battery">
           <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.2}>
