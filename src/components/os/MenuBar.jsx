@@ -6,11 +6,11 @@ import AppIcon from './AppIcon';
 const APP_LABELS = {
   about: 'About', techstack: 'Skills', projects: 'Projects',
   experience: 'Experience', blogs: 'Blogs', education: 'Education', contact: 'Mail',
-  resume: 'Resume', folderGames: 'Games', game2048: '2048',
+  resume: 'Resume', music: 'Music', folderGames: 'Games', game2048: '2048',
   snake: 'Snake', tictactoe: 'TicTacToe', breakout: 'Breakout',
 };
 
-const APP_IDS = ['about', 'techstack', 'projects', 'experience', 'blogs', 'education', 'contact', 'resume', 'folderGames', 'game2048', 'snake', 'tictactoe', 'breakout'];
+const APP_IDS = ['about', 'techstack', 'projects', 'experience', 'blogs', 'education', 'contact', 'resume', 'music', 'folderGames', 'game2048', 'snake', 'tictactoe', 'breakout'];
 
 const MenuBar = () => {
   const { activeWindowId, openWindow, closeWindow, minimizeWindow, focusWindow, getOpenWindows, windows } = useWindows();

@@ -47,7 +47,7 @@ const WINDOW_SIZES = {
   contact: { w: 460, h: 560 },
   safari: { w: 900, h: 620 },
   resume: { w: 750, h: 850 },
-  music: { w: 800, h: 540 },
+  music: { w: 900, h: 650 },
   folderGames: { w: 600, h: 400 },
   game2048: { w: 500, h: 660 },
   snake: { w: 500, h: 600 },
@@ -135,6 +135,7 @@ function DesktopSurface() {
       education: { x: 0, y: 0 },
       contact: { x: 0, y: 0 },
       resume: { x: 0, y: 0 },
+      music: { x: 0, y: 0 },
       folderGames: { x: 0, y: 0 },
       githubWidget: { x: 0, y: 0 },
     };

@@ -140,6 +140,14 @@ const ICONS = {
       </g>
     ),
   },
+  music: {
+    c1: '#FF517F', c2: '#FF2D55',
+    symbol: (
+      <g transform="translate(50,50)">
+        <path d="M-8 12 A 7 7 0 1 1 -8 0 L -8 -18 L 12 -22 L 12 8 A 7 7 0 1 1 12 -4 L 12 -16 L -4 -13 L -4 12 Z" fill={white(0.95)} />
+      </g>
+    ),
+  },
   snake: {
     c1: '#34D399', c2: '#059669',
     symbol: (
