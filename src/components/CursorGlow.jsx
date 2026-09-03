@@ -2,79 +2,46 @@
 import React, { useState, useEffect } from 'react';
 
 const CursorGlow = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
-    // Check if device is mobile
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    let timerId;
+    const handleMouseMove = (event) => {
+      //   console.log("event.pageX : ",event.pageX)
+      //  console.log("event.pageY : ",event.pageY)
+      // setPosition({x:event.pageX-200,y:event.pageY-200})
+      // to make it even more cleaner i will use the transform instead of guess work
+      // using clientX and clientY so that our code will not create bugs if anytime we add scroll , it always depend on viewport
 
-    // Only add mousemove listener if not on mobile
-    if (!isMobile) {
-      const handleMouseMove = (event) => {
-        setPosition({ x: event.clientX, y: event.clientY });
-        if (!isVisible) setIsVisible(true);
-      };
+      //adding slight throttle for safety
+      if (timerId) return
+      timerId = setTimeout(() => {
+        setPosition({ x: event.clientX, y: event.clientY })
+        timerId = null
+      }, 10)
 
-      // Add a small delay to avoid unnecessary renders
-      let timeoutId;
-      const throttledMouseMove = (event) => {
-        if (!timeoutId) {
-          timeoutId = setTimeout(() => {
-            handleMouseMove(event);
-            timeoutId = null;
-          }, 10);
-        }
-      };
-
-      window.addEventListener('mousemove', throttledMouseMove);
-      
-      // Hide cursor glow when mouse leaves window
-      const handleMouseLeave = () => setIsVisible(false);
-      const handleMouseEnter = () => setIsVisible(true);
-      
-      window.addEventListener('mouseleave', handleMouseLeave);
-      window.addEventListener('mouseenter', handleMouseEnter);
-
-      return () => {
-        window.removeEventListener('mousemove', throttledMouseMove);
-        window.removeEventListener('mouseleave', handleMouseLeave);
-        window.removeEventListener('mouseenter', handleMouseEnter);
-        window.removeEventListener('resize', checkMobile);
-        clearTimeout(timeoutId);
-      };
     }
-    
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
-  }, [isMobile, isVisible]);
 
-  // Don't render on mobile devices
-  if (isMobile) return null;
+    window.addEventListener("mousemove", handleMouseMove)
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      clearTimeout(timerId)
+    }
+  }, [])
 
   const glowStyle = {
-    position: 'fixed',
-    top: `${position.y}px`,
-    left: `${position.x}px`,
-    transform: 'translate(-50%, -50%)',
-    width: '400px',
-    height: '400px',
+    position: "fixed",
+    top: position.y,
+    left: position.x,
+    height: "400px",
+    width: "400px",
+    borderRadius: "50%",
     background: `radial-gradient(circle, rgba(74, 144, 226, 0.15) 0%, transparent 70%)`,
-    borderRadius: '50%',
-    pointerEvents: 'none',
-    zIndex: 1,
-    opacity: isVisible ? 1 : 0,
-    transition: 'opacity 0.3s ease-out, top 0.2s ease-out, left 0.2s ease-out',
-    willChange: 'top, left',
-  };
+    transform: "translate(-50%,-50%)",
+    transition: "top 0.1s ease-out, left 0.1s ease-out"
 
+  }
   return <div style={glowStyle} />;
 };
 
