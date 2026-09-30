@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { X, Minus, Plus, CaretLeft } from '@phosphor-icons/react';
 import { useWindows } from '../../context/windowContext';
 
 const Window = ({ id, title, children, defaultSize = { w: 700, h: 500 } }) => {
@@ -98,18 +99,22 @@ const Window = ({ id, title, children, defaultSize = { w: 700, h: 500 } }) => {
       <div
         className={`h-full flex flex-col overflow-hidden ${isMobile || isMax ? '' : 'rounded-[12px]'}`}
         style={{
-          background: '#2a2a2c',
+          // macOS frosted glass: semi-transparent dark canvas over the wallpaper
+          background: 'rgba(30, 30, 30, 0.65)',
+          backdropFilter: 'blur(25px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(25px) saturate(160%)',
+          // Crisp 1px edge where light catches the glass
+          border: isMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.15)',
           boxShadow: isMobile ? 'none' : isActive
-            ? '0 0 0 0.5px rgba(255,255,255,0.12), 0 22px 70px rgba(0,0,0,0.65), 0 8px 20px rgba(0,0,0,0.4)'
-            : '0 0 0 0.5px rgba(255,255,255,0.06), 0 12px 40px rgba(0,0,0,0.45)',
+            ? '0 0 1px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.15), 0 20px 40px rgba(0,0,0,0.3)'
+            : '0 0 1px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.15), 0 20px 40px rgba(0,0,0,0.3)',
         }}
       >
-        {/* Title bar */}
+        {/* Title bar — same material as the content, seamlessly integrated */}
         <div
           className={`flex items-center relative select-none ${
-            isMobile ? 'h-[44px] bg-[#1c1c1e]/90 border-b border-white/[0.08]' : 'px-3 h-[30px] cursor-grab active:cursor-grabbing'
+            isMobile ? 'h-[44px] bg-white/[0.04] border-b border-white/[0.07]' : 'px-3 h-[30px] cursor-grab active:cursor-grabbing'
           }`}
-          style={!isMobile ? { background: 'linear-gradient(180deg, #3a3a3c 0%, #303032 100%)' } : undefined}
           onMouseDown={!isMobile ? onTitleMouseDown : undefined}
           onDoubleClick={!isMobile ? handleMaxToggle : undefined}
         >
@@ -120,9 +125,7 @@ const Window = ({ id, title, children, defaultSize = { w: 700, h: 500 } }) => {
                 onClick={() => closeWindow(id)}
                 className="flex items-center gap-1 text-[#0A84FF] text-[15px] font-normal active:opacity-60 transition-opacity"
               >
-                <svg className="w-5 h-5 -ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
+                <CaretLeft size={20} weight="bold" className="-ml-1.5" />
                 <span>Home</span>
               </button>
 
@@ -139,30 +142,30 @@ const Window = ({ id, title, children, defaultSize = { w: 700, h: 500 } }) => {
               <div className="flex items-center gap-[8px] z-10 group/lights">
                 <button onClick={(e) => { e.stopPropagation(); closeWindow(id); }}
                   className={`${lightBase} ${dim ? 'bg-[#4d4d4f]' : 'bg-[#FF5F57]'}`}>
-                  <svg className="w-[7px] h-[7px] opacity-0 group-hover/lights:opacity-100 text-black/55" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2}><path d="M2.5 9.5L9.5 2.5M2.5 2.5l7 7"/></svg>
+                  <X size={8} weight="bold" className="opacity-0 group-hover/lights:opacity-100 text-black/55" />
                 </button>
                 <button onClick={(e) => { e.stopPropagation(); minimizeWindow(id); }}
                   className={`${lightBase} ${dim ? 'bg-[#4d4d4f]' : 'bg-[#FEBC2E]'}`}>
-                  <svg className="w-[7px] h-[7px] opacity-0 group-hover/lights:opacity-100 text-black/55" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2}><path d="M2.5 6h7"/></svg>
+                  <Minus size={8} weight="bold" className="opacity-0 group-hover/lights:opacity-100 text-black/55" />
                 </button>
                 <button onClick={handleMaxToggle}
                   className={`${lightBase} ${dim ? 'bg-[#4d4d4f]' : 'bg-[#28C840]'}`}>
-                  <svg className="w-[8px] h-[8px] opacity-0 group-hover/lights:opacity-100 text-black/55" viewBox="0 0 12 12" fill="currentColor"><path d="M3.5 2.5L2.5 3.5v3l3.5-4zM8.5 9.5l1-1v-3l-3.5 4z"/></svg>
+                  <Plus size={8} weight="bold" className="opacity-0 group-hover/lights:opacity-100 text-black/55" />
                 </button>
               </div>
               <span className="text-[13px] text-white/55 font-semibold absolute left-1/2 -translate-x-1/2 pointer-events-none tracking-tight">{title}</span>
             </>
           )}
         </div>
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar" style={{ background: '#2a2a2c' }}>
+        {/* Content — transparent so the window's vibrancy shows through */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar">
           {children}
         </div>
         {/* iOS Home Indicator */}
         {isMobile && (
           <div
             onClick={() => closeWindow(id)}
-            className="h-[34px] flex items-end justify-center pb-2 bg-[#2a2a2c] shrink-0 select-none cursor-pointer"
+            className="h-[34px] flex items-end justify-center pb-2 shrink-0 select-none cursor-pointer"
           >
             <div className="w-[134px] h-[5px] bg-white/25 rounded-full hover:bg-white/40 active:bg-white/50 transition-colors" />
           </div>

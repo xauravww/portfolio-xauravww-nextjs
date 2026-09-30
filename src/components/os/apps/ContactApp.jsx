@@ -3,11 +3,13 @@ import { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { XLogo, LinkedinLogo, GithubLogo, EnvelopeSimple, CaretRight } from '@phosphor-icons/react';
 import { Page, Card, SectionLabel, Button } from './ui';
 
-const XIcon = <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>;
-const LinkedInIcon = <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>;
-const GitHubIcon = <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.6 0-12 5.4-12 12 0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6.1 8.2-11.4 0-6.6-5.4-12-12-12z"/></svg>;
+const XIcon = <XLogo size={16} weight="fill" />;
+const LinkedInIcon = <LinkedinLogo size={16} weight="fill" />;
+const GitHubIcon = <GithubLogo size={16} weight="fill" />;
+const EmailIcon = <EnvelopeSimple size={16} weight="bold" />;
 
 const ContactApp = () => {
   const [formData, setFormData] = useState({ name: '', email: '', query: '' });
@@ -43,9 +45,10 @@ const ContactApp = () => {
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
-  const inputBase = 'w-full rounded-[7px] px-3 py-2 text-[13px] text-white/90 placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#0A84FF]/50 transition-all';
-  const inputBg = { background: '#323234', border: '1px solid rgba(255,255,255,0.08)' };
-  const inputErr = { background: '#323234', border: '1px solid rgba(248,113,113,0.4)' };
+  // macOS dark-panel input style: semi-transparent white tint + focus blue ring
+  const inputBase = 'w-full rounded-[6px] px-3 py-2 text-[13px] text-white placeholder:text-white/35 outline-none border transition-all duration-150 focus:border-[#007aff] focus:ring-[3px] focus:ring-[#007aff]/35';
+  const inputBg = { background: 'rgba(255, 255, 255, 0.07)', borderColor: 'rgba(255, 255, 255, 0.1)' };
+  const inputErr = { background: 'rgba(255, 255, 255, 0.07)', borderColor: 'rgba(248,113,113,0.4)' };
 
   return (
     <Page>
@@ -54,28 +57,37 @@ const ContactApp = () => {
       <Card className="mb-4">
         <form onSubmit={handleSubmit} className="p-3.5 space-y-3.5">
           <div>
-            <SectionLabel>Name</SectionLabel>
+            <label className="block text-[11px] font-semibold text-white/50 tracking-wide uppercase mb-1">Name</label>
             <input type="text" name="name" value={formData.name} onChange={handleChange} maxLength={30}
               placeholder="Your Name" className={inputBase} style={errors.name ? inputErr : inputBg} />
             {errors.name && <p className="text-red-400/80 text-[10px] mt-1">{errors.name}</p>}
           </div>
           <div>
-            <SectionLabel>Email</SectionLabel>
+            <label className="block text-[11px] font-semibold text-white/50 tracking-wide uppercase mb-1">Email</label>
             <input type="email" name="email" value={formData.email} onChange={handleChange} maxLength={50}
               placeholder="you@example.com" className={inputBase} style={errors.email ? inputErr : inputBg} />
             {errors.email && <p className="text-red-400/80 text-[10px] mt-1">{errors.email}</p>}
           </div>
           <div>
-            <SectionLabel>Message</SectionLabel>
+            <label className="block text-[11px] font-semibold text-white/50 tracking-wide uppercase mb-1">Message</label>
             <textarea name="query" value={formData.query} onChange={handleChange} rows={4} maxLength={500}
               placeholder="Your message..." className={`${inputBase} resize-none`} style={errors.query ? inputErr : inputBg} />
             {errors.query && <p className="text-red-400/80 text-[10px] mt-1">{errors.query}</p>}
             <p className="text-right text-[10px] text-white/20 mt-0.5">{formData.query.length}/500</p>
           </div>
-          <button type="submit" disabled={sending}
-            className={`w-full inline-flex items-center justify-center py-2.5 rounded-[7px] text-[12px] font-medium text-white bg-[#0A84FF] hover:bg-[#0a78e8] shadow-sm transition-all active:scale-[0.97] ${sending ? 'opacity-60 cursor-not-allowed' : ''}`}>
-            {sending ? 'Sending...' : 'Send Message'}
-          </button>
+          <div className="flex justify-end">
+            <button type="submit" disabled={sending}
+              className={`inline-flex items-center justify-center gap-1.5 px-5 py-2 rounded-[6px] text-[12px] font-semibold text-white transition-all active:scale-[0.97] ${sending ? 'opacity-60 cursor-not-allowed' : ''}`}
+              style={{
+                background: 'linear-gradient(180deg, #2f97ff 0%, #0a84ff 55%, #0670e0 100%)',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.28)',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.filter = 'brightness(1.08)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.filter = ''; }}
+            >
+              {sending ? 'Sending...' : 'Send Message'}
+            </button>
+          </div>
         </form>
       </Card>
 
@@ -85,25 +97,23 @@ const ContactApp = () => {
           <a href={process.env.NEXT_PUBLIC_X_URL || '#'} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] text-white/70 hover:bg-white/[0.04] transition-colors">
             {XIcon}<span>X (Twitter)</span>
-            <svg className="w-3 h-3 ml-auto text-white/25" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+            <CaretRight size={12} weight="bold" className="ml-auto text-white/25" />
           </a>
           <a href={process.env.NEXT_PUBLIC_LINKEDIN_URL || '#'} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] text-white/70 hover:bg-white/[0.04] transition-colors">
             {LinkedInIcon}<span>LinkedIn</span>
-            <svg className="w-3 h-3 ml-auto text-white/25" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+            <CaretRight size={12} weight="bold" className="ml-auto text-white/25" />
           </a>
           <a href="https://github.com/xauravww" target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] text-white/70 hover:bg-white/[0.04] transition-colors">
             {GitHubIcon}<span>GitHub</span>
-            <svg className="w-3 h-3 ml-auto text-white/25" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+            <CaretRight size={12} weight="bold" className="ml-auto text-white/25" />
           </a>
           <a href="mailto:sauravmaheshwari8@gmail.com"
             className="flex items-center gap-2.5 px-3.5 py-2.5 text-[12.5px] text-white/70 hover:bg-white/[0.04] transition-colors">
-            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+            {EmailIcon}
             <span>Email</span>
-            <svg className="w-3 h-3 ml-auto text-white/25" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+            <CaretRight size={12} weight="bold" className="ml-auto text-white/25" />
           </a>
         </div>
       </Card>

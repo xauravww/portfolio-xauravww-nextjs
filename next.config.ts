@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
   },
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: ['@phosphor-icons/react'],
   },
   // Compress responses
   compress: true,

@@ -41,7 +41,7 @@ const ContextMenu = ({ x, y, items, onClose }) => {
   const node = (
     <div
       ref={ref}
-      className="fixed z-[9999] min-w-[210px] py-1.5 rounded-[10px] bg-[#2c2c2e]/95 backdrop-blur-2xl border border-white/[0.12] shadow-[0_12px_48px_rgba(0,0,0,0.6)]"
+      className="fixed z-[9999] min-w-[180px] p-1 rounded-[6px] bg-[#1e1e1e]/75 backdrop-blur-xl border border-white/12 shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
       style={{
         left: pos.x, top: pos.y,
         opacity: pos.ready ? 1 : 0,
@@ -58,10 +58,10 @@ const ContextMenu = ({ x, y, items, onClose }) => {
             key={i}
             disabled={item.disabled}
             onClick={() => { if (!item.disabled) { item.action?.(); onClose(); } }}
-            className={`w-full flex items-center gap-2.5 px-3 py-[6px] mx-0 text-[13px] text-left transition-colors duration-75 rounded-[5px] ${
+            className={`w-full flex items-center gap-2.5 px-3 py-1.5 mx-0 text-[13px] text-left transition-colors duration-100 rounded-[4px] ${
               item.disabled
                 ? 'text-white/25 cursor-default'
-                : 'text-white/90 hover:bg-[#0A84FF] hover:text-white cursor-default'
+                : 'text-[#e5e5e5] hover:bg-[#007aff] hover:text-white cursor-default'
             }`}
           >
             {item.icon && <span className="w-[15px] h-[15px] flex items-center justify-center shrink-0 opacity-80">{item.icon}</span>}

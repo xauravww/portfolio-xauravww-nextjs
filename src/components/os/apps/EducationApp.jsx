@@ -1,21 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { MapPin, CalendarBlank, CaretLeft } from '@phosphor-icons/react';
 import { Page, Card, SectionLabel, Tag, SidebarItem, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
 
-const MapPinIcon = (
-  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
-
-const CalendarIcon = (
-  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
-);
+const MapPinIcon = <MapPin size={14} weight="bold" className="shrink-0" />;
+const CalendarIcon = <CalendarBlank size={14} weight="bold" className="shrink-0" />;
 
 function formatDate(d) {
   return new Date(d).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
@@ -89,9 +79,7 @@ const EducationApp = () => {
               onClick={() => setMobileView('list')}
               className="inline-flex items-center gap-1.5 text-[#0A84FF] text-[15px] font-normal mb-4 active:opacity-60 transition-opacity"
             >
-              <svg className="w-5 h-5 -ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
+              <CaretLeft size={20} weight="bold" className="-ml-1.5" />
               <span>Back</span>
             </button>
 

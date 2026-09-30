@@ -1,22 +1,22 @@
 'use client';
 import { useState } from 'react';
+import {
+  CaretLeft, CaretRight, ArrowClockwise, TextAlignLeft, Globe as GlobeIcon,
+  ArrowSquareOut, House,
+} from '@phosphor-icons/react';
 import { useWindows } from '../../../context/windowContext';
 import { Centered } from './ui';
 import AppIcon from '../AppIcon';
 
 const PROXY_URL = process.env.NEXT_PUBLIC_PROXY_URL || '';
 
-const Back = <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>;
-const Fwd = <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>;
-const Reload = <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v6h6M20 20v-6h-6M20 8a8 8 0 00-14-3M4 16a8 8 0 0014 3" /></svg>;
-const Reader = <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 5h16M4 9h16M4 13h10M4 17h10" /></svg>;
-const Globe = <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>;
-const OpenExt = <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>;
-const HomeIcon = (
-  <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-  </svg>
-);
+const Back = <CaretLeft size={16} weight="bold" />;
+const Fwd = <CaretRight size={16} weight="bold" />;
+const Reload = <ArrowClockwise size={14} weight="bold" />;
+const Reader = <TextAlignLeft size={14} weight="bold" className="shrink-0" />;
+const Globe = <GlobeIcon size={14} weight="bold" className="shrink-0" />;
+const OpenExt = <ArrowSquareOut size={14} weight="bold" />;
+const HomeIcon = <House size={18} weight="bold" />;
 
 const BOOKMARKS = [
   { id: 'github', name: 'GitHub', url: process.env.NEXT_PUBLIC_GITHUB_URL || 'https://github.com/xauravww', title: 'GitHub — xauravww' },
@@ -150,7 +150,7 @@ const SafariApp = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#2a2a2c] select-none">
+    <div className="flex flex-col h-full select-none">
       {/* Toolbar */}
       <div className="flex items-center gap-2 px-3 h-[42px] shrink-0 border-b border-white/[0.06]"
         style={{ background: 'linear-gradient(180deg,#343436,#2c2c2e)' }}>

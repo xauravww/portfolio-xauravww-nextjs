@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { X, CaretRight } from '@phosphor-icons/react';
 import { Page, Card, SectionLabel, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
 import { useWindows } from '../../../context/windowContext';
@@ -168,7 +169,7 @@ const TechStackApp = () => {
         const matchingExperiences = experiences.filter(e => skillsMatch(e.skills, selectedSkill.name));
         return (
           <div className="fixed inset-0 bg-black/45 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-[#2a2a2c] border border-white/[0.08] rounded-xl w-full max-w-[290px] overflow-hidden shadow-2xl animate-fade-in flex flex-col max-h-[85%]">
+            <div className="border border-white/[0.1] rounded-xl w-full max-w-[290px] overflow-hidden shadow-2xl animate-fade-in flex flex-col max-h-[85%]" style={{ background: 'rgba(44, 44, 46, 0.88)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)' }}>
               
               {/* Popover Header */}
               <div className="flex items-center justify-between p-3 border-b border-white/[0.06] bg-[#323234] shrink-0">
@@ -185,14 +186,12 @@ const TechStackApp = () => {
                   onClick={() => setSelectedSkill(null)}
                   className="text-white/40 hover:text-white/70 transition-colors p-1"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <X size={16} weight="bold" />
                 </button>
               </div>
 
               {/* Popover List */}
-              <div className="flex-1 overflow-y-auto bg-[#2a2a2c] py-1 custom-scrollbar">
+              <div className="flex-1 overflow-y-auto py-1 custom-scrollbar">
                 {/* Projects Section */}
                 <div className="px-3 py-1.5 text-[9px] font-bold text-white/35 uppercase tracking-wide bg-[#323234]/30 select-none">Projects ({matchingProjects.length})</div>
                 <div className="divide-y divide-white/[0.04] mb-3">
@@ -219,9 +218,7 @@ const TechStackApp = () => {
                           <div className="text-[11.5px] font-semibold text-white/90 truncate group-hover:text-[#0A84FF] transition-colors">{p.title}</div>
                           <div className="text-[9.5px] text-white/40 truncate mt-0.5">{p.description}</div>
                         </div>
-                        <svg className="w-3 h-3 text-white/20 shrink-0 group-hover:text-[#0A84FF] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
+                        <CaretRight size={12} weight="bold" className="text-white/20 shrink-0 group-hover:text-[#0A84FF] group-hover:translate-x-0.5 transition-all" />
                       </button>
                     ))
                   ) : (
@@ -255,9 +252,7 @@ const TechStackApp = () => {
                           <div className="text-[11.5px] font-semibold text-white/90 truncate group-hover:text-[#0A84FF] transition-colors">{exp.position}</div>
                           <div className="text-[9.5px] text-white/45 truncate mt-0.5">{exp.company}</div>
                         </div>
-                        <svg className="w-3 h-3 text-white/20 shrink-0 group-hover:text-[#0A84FF] group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
+                        <CaretRight size={12} weight="bold" className="text-white/20 shrink-0 group-hover:text-[#0A84FF] group-hover:translate-x-0.5 transition-all" />
                       </button>
                     ))
                   ) : (

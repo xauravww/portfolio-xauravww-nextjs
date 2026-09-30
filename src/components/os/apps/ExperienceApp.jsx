@@ -1,21 +1,11 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
+import { MapPin, CalendarBlank, CaretLeft, MagnifyingGlass, XCircle } from '@phosphor-icons/react';
 import { Page, Card, SectionLabel, Tag, SidebarItem, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
 
-const MapPinIcon = (
-  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-  </svg>
-);
-
-const CalendarIcon = (
-  <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-  </svg>
-);
+const MapPinIcon = <MapPin size={14} weight="bold" className="shrink-0" />;
+const CalendarIcon = <CalendarBlank size={14} weight="bold" className="shrink-0" />;
 
 function formatDate(d) {
   return new Date(d).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
@@ -116,10 +106,7 @@ const ExperienceApp = () => {
     <div className="relative flex items-center w-full px-1.5 py-1">
       <div className="relative w-full">
         <span className="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-white/30">
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
+          <MagnifyingGlass size={14} weight="bold" />
         </span>
         <input
           type="text"
@@ -133,9 +120,7 @@ const ExperienceApp = () => {
             onClick={() => setSearchTerm('')}
             className="absolute inset-y-0 right-2 flex items-center text-white/30 hover:text-white/60"
           >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
+            <XCircle size={16} weight="fill" />
           </button>
         )}
       </div>
@@ -183,9 +168,7 @@ const ExperienceApp = () => {
               onClick={() => setMobileView('list')}
               className="inline-flex items-center gap-1 text-[#0A84FF] text-[15px] font-normal mb-4 active:opacity-60 transition-opacity"
             >
-              <svg className="w-5 h-5 -ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
+              <CaretLeft size={20} weight="bold" className="-ml-1.5" />
               <span>Back</span>
             </button>
 

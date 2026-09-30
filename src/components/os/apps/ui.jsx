@@ -1,4 +1,5 @@
 'use client';
+import { CaretRight } from '@phosphor-icons/react';
 // Shared macOS System Settings / inspector style primitives.
 // Content surface = #2a2a2c. Grouped cards = #363638. Hairline = rgba(255,255,255,0.08).
 
@@ -7,11 +8,11 @@ export const Page = ({ children, className = '' }) => (
   <div className={`p-4 md:p-5 ${className}`}>{children}</div>
 );
 
-// Grouped card — rounded container holding rows / content
+// Grouped card — rounded container holding rows / content (translucent over window vibrancy)
 export const Card = ({ children, className = '', inset = false }) => (
   <div
-    className={`rounded-[10px] border border-white/[0.06] overflow-hidden ${className}`}
-    style={{ background: inset ? '#323234' : '#363638' }}
+    className={`rounded-[10px] border border-white/[0.07] overflow-hidden ${className}`}
+    style={{ background: inset ? 'rgba(255,255,255,0.045)' : 'rgba(255,255,255,0.07)' }}
   >
     {children}
   </div>
@@ -42,7 +43,7 @@ export const SectionLabel = ({ children, className = '' }) => (
 
 // macOS button — default (grey) or accent (blue) or tinted
 export const Button = ({ children, onClick, href, variant = 'default', className = '', icon }) => {
-  const base = 'inline-flex items-center justify-center gap-1.5 px-3.5 py-[6px] rounded-[7px] text-[12px] font-medium transition-all duration-100 active:scale-[0.97] select-none cursor-default';
+  const base = 'inline-flex items-center justify-center gap-1.5 px-3.5 py-[6px] rounded-[5px] text-[12px] font-medium transition-all duration-100 active:scale-[0.97] select-none cursor-default';
   const styles = {
     default: 'text-white/90 border border-white/[0.12] hover:brightness-125',
     accent: 'text-white bg-[#0A84FF] hover:bg-[#0a78e8] shadow-sm',
@@ -83,17 +84,15 @@ export const Avatar = ({ src, alt, size = 72, radius = 16 }) => (
 export const SidebarItem = ({ active, title, subtitle, onClick, showChevron }) => (
   <button
     onClick={onClick}
-    className={`w-full text-left px-3 py-2.5 rounded-[7px] mb-0.5 transition-colors flex items-center justify-between gap-3 ${
-      active ? 'bg-[#0A84FF] text-white' : 'text-white/70 hover:bg-white/[0.06]'}`}
+    className={`w-full text-left px-3 py-2.5 rounded-[5px] mb-0.5 transition-colors flex items-center justify-between gap-3 ${
+      active ? 'bg-[#0A84FF] text-white' : 'text-white/70 hover:bg-white/[0.08]'}`}
   >
     <div className="min-w-0 flex-1">
       <div className="text-[12.5px] font-medium leading-tight truncate">{title}</div>
       {subtitle && <div className={`text-[11px] leading-tight truncate mt-0.5 ${active ? 'text-white/80' : 'text-white/35'}`}>{subtitle}</div>}
     </div>
     {showChevron && (
-      <svg className={`w-3.5 h-3.5 shrink-0 ${active ? 'text-white/70' : 'text-white/30'}`} fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-      </svg>
+      <CaretRight size={14} weight="bold" className={`shrink-0 ${active ? 'text-white/70' : 'text-white/30'}`} />
     )}
   </button>
 );

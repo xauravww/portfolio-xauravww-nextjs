@@ -1,5 +1,9 @@
 'use client';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import {
+  ArrowRight, Info, Copy, ArrowClockwise, SquaresFour, X,
+  GithubLogo, Image as ImageIcon, HandPointing,
+} from '@phosphor-icons/react';
 import { WindowProvider, useWindows } from '../../context/windowContext';
 import MenuBar from './MenuBar';
 import Dock from './Dock';
@@ -37,6 +41,85 @@ const DESKTOP_ICONS = [
   { id: 'folderGames', name: 'Games' },
 ];
 
+/* ── One-time workspace hint (macOS notification style) ──────────────────
+   Shows once per browser until the user switches workspaces (or dismisses
+   it). Re-triggerable from the View menu via a custom window event. */
+const WorkspaceHint = ({ onSwitch }) => {
+  const [show, setShow] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+
+  useEffect(() => {
+    let hideTimer;
+    const maybeShow = () => {
+      let seen = false;
+      try { seen = localStorage.getItem('workspace_hint_seen') === '1'; } catch (e) {}
+      if (!seen) {
+        const t = setTimeout(() => {
+          setShow(true);
+          hideTimer = setTimeout(() => setLeaving(true), 9000); // auto-leave
+        }, 2500);
+        return () => clearTimeout(t);
+      }
+    };
+    const dismiss = () => {
+      try { localStorage.setItem('workspace_hint_seen', '1'); } catch (e) {}
+      setLeaving(true);
+    };
+    const reshow = () => {
+      try { localStorage.removeItem('workspace_hint_seen'); } catch (e) {}
+      setLeaving(false);
+      setShow(true);
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => setLeaving(true), 9000);
+    };
+    const cleanup = maybeShow();
+    window.addEventListener('workspace-hint-dismiss', dismiss);
+    window.addEventListener('workspace-hint-reshow', reshow);
+    return () => {
+      if (cleanup) cleanup();
+      clearTimeout(hideTimer);
+      window.removeEventListener('workspace-hint-dismiss', dismiss);
+      window.removeEventListener('workspace-hint-reshow', reshow);
+    };
+  }, []);
+
+  // Mark as seen the first time the user actually switches workspaces
+  useEffect(() => {
+    if (onSwitch == null) return;
+    try { localStorage.setItem('workspace_hint_seen', '1'); } catch (e) {}
+  }, [onSwitch]);
+
+  if (!show) return null;
+
+  return (
+    <button
+      onClick={() => { window.dispatchEvent(new Event('workspace-hint-accept')); window.dispatchEvent(new Event('workspace-hint-dismiss')); }}
+      className="fixed top-9 right-3 z-[125] w-[300px] text-left rounded-[14px] border border-white/15 bg-[#2c2c2e]/80 backdrop-blur-xl shadow-[0_10px_36px_rgba(0,0,0,0.5)] p-3.5 pr-9 transition-all duration-300"
+      style={{
+        opacity: leaving ? 0 : 1,
+        transform: leaving ? 'translateX(24px)' : 'translateX(0)',
+        pointerEvents: leaving ? 'none' : 'auto',
+      }}
+      aria-label="Show hint for switching workspaces"
+    >
+      <span className="absolute top-3 right-3 text-white/30 hover:text-white/70 text-[13px] leading-none">✕</span>
+      <div className="flex items-start gap-2.5">
+        <span className="w-7 h-7 rounded-lg bg-gradient-to-b from-[#5AC8FA] to-[#0A84FF] flex items-center justify-center shrink-0 shadow-sm">
+          <HandPointing size={15} weight="fill" color="white" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[12px] font-semibold text-white/95 leading-tight">Multiple Desktops</p>
+          <p className="text-[11.5px] text-white/60 leading-snug mt-0.5">
+            Swipe with a trackpad or press <kbd className="px-1 py-px mx-0.5 rounded bg-white/10 border border-white/10 text-[10px] font-sans">Ctrl</kbd>
+            +<kbd className="px-1 py-px mx-0.5 rounded bg-white/10 border border-white/10 text-[10px] font-sans">←</kbd>
+            /<kbd className="px-1 py-px mx-0.5 rounded bg-white/10 border border-white/10 text-[10px] font-sans">→</kbd> to switch desktops.
+          </p>
+        </div>
+      </div>
+    </button>
+  );
+};
+
 const WINDOW_SIZES = {
   about: { w: 500, h: 420 },
   techstack: { w: 720, h: 520 },
@@ -56,14 +139,14 @@ const WINDOW_SIZES = {
 };
 
 const SVG = {
-  open: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 5l7 7-7 7M5 12h14"/></svg>,
-  info: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="12" cy="12" r="9"/><path strokeLinecap="round" d="M12 11v5M12 8h.01"/></svg>,
-  copy: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>,
-  refresh: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 4v6h6M20 20v-6h-6M20 8a8 8 0 00-14-3M4 16a8 8 0 0014 3"/></svg>,
-  grid: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>,
-  close: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" d="M6 18L18 6M6 6l12 12"/></svg>,
-  github: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.6 0-12 5.4-12 12 0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6.1 8.2-11.4 0-6.6-5.4-12-12-12z"/></svg>,
-  image: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path strokeLinecap="round" strokeLinejoin="round" d="M4 18l5-5 4 4 3-3 4 4"/></svg>,
+  open: <ArrowRight size={14} weight="bold" />,
+  info: <Info size={14} weight="bold" />,
+  copy: <Copy size={14} weight="bold" />,
+  refresh: <ArrowClockwise size={14} weight="bold" />,
+  grid: <SquaresFour size={14} weight="bold" />,
+  close: <X size={14} weight="bold" />,
+  github: <GithubLogo size={14} weight="bold" />,
+  image: <ImageIcon size={14} weight="bold" />,
 };
 
 function DesktopSurface() {
@@ -350,7 +433,6 @@ function DesktopSurface() {
     const handleEnd = () => {
       handleDragEnd();
     };
-
     window.addEventListener('mousemove', handleMove, { passive: false });
     window.addEventListener('mouseup', handleEnd);
     window.addEventListener('touchmove', handleMove, { passive: false });
@@ -364,16 +446,100 @@ function DesktopSurface() {
     };
   }, [draggedId, handleDragMove, handleDragEnd]);
 
+  // ── macOS Spaces: workspace carousel engine ────────────────────────────
+  const WORKSPACE_COUNT = 2;
+  const surfaceRef = useRef(null);
+  const wheelAccum = useRef(0);
+  const wheelTimer = useRef(null);
+  const swipeCooldown = useRef(false);
+  const [swipeX, setSwipeX] = useState(null); // null = idle, number = live drag preview (px)
+
+  const goToWorkspace = useCallback((i) => {
+    setDesktopWorkspace(Math.max(0, Math.min(WORKSPACE_COUNT - 1, i)));
+  }, []);
+
+  // MenuBar's 'Desktops' menu asks us to switch (sibling-component bridge)
+  useEffect(() => {
+    const onSwitch = (e) => goToWorkspace(Number(e.detail));
+    window.addEventListener('switch-workspace', onSwitch);
+    return () => window.removeEventListener('switch-workspace', onSwitch);
+  }, [goToWorkspace]);
+
+  // Broadcast workspace changes so MenuBar can show a live checkmark
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('workspace-changed', { detail: desktopWorkspace }));
+  }, [desktopWorkspace]);
+
+  // Hint toast "try it" click: play a short swipe demo to Desktop 2 and back
+  useEffect(() => {
+    const accept = () => {
+      goToWorkspace(1);
+      setTimeout(() => goToWorkspace(0), 1400);
+    };
+    window.addEventListener('workspace-hint-accept', accept);
+    return () => window.removeEventListener('workspace-hint-accept', accept);
+  }, [goToWorkspace]);
+
+  // Trackpad/mouse horizontal swipe: live rubber-band preview + threshold snap
+  useEffect(() => {
+    const el = surfaceRef.current;
+    if (!el || isMobile) return;
+
+    const finishSwipe = () => {
+      wheelAccum.current = 0;
+      setSwipeX(null);
+    };
+
+    const onWheel = (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return; // vertical scroll untouched
+      e.preventDefault();
+      if (swipeCooldown.current) return;
+
+      wheelAccum.current += e.deltaX;
+      const vw = window.innerWidth;
+
+      // Live preview of the slide (drag the strip with the fingers)
+      const atStart = desktopWorkspace === 0;
+      const atEnd = desktopWorkspace === WORKSPACE_COUNT - 1;
+      let preview = wheelAccum.current * 0.45;
+      if ((atStart && preview > 0) || (atEnd && preview < 0)) preview *= 0.25; // edge rubber-band
+      setSwipeX(Math.max(-vw * 0.28, Math.min(vw * 0.28, preview)));
+
+      // Threshold crossed → commit the switch (like releasing a 30%-width swipe)
+      if (wheelAccum.current < -100) {
+        if (!atEnd) { swipeCooldown.current = true; goToWorkspace(desktopWorkspace + 1); }
+        finishSwipe();
+        setTimeout(() => { swipeCooldown.current = false; }, 420);
+      } else if (wheelAccum.current > 100) {
+        if (!atStart) { swipeCooldown.current = true; goToWorkspace(desktopWorkspace - 1); }
+        finishSwipe();
+        setTimeout(() => { swipeCooldown.current = false; }, 420);
+      }
+
+      // Released before threshold → bounce back to current workspace
+      clearTimeout(wheelTimer.current);
+      wheelTimer.current = setTimeout(finishSwipe, 140);
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+      clearTimeout(wheelTimer.current);
+    };
+  }, [desktopWorkspace, isMobile, goToWorkspace]);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isMobile) {
-        if (e.ctrlKey && e.key === 'ArrowRight') setDesktopWorkspace(1);
-        if (e.ctrlKey && e.key === 'ArrowLeft') setDesktopWorkspace(0);
+        if (e.ctrlKey && e.key === 'ArrowRight') goToWorkspace(desktopWorkspace + 1);
+        if (e.ctrlKey && e.key === 'ArrowLeft') goToWorkspace(desktopWorkspace - 1);
+        // Ctrl + [number] → jump straight to that workspace
+        if (e.ctrlKey && (e.key === '1' || e.key === '2')) goToWorkspace(Number(e.key) - 1);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isMobile]);
+  }, [isMobile, desktopWorkspace, goToWorkspace]);
 
   const openList = getOpenWindows();
   const hasOpenWindow = openList.length > 0;
@@ -385,15 +551,16 @@ function DesktopSurface() {
 
       {/* Desktop surface */}
       <div
+        ref={surfaceRef}
         className="fixed inset-0 pt-7 pb-[64px] overflow-hidden"
         onContextMenu={desktopMenu}
         onMouseDown={(e) => { if (e.target === e.currentTarget) setSelected(null); }}
       >
-        {/* Desktop Workspaces (Mac style) */}
+        {/* Desktop Workspaces (Mac style) — 380ms glide, live swipe preview */}
         {!isMobile && (
           <div 
-            className="absolute inset-0 transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] flex pointer-events-none"
-            style={{ transform: `translateX(-${desktopWorkspace * 100}vw)` }}
+            className={`absolute inset-0 flex pointer-events-none ${swipeX === null ? 'transition-transform duration-[380ms] ease-[cubic-bezier(0.32,0.72,0,1)]' : ''}`}
+            style={{ transform: `translateX(calc(-${desktopWorkspace * 100}vw + ${swipeX ?? 0}px))` }}
           >
             {/* Workspace 0 */}
             <div className="w-screen h-full relative flex-shrink-0">
@@ -471,14 +638,6 @@ function DesktopSurface() {
                 })}
               </div>
             </div>
-          </div>
-        )}
-        
-        {/* Desktop Workspace Indicator */}
-        {!isMobile && (
-          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-3 z-0">
-            <button onClick={() => setDesktopWorkspace(0)} className={`w-2 h-2 rounded-full transition-all ${desktopWorkspace === 0 ? 'bg-white/90 scale-125' : 'bg-white/40 hover:bg-white/60'}`} />
-            <button onClick={() => setDesktopWorkspace(1)} className={`w-2 h-2 rounded-full transition-all ${desktopWorkspace === 1 ? 'bg-white/90 scale-125' : 'bg-white/40 hover:bg-white/60'}`} />
           </div>
         )}
 
@@ -606,7 +765,7 @@ function DesktopSurface() {
         <MusicApp />
       </Window>
       <Window id="folderGames" title="Games" defaultSize={WINDOW_SIZES.folderGames}>
-        <div className="w-full h-full bg-[#1c1c1e] p-6 flex flex-wrap content-start items-start justify-start gap-6">
+        <div className="w-full h-full p-6 flex flex-wrap content-start items-start justify-start gap-6">
           <button
             onDoubleClick={() => openWindow('game2048', { size: WINDOW_SIZES.game2048 })}
             onClick={(e) => e.stopPropagation()}
@@ -660,6 +819,8 @@ function DesktopSurface() {
       </Window>
 
       {/* Context Menu */}
+      {!isMobile && <WorkspaceHint onSwitch={desktopWorkspace} />}
+
       {menu && <ContextMenu x={menu.x} y={menu.y} items={menu.items} onClose={() => setMenu(null)} />}
 
       <Dock defaultSizes={WINDOW_SIZES} />

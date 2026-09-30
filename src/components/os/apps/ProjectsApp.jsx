@@ -1,5 +1,9 @@
 'use client';
 import { useState, useEffect, useMemo, useRef } from 'react';
+import {
+  GithubLogo, ArrowSquareOut, Funnel, CaretLeft, CaretRight,
+  MagnifyingGlass, XCircle, Check,
+} from '@phosphor-icons/react';
 import { useWindows } from '../../../context/windowContext';
 import { Page, Card, Tag, Button, SectionLabel, Centered } from './ui';
 import LoadingSpinner from '../../LoadingSpinner';
@@ -35,11 +39,11 @@ const TECH_MAP = {
   'Sanity': { name: 'Sanity', icon: '/assets/techstack/sanity.png' },
 };
 
-const GitHubIcon = <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.6 0-12 5.4-12 12 0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6.1 8.2-11.4 0-6.6-5.4-12-12-12z"/></svg>;
-const ExternalIcon = <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>;
-const FilterIcon = <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>;
-const ChevronLeft = <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>;
-const ChevronRight = <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>;
+const GitHubIcon = <GithubLogo size={14} weight="fill" />;
+const ExternalIcon = <ArrowSquareOut size={14} weight="bold" />;
+const FilterIcon = <Funnel size={12} weight="fill" />;
+const ChevronLeft = <CaretLeft size={12} weight="bold" />;
+const ChevronRight = <CaretRight size={12} weight="bold" />;
 
 const ProjectCard = ({ project, onOpenUrl }) => {
   const repo = project.url?.repo;
@@ -145,7 +149,7 @@ const FilterSheet = ({ isOpen, onClose, availableTechs, activeFilters, onApply }
 
   return (
     <div onClick={onClose} className="fixed inset-0 bg-black/50 flex items-center justify-center z-[100] p-4">
-      <div onClick={e => e.stopPropagation()} className="w-full max-w-sm rounded-xl overflow-hidden border border-white/[0.1] shadow-2xl flex flex-col max-h-[75vh]" style={{ background: '#2a2a2c' }}>
+      <div onClick={e => e.stopPropagation()} className="w-full max-w-sm rounded-xl overflow-hidden border border-white/[0.1] shadow-2xl flex flex-col max-h-[75vh]" style={{ background: 'rgba(44, 44, 46, 0.88)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)' }}>
         <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06]">
           <button onClick={reset} className="text-[13px] text-white/50 hover:text-white/80 transition-colors">Reset</button>
           <span className="text-[13px] font-semibold text-white">Filters</span>
@@ -161,7 +165,7 @@ const FilterSheet = ({ isOpen, onClose, availableTechs, activeFilters, onApply }
                   <button key={d ?? 'all'} onClick={() => setDifficulty(d)}
                     className="w-full flex items-center justify-between px-3.5 py-2.5 text-[12.5px] text-white/80 hover:bg-white/[0.04] transition-colors">
                     <span>{d ?? 'All'}</span>
-                    {difficulty === d && <svg className="w-4 h-4 text-[#0A84FF]" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
+                    {difficulty === d && <Check size={16} weight="bold" className="text-[#0A84FF]" />}
                   </button>
                 ))}
               </div>
@@ -200,7 +204,7 @@ const FilterSheet = ({ isOpen, onClose, availableTechs, activeFilters, onApply }
                       )}
                       {t}
                     </span>
-                    {techs.includes(t) && <svg className="w-4 h-4 text-[#0A84FF]" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
+                    {techs.includes(t) && <Check size={16} weight="bold" className="text-[#0A84FF]" />}
                   </button>
                 ))}
               </div>
@@ -323,10 +327,7 @@ const ProjectsApp = () => {
         {/* iPhone-style Search Bar */}
         <div className="flex-1 relative flex items-center">
           <span className="absolute inset-y-0 left-2.5 flex items-center pointer-events-none text-white/30">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            <MagnifyingGlass size={14} weight="bold" />
           </span>
           <input
             type="text"
@@ -340,9 +341,7 @@ const ProjectsApp = () => {
               onClick={() => setSearchTerm('')}
               className="absolute inset-y-0 right-2 flex items-center text-white/30 hover:text-white/60"
             >
-              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
+              <XCircle size={14} weight="fill" />
             </button>
           )}
         </div>

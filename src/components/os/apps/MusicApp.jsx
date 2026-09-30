@@ -1,17 +1,21 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import YouTube from 'react-youtube';
+import {
+  Play, Pause, SkipForward, SkipBack, House, MagnifyingGlass,
+  Books, CircleNotch,
+} from '@phosphor-icons/react';
 
 // Icons
-const PlayIcon = <svg className="w-5 h-5 ml-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>;
-const PauseIcon = <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg>;
-const NextIcon = <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" /></svg>;
-const PrevIcon = <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" /></svg>;
-const HomeIcon = <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>;
-const SearchIcon = <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>;
-const LibraryIcon = <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>;
+const PlayIcon = <Play size={20} weight="fill" className="ml-0.5" />;
+const PauseIcon = <Pause size={20} weight="fill" />;
+const NextIcon = <SkipForward size={20} weight="fill" />;
+const PrevIcon = <SkipBack size={20} weight="fill" />;
+const HomeIcon = <House size={24} weight="bold" />;
+const SearchIcon = <MagnifyingGlass size={24} weight="bold" />;
+const LibraryIcon = <Books size={24} weight="bold" />;
 
-const SpinnerIcon = <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="3" className="opacity-25"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>;
+const SpinnerIcon = <CircleNotch size={20} weight="bold" className="animate-spin" />;
 
 const formatTime = (time) => {
   if (isNaN(time) || time === Infinity) return '0:00';
