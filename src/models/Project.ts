@@ -14,6 +14,8 @@ export interface Project {
     repo?: string;
     live?: string;
   };
+  /** Source is not publicly readable — the UI offers a "request access" alert instead of the link. */
+  repoPrivate?: boolean;
   img: string;
   status: 'live' | 'draft';
   order: number;
@@ -30,6 +32,8 @@ export interface ProjectInput {
     repo?: string;
     live?: string;
   };
+  /** Source is not publicly readable — the UI offers a "request access" alert instead of the link. */
+  repoPrivate?: boolean;
   img: string;
   status: 'live' | 'draft';
   order: number;

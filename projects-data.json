@@ -1,5 +1,58 @@
 [
   {
+    "_id": "68de0001a1b2c3d4e5f60003",
+    "title": "Spodify",
+    "description": "A free Spotify alternative for Android, built in React Native. Streams the full YouTube Music catalogue with search, playlists, artist pages and a personal library, and imports your Spotify account so existing playlists and liked songs carry over. Delivers what a subscription normally gates — offline downloads, time-synced lyrics from LRCLIB that self-correct against the real track duration, listening stats, and background playback with lock-screen controls — with all state held in on-device SQLite. Release builds ship through a signed APK pipeline hardened with R8 full mode and Hermes bytecode.",
+    "techStacks": [
+      "React Native",
+      "TypeScript",
+      "Android",
+      "SQLite",
+      "Gradle",
+      "R8",
+      "Hermes",
+      "YouTube Music API"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/spodify-native",
+      "live": ""
+    },
+    "repoPrivate": true,
+    "img": "/assets/projects/spodify.jpg",
+    "status": "live",
+    "order": 0,
+    "id": "1790899200003",
+    "createdAt": "2026-10-02T00:00:00.000Z",
+    "updatedAt": "2026-10-02T00:00:00.000Z"
+  },
+  {
+    "_id": "68de0001a1b2c3d4e5f60002",
+    "title": "OpenCode Wrapper",
+    "description": "OpenAI-compatible LLM API gateway that routes one interface across multiple providers — Groq, Anthropic, Gemini, OpenAI, Cerebras and more. Routes each request to the fastest healthy provider from historical latency and error rates, fails over instantly when a provider errors or times out, and exposes image generation and text-to-speech endpoints alongside chat completions. MongoDB-backed client API keys, admin key issuance, and per-request token, latency and cost analytics.",
+    "techStacks": [
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "OpenAI API",
+      "Anthropic API",
+      "Groq",
+      "Gemini",
+      "REST API"
+    ],
+    "difficulty": "Advanced",
+    "url": {
+      "repo": "https://github.com/xauravww/opencode-wrapper-main",
+      "live": ""
+    },
+    "img": "/assets/projects/opencode-wrapper.png",
+    "status": "live",
+    "order": 1,
+    "id": "1790899200002",
+    "createdAt": "2026-10-02T00:00:00.000Z",
+    "updatedAt": "2026-10-02T00:00:00.000Z"
+  },
+  {
     "_id": "nebulaplan_001",
     "title": "NebulaPlan",
     "description": "Created an AI-powered project planning tool that automates development from ideas to deployment, with chat-based brainstorming. Used AI to generate requirements, architecture, user stories, tech recommendations, workflows, and UI mockups accurately. Added features for task tracking, personas, user journeys, and auto PDF docs.",
@@ -17,12 +70,62 @@
       "repo": "https://github.com/xauravww/project-planner-next",
       "live": "https://nebulaplan.vercel.app"
     },
-    "img": "/assets/random.png",
+    "img": "/assets/projects/nebulaplan.png",
     "status": "live",
-    "order": 0,
+    "order": 2,
     "id": "nebulaplan_2025",
     "createdAt": "2025-12-21T03:30:00.000Z",
     "updatedAt": "2025-12-21T03:30:00.000Z"
+  },
+  {
+    "_id": "68de0001a1b2c3d4e5f60001",
+    "title": "InvBasic",
+    "description": "Inventory and GST billing system for wholesale shops. Layered Express 5 API with a Vite/React 19 client, sharing one source of truth for the wire format through Zod DTO contracts. JWT cookie sessions, Prisma over PostgreSQL, and a full docs set covering layers, architecture, conventions, API surface, database design and wireframes.",
+    "techStacks": [
+      "TypeScript",
+      "Express",
+      "Prisma",
+      "PostgreSQL",
+      "React",
+      "Vite",
+      "Tailwind CSS",
+      "Zod",
+      "React Query"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/invbasic",
+      "live": ""
+    },
+    "repoPrivate": true,
+    "img": "/assets/projects/invbasic-placeholder.png",
+    "status": "live",
+    "order": 3,
+    "id": "1790899200001",
+    "createdAt": "2026-10-02T00:00:00.000Z",
+    "updatedAt": "2026-10-02T00:00:00.000Z"
+  },
+  {
+    "_id": "68de0001a1b2c3d4e5f60004",
+    "title": "Encrypted Datasafe Notes",
+    "description": "Obsidian plugin that AES-encrypts Markdown, Canvas and Excalidraw files on disk, protecting the whole vault or a single folder. Locks automatically when the window loses focus, supports right-click encrypt/decrypt per file, decrypt-in-search, corruption recovery and password change, with lock state shown in the status bar and file explorer. Published to the Obsidian community plugin registry at v3.0.1.",
+    "techStacks": [
+      "TypeScript",
+      "Obsidian API",
+      "AES",
+      "Node.js"
+    ],
+    "difficulty": "Intermediate",
+    "url": {
+      "repo": "https://github.com/xauravww/obsidian-encrypted-datasafe-notes",
+      "live": "https://obsidian.md/plugins?id=encrypted-datasafe-notes"
+    },
+    "img": "/assets/projects/datasafe-notes.png",
+    "status": "live",
+    "order": 4,
+    "id": "1790899200004",
+    "createdAt": "2026-10-02T00:00:00.000Z",
+    "updatedAt": "2026-10-02T00:00:00.000Z"
   },
   {
     "_id": "68c59f20b5b28fe698243f16",
@@ -37,9 +140,9 @@
       "repo": "https://github.com/xauravww/jobquest-ai",
       "live": "https://jobquest-ai.vercel.app"
     },
-    "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d/assets/projects/jobquestai.png",
+    "img": "/assets/projects/jobquest.png",
     "status": "live",
-    "order": 2,
+    "order": 5,
     "id": "1757781792113",
     "createdAt": "2025-09-13T16:43:12.113Z",
     "updatedAt": "2025-09-13T16:49:44.587Z"
@@ -61,7 +164,7 @@
     },
     "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d/assets/projects/rupaysavvy.png",
     "status": "live",
-    "order": 2,
+    "order": 6,
     "id": "1756401810030",
     "createdAt": "2025-08-28T17:23:30.030Z",
     "updatedAt": "2025-09-13T16:53:07.493Z"
@@ -83,7 +186,7 @@
     },
     "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d@main/assets/test/gen.webp",
     "status": "live",
-    "order": 3,
+    "order": 7,
     "id": "1756401054698",
     "createdAt": "2025-08-28T17:10:54.698Z",
     "updatedAt": "2025-10-19T10:34:27.024Z"
@@ -102,51 +205,32 @@
       "repo": "https://github.com/xauravww/portfolio-xauravww-nextjs",
       "live": "https://xauravww.vercel.app"
     },
-    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1704802069/assets/projects/portfolio_bg_uoxyxc.png",
+    "img": "/assets/projects/portfolio-site.jpg",
     "status": "live",
-    "order": 4,
+    "order": 8,
     "id": "1756402058947",
     "createdAt": "2025-08-28T17:27:38.947Z",
     "updatedAt": "2025-08-28T17:52:32.803Z"
   },
   {
-    "_id": "68b0949f08a5dfe744a80a91",
-    "title": "Grocery Bud - TODO List",
-    "description": "This miniproject is a simple todo list that was made to showcase my understanding of React and Redux Toolkit.",
+    "_id": "68b0955808a5dfe744a80a93",
+    "title": "Analog Clock",
+    "description": "This is a simple and elegant project showcases a basic analog clock.",
     "techStacks": [
-      "React",
-      "Redux Toolkit"
+      "JavaScript",
+      "HTML & CSS"
     ],
     "difficulty": "Easy",
     "url": {
-      "repo": "https://github.com/xauravww/practiceWEB/tree/react-projects/09-grocery-bud",
-      "live": "https://grocery-bud-xauravww.onrender.com/"
+      "repo": "https://github.com/xauravww/practiceWEB/tree/learn-js/mini-projects/analog-clock-mini-project",
+      "live": "https://analog-clock-xauravww.onrender.com"
     },
-    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1711396632/grocery-bud_mlfowb.webp",
+    "img": "/assets/projects/analog-clock.png",
     "status": "live",
-    "order": 5,
-    "id": "1756402847576",
-    "createdAt": "2025-08-28T17:40:47.576Z",
-    "updatedAt": "2025-08-28T17:53:10.315Z"
-  },
-  {
-    "_id": "68b0945908a5dfe744a80a90",
-    "title": "Color Shade Generator",
-    "description": "This mini-project lets you can Generate color shades from any type of color format",
-    "techStacks": [
-      "React"
-    ],
-    "difficulty": "Easy",
-    "url": {
-      "repo": "https://github.com/xauravww/practiceWEB/tree/react-projects/04-color-shades-generator",
-      "live": "https://color-shader-xauravww.onrender.com"
-    },
-    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1724990853/color-shader_qmdnjt.png",
-    "status": "live",
-    "order": 6,
-    "id": "1756402777771",
-    "createdAt": "2025-08-28T17:39:37.771Z",
-    "updatedAt": "2025-08-28T17:53:22.477Z"
+    "order": 9,
+    "id": "1756403032577",
+    "createdAt": "2025-08-28T17:43:52.577Z",
+    "updatedAt": "2025-08-28T17:54:13.657Z"
   },
   {
     "_id": "68b092e9b3bd70dc16a6a7ad",
@@ -161,12 +245,51 @@
       "repo": "https://github.com/xauravww/practiceWEB/tree/learn-js/mini-projects/adv-midi-piano-miniproject",
       "live": "https://adv-midi-piano-miniproject.onrender.com"
     },
-    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1704802058/assets/projects/piano_bg_cbvm09.png",
+    "img": "/assets/projects/midi-piano.png",
     "status": "live",
-    "order": 7,
+    "order": 10,
     "id": "1756402409616",
     "createdAt": "2025-08-28T17:33:29.616Z",
     "updatedAt": "2025-08-28T17:53:30.462Z"
+  },
+  {
+    "_id": "68b0945908a5dfe744a80a90",
+    "title": "Color Shade Generator",
+    "description": "This mini-project lets you can Generate color shades from any type of color format",
+    "techStacks": [
+      "React"
+    ],
+    "difficulty": "Easy",
+    "url": {
+      "repo": "https://github.com/xauravww/practiceWEB/tree/react-projects/04-color-shades-generator",
+      "live": "https://color-shader-xauravww.onrender.com"
+    },
+    "img": "/assets/projects/color-shader.png",
+    "status": "live",
+    "order": 11,
+    "id": "1756402777771",
+    "createdAt": "2025-08-28T17:39:37.771Z",
+    "updatedAt": "2025-08-28T17:53:22.477Z"
+  },
+  {
+    "_id": "68b0949f08a5dfe744a80a91",
+    "title": "Grocery Bud - TODO List",
+    "description": "This miniproject is a simple todo list that was made to showcase my understanding of React and Redux Toolkit.",
+    "techStacks": [
+      "React",
+      "Redux Toolkit"
+    ],
+    "difficulty": "Easy",
+    "url": {
+      "repo": "https://github.com/xauravww/practiceWEB/tree/react-projects/09-grocery-bud",
+      "live": "https://grocery-bud-xauravww.onrender.com/"
+    },
+    "img": "/assets/projects/grocery-bud.png",
+    "status": "live",
+    "order": 12,
+    "id": "1756402847576",
+    "createdAt": "2025-08-28T17:40:47.576Z",
+    "updatedAt": "2025-08-28T17:53:10.315Z"
   },
   {
     "_id": "68b09395b3bd70dc16a6a7ae",
@@ -180,9 +303,9 @@
     "url": {
       "live": "https://xauravww-form-validation.netlify.app"
     },
-    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1723032640/form_s39len.webp",
+    "img": "/assets/projects/form-validation.png",
     "status": "live",
-    "order": 8,
+    "order": 13,
     "id": "1756402581666",
     "createdAt": "2025-08-28T17:36:21.666Z",
     "updatedAt": "2025-08-28T17:53:44.620Z"
@@ -202,30 +325,31 @@
     },
     "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1704802065/assets/projects/pixtract_bg_xrwjvk.png",
     "status": "draft",
-    "order": 9,
+    "order": 14,
     "id": "1756402934578",
     "createdAt": "2025-08-28T17:42:14.578Z",
     "updatedAt": "2025-08-28T17:53:56.947Z"
   },
   {
-    "_id": "68b0955808a5dfe744a80a93",
-    "title": "Analog Clock",
-    "description": "This is a simple and elegant project showcases a basic analog clock.",
+    "_id": "68b09005157c11be3ab35028",
+    "title": "BRCM Educon",
+    "description": "A college management Android App with features like managing students, attendance, and etc.",
     "techStacks": [
-      "JavaScript",
-      "HTML & CSS"
+      "React Native",
+      "Express",
+      "MongoDB",
+      "Tailwind CSS"
     ],
-    "difficulty": "Easy",
+    "difficulty": "Intermediate",
     "url": {
-      "repo": "https://github.com/xauravww/practiceWEB/tree/learn-js/mini-projects/analog-clock-mini-project",
-      "live": "https://analog-clock-xauravww.onrender.com"
+      "repo": "https://github.com/xauravww/brcmeducon-cross-platform"
     },
-    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1704802062/assets/projects/clock_bg_l9alsk.png",
-    "status": "live",
-    "order": 10,
-    "id": "1756403032577",
-    "createdAt": "2025-08-28T17:43:52.577Z",
-    "updatedAt": "2025-08-28T17:54:13.657Z"
+    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1722943455/brcmeduconmerge_oeppji.png",
+    "status": "draft",
+    "order": 15,
+    "id": "1756401669185",
+    "createdAt": "2025-08-28T17:21:09.185Z",
+    "updatedAt": "2025-08-28T17:51:48.280Z"
   },
   {
     "_id": "68b08e97157c11be3ab35026",
@@ -244,7 +368,7 @@
     },
     "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1724586718/2_jwyuaj.jpg",
     "status": "draft",
-    "order": 11,
+    "order": 16,
     "id": "1756401303235",
     "createdAt": "2025-08-28T17:15:03.235Z",
     "updatedAt": "2025-08-28T17:54:22.581Z"
@@ -266,30 +390,9 @@
     },
     "img": "https://cdn.jsdelivr.net/gh/sauravtechno/main-d/assets/projects/ai-analyzer.webp",
     "status": "draft",
-    "order": 12,
+    "order": 17,
     "id": "1756401158172",
     "createdAt": "2025-08-28T17:12:38.172Z",
     "updatedAt": "2025-08-28T17:51:39.428Z"
-  },
-  {
-    "_id": "68b09005157c11be3ab35028",
-    "title": "BRCM Educon",
-    "description": "A college management Android App with features like managing students, attendance, and etc.",
-    "techStacks": [
-      "React Native",
-      "Express",
-      "MongoDB",
-      "Tailwind CSS"
-    ],
-    "difficulty": "Intermediate",
-    "url": {
-      "repo": "https://github.com/xauravww/brcmeducon-cross-platform"
-    },
-    "img": "https://res.cloudinary.com/drvntsbpo/image/upload/v1722943455/brcmeduconmerge_oeppji.png",
-    "status": "draft",
-    "order": 13,
-    "id": "1756401669185",
-    "createdAt": "2025-08-28T17:21:09.185Z",
-    "updatedAt": "2025-08-28T17:51:48.280Z"
   }
 ]

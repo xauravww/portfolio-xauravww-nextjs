@@ -2,7 +2,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   GithubLogo, ArrowSquareOut, Funnel, CaretLeft, CaretRight,
-  MagnifyingGlass, XCircle, Check,
+  MagnifyingGlass, XCircle, Check, LockKey,
 } from '@phosphor-icons/react';
 import { useWindows } from '../../../context/windowContext';
 import { Page, Card, Tag, Button, SectionLabel, Centered } from './ui';
@@ -40,16 +40,52 @@ const TECH_MAP = {
 };
 
 const GitHubIcon = <GithubLogo size={14} weight="fill" />;
+const PrivateIcon = <LockKey size={14} weight="fill" />;
 const ExternalIcon = <ArrowSquareOut size={14} weight="bold" />;
 const FilterIcon = <Funnel size={12} weight="fill" />;
 const ChevronLeft = <CaretLeft size={12} weight="bold" />;
 const ChevronRight = <CaretRight size={12} weight="bold" />;
 
+// macOS-style alert shown when a project's repo is not public — a 404 for visitors,
+// so the card explains it instead of opening a dead link.
+const PrivateRepoDialog = ({ projectTitle, onClose }) => {
+  useEffect(() => {
+    const onKey = e => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div onClick={onClose} className="fixed inset-0 bg-black/40 flex items-center justify-center z-[110] p-4">
+      <div onClick={e => e.stopPropagation()}
+        className="w-[270px] rounded-[12px] overflow-hidden border border-white/[0.1] shadow-2xl text-center"
+        style={{ background: 'rgba(44, 44, 46, 0.86)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)' }}>
+        <div className="px-5 pt-5 pb-4">
+          <div className="mx-auto mb-3 w-[52px] h-[52px] rounded-[12px] flex items-center justify-center"
+            style={{ background: 'linear-gradient(180deg, #5c5c60, #454548)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.14), 0 2px 6px rgba(0,0,0,0.3)' }}>
+            <LockKey size={26} weight="fill" className="text-white/85" />
+          </div>
+          <h3 className="text-[13px] font-semibold text-white">Private Repository</h3>
+          <p className="text-[11px] text-white/55 leading-relaxed mt-1.5">
+            The source for {projectTitle || 'this project'} isn&apos;t public. Contact the owner to request access.
+          </p>
+        </div>
+        <button onClick={onClose}
+          className="w-full py-2.5 text-[13px] font-medium text-[#0A84FF] border-t border-white/[0.08] hover:bg-white/[0.05] active:bg-white/[0.08] transition-colors">
+          OK
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const ProjectCard = ({ project, onOpenUrl }) => {
   const repo = project.url?.repo;
   const live = project.url?.live;
+  const [showPrivate, setShowPrivate] = useState(false);
 
   return (
+    <>
     <Card className="flex flex-col overflow-hidden">
       <div className="relative w-full aspect-[16/10] overflow-hidden">
         <OptimizedImage
@@ -96,11 +132,13 @@ const ProjectCard = ({ project, onOpenUrl }) => {
         )}
 
         <div className="flex gap-2 mt-auto pt-1">
-          {repo && <Button onClick={() => window.open(repo, '_blank')} variant="default" icon={GitHubIcon} className="text-[11px] !px-2.5 !py-[4px]">Code</Button>}
+          {repo && <Button onClick={() => (project.repoPrivate ? setShowPrivate(true) : window.open(repo, '_blank'))} variant="default" icon={project.repoPrivate ? PrivateIcon : GitHubIcon} className="text-[11px] !px-2.5 !py-[4px]">Code</Button>}
           {live && <Button onClick={() => window.open(live, '_blank')} variant="accent" icon={ExternalIcon} className="text-[11px] !px-2.5 !py-[4px]">Live</Button>}
         </div>
       </div>
     </Card>
+    {showPrivate && <PrivateRepoDialog projectTitle={project.title} onClose={() => setShowPrivate(false)} />}
+    </>
   );
 };
 
